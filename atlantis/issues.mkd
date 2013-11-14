@@ -3,6 +3,7 @@
 
 Open Issues
 -----------
+- **[1]** Create basic game skeleton
 
 Resolved Issues
 ---------------
