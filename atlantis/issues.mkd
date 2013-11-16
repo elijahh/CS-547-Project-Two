@@ -6,9 +6,9 @@ Open Issues
 - **[1]** Create basic game skeleton
 - **[2]** Create a login screen so player can choose either "create new game" or "join a game" as a game state
 
-- **[5]** Make Parallel Dijkstra function for split adjacencies
+- **[5]** Make Parallel Dijkstra function for split adjacencies. Investigate possible optimizations.
 
 Resolved Issues
 ---------------
 - **[3]** Add jsr166y library, backport of Java 1.7 Concurrency utilities to Java 1.6. 
-- **[4]** Add Parallel Dijkstra work in progress from Greg's Project One
+- **[4]** Add Parallel Dijkstra work in progress from Greg's Project One. Single thread active.
