@@ -5,6 +5,6 @@ package atlantis.networking;
  * 
  */
 
-public class Client {
+public class AtlantisClient {
 
 }
