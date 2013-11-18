@@ -15,13 +15,12 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class AtlantisGame extends StateBasedGame {
 	
-	public static final int START_UP = 1;
-	public static final int PLAYING = 2;
-	public static final int GAME_OVER = 3;
-	public static final int SPLASH = 4;
+	public static final int SPLASH = 1;
+	public static final int MENU = 2;
+	public static final int PLAYING = 3;
+	public static final int GAME_OVER = 4;
 	
 	public static final String SPLASH_SCREEN_GRAPHIC = "atlantis/resource/splash.png";
-	public static final String START_GAME_PROMPT_GRAPHIC = "atlantis/resource/PressSpace.png";
 	public static final String GAME_OVER_PROMPT_GRAPHIC = "atlantis/resource/GameOver.png";
 	public static final String CREATE_GAME = "atlantis/resource/create_game.png";
 	public static final String JOIN_GAME = "atlantis/resource/join_game.png";
@@ -40,12 +39,12 @@ public class AtlantisGame extends StateBasedGame {
 	
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {
-		addState(new StartUpState());
+		addState(new SplashState());
+		addState(new StartMenuState());
 		addState(new PlayingState());
 		addState(new GameOverState());
 		
 		ResourceManager.loadImage(SPLASH_SCREEN_GRAPHIC);
-		ResourceManager.loadImage(START_GAME_PROMPT_GRAPHIC);
 		ResourceManager.loadImage(GAME_OVER_PROMPT_GRAPHIC);
 		ResourceManager.loadImage(CREATE_GAME);
 		ResourceManager.loadImage(JOIN_GAME);
