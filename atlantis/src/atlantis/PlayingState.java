@@ -7,6 +7,8 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 public class PlayingState extends BasicGameState{
+	Overlay overlay;
+	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
@@ -15,13 +17,13 @@ public class PlayingState extends BasicGameState{
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
-		
+		overlay = new Overlay();
 	}
 	
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
-		
+		overlay.render(container, game, g);
 	}
 	
 	private final void doHousekeeping() {

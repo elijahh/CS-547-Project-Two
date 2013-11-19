@@ -3,9 +3,7 @@
 
 Open Issues
 -----------
-- **[1]** Create basic game skeleton
-
-- **[7]** Add overlay with actions for selected unit 
+- **[1]** Create basic game skeleton 
 
 Resolved Issues
 ---------------
@@ -13,6 +11,7 @@ Resolved Issues
 - **[3]** Add jsr166y library, backport of Java 1.7 Concurrency utilities to Java 1.6. 
 - **[4]** Add Parallel Dijkstra work in progress from Greg's Project One. Single thread active.
 - **[6]** Fix StartUpState by separating the gameState branches into BasicGameStates.
+- **[7]** Add overlay with actions for selected unit
 
 Need to Revisit
 ---------------

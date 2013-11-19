@@ -51,6 +51,7 @@ public class StartMenuState extends BasicGameState {
 				// TODO: create game -- enter PlayingState with server mode
 			} else if (posX > 500 && posX < 725 && posY > 190 && posY < 233) {
 				String address = serverAddr.getText();
+				game.enterState(AtlantisGame.PLAYING);
 				// TODO: join game -- enter PlayingState with client mode
 			}
 		} else if (serverAddr.hasFocus() && input.isKeyDown(Input.KEY_ENTER)) {
