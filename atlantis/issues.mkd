@@ -5,6 +5,8 @@ Open Issues
 -----------
 - **[1]** Create basic game skeleton
 
+- **[7]** Add overlay with actions for selected unit 
+
 Resolved Issues
 ---------------
 - **[2]** Create a login screen so player can choose either "create new game" or "join a game" as a game state
