@@ -18,6 +18,8 @@ public class Overlay {
 	Image targetAttack;
 	Image pixel;
 	
+	boolean isDefaultCursorSet = true;
+	
 	short action = 0; // 1 = move, 2 = attack
 	
 	public Overlay() {
@@ -39,12 +41,21 @@ public class Overlay {
 		int y = input.getMouseY();
 		
 		if (y > 470) { // select action
-			container.setMouseCursor(AtlantisGame.cursor, 0, 0);
+			if (!isDefaultCursorSet) {
+				container.setMouseCursor(AtlantisGame.cursor, 0, 0);
+				isDefaultCursorSet = true;
+			}
 		} else if (action == 1) { // move
-			container.setMouseCursor(pixel, 0, 0);
+			if (isDefaultCursorSet) {
+				container.setMouseCursor(pixel, 0, 0);
+				isDefaultCursorSet = false;
+			}
 			g.drawImage(targetMove, x, y);
 		} else if (action == 2) { // attack
-			container.setMouseCursor(pixel, 0, 0);
+			if (isDefaultCursorSet) {
+				container.setMouseCursor(pixel, 0, 0);
+				isDefaultCursorSet = false;
+			}
 			g.drawImage(targetAttack, x, y);
 		}
 		
