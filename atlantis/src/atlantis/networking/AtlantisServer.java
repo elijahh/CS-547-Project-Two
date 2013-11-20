@@ -9,6 +9,10 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Input;
+
 /*
  * Implement LockStepProtocol. Receive commands from clients. Send results to clients.
  */
@@ -31,8 +35,7 @@ public class AtlantisServer {
 			try{				
 				System.out.println("waiting for client");
 				clientSocket = serverSocket.accept();
-				socket_os = (DataOutputStream) clientSocket.getOutputStream();
-				socket_is = (DataInputStream) clientSocket.getInputStream();
+				System.out.println("connected!");
 			}catch (IOException e  ) {
 				System.out.println( "client error " + e.toString() );
 			}
@@ -46,17 +49,23 @@ public class AtlantisServer {
 		cl.start();
 	}
 	
-	public void tellClient() {
+	public void tellClient(GameContainer container) {
 		try {
-			PrintWriter out = new PrintWriter(socket_os, true);
+			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 			BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
 			
-			String fromServer;
-			fromServer = stdIn.readLine();
-			if(fromServer != null) {
-				System.out.println("Server: "+ fromServer);
-				out.println(fromServer);
+		
+			Input input = container.getInput();
+			
+			if(input.isKeyDown(Input.KEY_ENTER)) {
+				out.println("press enter");
 			}
+//			String fromServer;
+//			fromServer = stdIn.readLine();
+//			if(fromServer != null) {
+//				System.out.println("Server: "+ fromServer);
+//				out.println(fromServer);
+//			}
 		} catch (IOException e){
 			
 		}

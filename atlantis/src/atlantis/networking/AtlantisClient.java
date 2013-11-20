@@ -9,6 +9,10 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Input;
+
+import atlantis.StartMenuState;
 import atlantis.networking.AtlantisServer.ClientListener;
 
 /*
@@ -21,23 +25,18 @@ public class AtlantisClient {
 	public DataOutputStream socket_os;
 	public DataInputStream socket_is;
 	public Socket socket;
-	public String command;
+	public String result;
+	public static int PORT_NUMBER;
 	
-	public AtlantisClient() {
-		
+	public AtlantisClient(int portNumber) {
+		PORT_NUMBER = portNumber;
 	}
 	
 	public void connect() {
 		try{
-			Socket socket = new Socket("localhost", AtlantisServer.PORT_NUMBER);
-			try{				
-				socket_os = (DataOutputStream) socket.getOutputStream();
-				socket_is = (DataInputStream) socket.getInputStream();
-			}catch (IOException e  ) {
-				System.out.println( "client error " + e.toString() );
-			}
+			socket = new Socket("localhost", PORT_NUMBER);
 		}catch ( IOException e ) {
-			System.out.println( "No socket!" + e.toString());
+			System.out.println( "No socket! " + e.toString());
 		} 
 	}
 	
@@ -46,17 +45,23 @@ public class AtlantisClient {
 		sl.start();
 	}
 	
-	public void tellServer() {
+	public void tellServer(GameContainer container) {
 		try {
-			PrintWriter out = new PrintWriter(socket_os, true);
+			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 			BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
 			
-			String fromClient;
-			fromClient = stdIn.readLine();
-			if(fromClient != null) {
-				System.out.println("Client: "+ fromClient);
-				out.println(fromClient);
+//			String fromClient;
+//			fromClient = stdIn.readLine();
+//			if(fromClient != null) {
+//				System.out.println("Client: "+ fromClient);
+//				out.println(fromClient);
+//			}
+			
+			Input input = container.getInput();
+			if(input.isKeyDown(Input.KEY_SPACE)) {
+				out.println("press space");
 			}
+			
 		} catch (IOException e){
 			
 		}
@@ -77,7 +82,7 @@ public class AtlantisClient {
 				String inputLine;
 
 				while ((inputLine = in.readLine()) != null) {
-					command = inputLine;
+					result = inputLine;
 				}
 			} catch (IOException e) {
 				System.out.println("Exception caught when trying to listen on port "
