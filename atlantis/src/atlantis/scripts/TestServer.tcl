@@ -23,7 +23,7 @@ proc Terminate { sock } {
 
     global Server
 
-    unset Server(state)
+    unset Server($sock,state)
 
     if [ catch { close $sock } errMsg ] {
         
@@ -31,22 +31,44 @@ proc Terminate { sock } {
     }
 }
 
+proc Transmit_Position_Updates { sock } {
+
+    set rc [ catch { gets $sock buffer } errMsg ]
+
+    if { 0 != $rc } {
+
+        puts "error reading socket: $sock: $errMsg"
+        Terminate $sock
+
+    } else {
+
+        if [ eof $sock ] {
+
+            puts "connection ended: $sock"
+            Terminate $sock
+        }
+    }
+}
+
 proc Transmit_Map_Attributes { sock } {
+
+    global Server
 
     global SERVER_MAP_NAME
 
     puts $sock $SERVER_MAP_NAME
 
-    Terminate $sock
+    set Server($sock,state) 1
 }
 
 proc Process { sock } {
 
     global Server
 
-    switch $Server(state) {
+    switch $Server($sock,state) {
 
         0 { Transmit_Map_Attributes $sock }
+        1 { Transmit_Position_Updates $sock }
     }
 }
 
@@ -54,13 +76,7 @@ proc Accept { sock addr port } {
 
     global Server
 
-    if [ info exists Server(state) ] {
-
-        puts "rejected: $sock: connection in progress"
-        catch { close $sock }
-    }
-
-    set Server(state) 0
+    set Server($sock,state) 0
 
     fconfigure $sock -buffering line
     fileevent $sock readable [ list Process $sock ]

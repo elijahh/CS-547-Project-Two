@@ -13,14 +13,18 @@ proc Process { sock } {
 
     set rc [ catch { gets $sock buffer } errMsg ]
 
-    if { 0 != rc } {
+    if { 0 != $rc } {
 
-        catch { close $sock }
         error "error reading socket: $sock: $errMsg"
+        catch { close $sock }
 
     } else {
 
+        if [ eof $sock ] { close $sock; exit 0 }
+
         puts $buffer
+
+        puts $sock "OK"
     }
 }
 
@@ -33,6 +37,8 @@ if { 0 != $rc } {
 
 fconfigure $sock -buffering line
 fileevent $sock readable [ list Process $sock ]
+
+puts $sock "HELLO"
 
 vwait forever
 
