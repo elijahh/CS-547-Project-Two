@@ -14,6 +14,8 @@ import org.newdawn.slick.state.StateBasedGame;
 public class StartMenuState extends BasicGameState {
 
 	private TextField serverAddr;
+	public static String GAME_TYPE;
+	public static String ADDRESS;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
@@ -49,9 +51,18 @@ public class StartMenuState extends BasicGameState {
 			int posY = input.getMouseY();
 			if (posX > 280 && posX < 505 && posY > 350 && posY < 393) {
 				// TODO: create game -- enter PlayingState with server mode
+				GAME_TYPE = "server";
+				game.enterState(AtlantisGame.PLAYING);
 			} else if (posX > 500 && posX < 725 && posY > 190 && posY < 233) {
+
 				String address = serverAddr.getText();
+				game.enterState(AtlantisGame.PLAYING);
+
+				ADDRESS = serverAddr.getText();
+
 				// TODO: join game -- enter PlayingState with client mode
+				GAME_TYPE = "client";
+				game.enterState(AtlantisGame.PLAYING);
 			}
 		} else if (serverAddr.hasFocus() && input.isKeyDown(Input.KEY_ENTER)) {
 			String address = serverAddr.getText();
