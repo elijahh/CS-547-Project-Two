@@ -5,14 +5,16 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.tiled.TiledMap;
 
 public class PlayingState extends BasicGameState{
 	Overlay overlay;
+	TiledMap map;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
-
+		map = new TiledMap("atlantis/resource/densemap.tmx");
 	}
 	
 	@Override
