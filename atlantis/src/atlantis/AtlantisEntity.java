@@ -1,10 +1,21 @@
 package atlantis;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
 import java.util.Set;
+
+import org.newdawn.slick.Animation;
+import org.newdawn.slick.Image;
 
 import jig.Entity;
 import jig.Vector;
+import dijkstra.engine.DijkstraAlgorithm;
+import dijkstra.model.Edge;
+import dijkstra.model.Graph;
+import dijkstra.model.Vertex;
 
 abstract class AtlantisEntity extends Entity implements
 		Comparable<AtlantisEntity> {
@@ -24,20 +35,39 @@ abstract class AtlantisEntity extends Entity implements
 	
 	protected static final int MAP_GRID_Y = 12;
 	protected static final int MAP_Y_NODE_DIMENSION = 50; /* Pixels */
-
+	
+	private static Random random_generator = new Random(); 
+	
 	protected Vector velocity;
-
+	protected static DijkstraAlgorithm dijkstra;
+	
 	@Override
 	public int compareTo(final AtlantisEntity other) {
-		Float min_entity_y = getCoarseGrainedMinY();
-		return min_entity_y.compareTo(other.getCoarseGrainedMinY());
+		return identity.compareTo(other.identity);
 	}
-
+	
 	public AtlantisEntity(final float x, final float y) {
 		super(x, y);
 		velocity = STOPPED_VECTOR;
+		identity = random_generator.nextLong();
 	}
+	
+	private Long identity;
+
+	public long getIdentity() { return identity; }
+	
+	protected boolean homing = false;
+	
+	public void activateHoming() { homing = true; }
+	
+	public void update(final int delta) {
+		translate(velocity.scale(delta));
+	}
+	
+	public void update(final AtlantisEntity other) {
 		
+	}
+	
 	protected static float movement_min_x = -Float.MAX_VALUE; 
 	protected static float movement_max_x = Float.MAX_VALUE;
 	protected static float movement_min_y = -Float.MAX_VALUE; 
@@ -49,10 +79,6 @@ abstract class AtlantisEntity extends Entity implements
 		movement_max_x = max_x_arg;
 		movement_min_y = min_y_arg;
 		movement_max_y = max_y_arg;
-	}
-	
-	public void update(final int delta) {
-		translate(velocity.scale(delta));
 	}
 	
 	public boolean isOutsideXMovementLimit() {
@@ -142,4 +168,74 @@ abstract class AtlantisEntity extends Entity implements
 
 		return node_number_set;
 	}
+		
+	public final boolean isNearbyEntity(final AtlantisEntity g) {
+		final Set<Integer> map_nodes = this.getCurrentMapNodesSpanned();
+		Set<Integer> their_nodes = g.getCurrentMapNodesSpanned();
+
+		their_nodes.retainAll(map_nodes);
+
+		if (0 < their_nodes.size())
+			return true;
+
+		return false;
+	}
+
+	public final List<AtlantisEntity> listNearbyEntities() {
+		ArrayList<AtlantisEntity> nearby_entities = new ArrayList<AtlantisEntity>();
+
+		for (AtlantisEntity e : nearby_entities) {
+			if (e == this)
+				continue;
+
+			if (isNearbyEntity(e))
+				nearby_entities.add(e);
+		}
+
+		return Collections.unmodifiableList(nearby_entities);
+	}
+	
+	public Vector getNextMovementFromPath(final List<Vertex> path) {
+		Vector movement_direction = STOPPED_VECTOR;
+		
+		final int current_map_node = getCurrentMapNode();
+		String move_to_node = "";
+		
+		if(null != path) move_to_node = path.get(1).toString();
+				
+		if (move_to_node.equals("Node_" + (current_map_node + MAP_GRID_X))) {
+			movement_direction = movement_direction.add(DOWN_UNIT_VECTOR);
+		} else if (move_to_node.equals("Node_"
+				+ (current_map_node + MAP_GRID_X - 1))) {
+			movement_direction = movement_direction.add(DOWN_UNIT_VECTOR);
+			movement_direction = movement_direction.add(LEFT_UNIT_VECTOR);
+		} else if (move_to_node.equals("Node_"
+				+ (current_map_node + MAP_GRID_X + 1))) {
+			movement_direction = movement_direction.add(DOWN_UNIT_VECTOR);
+			movement_direction = movement_direction.add(RIGHT_UNIT_VECTOR);
+		} else if (move_to_node.equals("Node_"
+				+ (current_map_node - MAP_GRID_X))) {
+			movement_direction = movement_direction.add(UP_UNIT_VECTOR);
+		} else if (move_to_node.equals("Node_"
+				+ (current_map_node - MAP_GRID_X - 1))) {
+			movement_direction = movement_direction.add(UP_UNIT_VECTOR);
+			movement_direction = movement_direction.add(LEFT_UNIT_VECTOR);
+		} else if (move_to_node.equals("Node_"
+				+ (current_map_node - MAP_GRID_X + 1))) {
+			movement_direction = movement_direction.add(UP_UNIT_VECTOR);
+			movement_direction = movement_direction.add(RIGHT_UNIT_VECTOR);
+		} else if (move_to_node.equals("Node_" + (current_map_node - 1))) {
+			movement_direction = movement_direction.add(LEFT_UNIT_VECTOR);
+		} else if (move_to_node.equals("Node_" + (current_map_node + 1))) {
+			movement_direction = movement_direction.add(RIGHT_UNIT_VECTOR);
+		}
+		
+		return movement_direction;
+	}
+
+	/* -------------------------------------------------------------------- */
+	
+	protected Vector face_direction = STOPPED_VECTOR;
+	protected Vector movement_last_direction = STOPPED_VECTOR;
+
 }

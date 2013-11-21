@@ -1,5 +1,8 @@
 package atlantis;
 
+import java.util.PriorityQueue;
+import java.util.Queue;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -25,6 +28,12 @@ public class PlayingState extends BasicGameState{
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
+		
+		GameStatus status = AtlantisGame.getGameStatus();
+		Queue<Worker> workers = new PriorityQueue(status.getWorkers());
+		
+		for(Worker w : workers) w.render(g); 
+		
 		overlay.render(container, game, g);
 	}
 	

@@ -3,7 +3,7 @@
 
 Open Issues
 -----------
-- **[7]** Create basic AtlantisEntity and Worker classes. Make one character appear on screen when
+- **[7]** Create basic AtlantisEntity and Worker classes. Make one worker appear on screen when
           client starts.
 - **[8]** Add enough functionality to GameStatus to move one character around screen with position
           updates retrieved from Woker list provided by GameStatus. At this point, no network
