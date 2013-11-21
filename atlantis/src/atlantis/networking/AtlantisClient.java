@@ -4,10 +4,14 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
@@ -28,13 +32,17 @@ public class AtlantisClient {
 	public String result;
 	public static int PORT_NUMBER;
 	
+	public BlockingQueue<SimulationResult> resultsQueue;
+	
 	public AtlantisClient(int portNumber) {
 		PORT_NUMBER = portNumber;
+		resultsQueue = new LinkedBlockingQueue<SimulationResult>();
 	}
 	
 	public void connect() {
 		try{
 			socket = new Socket("localhost", PORT_NUMBER);
+			createListener();
 		}catch ( IOException e ) {
 			System.out.println( "No socket! " + e.toString());
 		} 
@@ -76,18 +84,27 @@ public class AtlantisClient {
 		public void run() {
 			try {
 
-				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-
-				String inputLine;
-
-				while ((inputLine = in.readLine()) != null) {
-					result = inputLine;
-				}
+//				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+//				String inputLine;
+//				while ((inputLine = in.readLine()) != null) {
+//					result = inputLine;
+//				}
+				
+				InputStream in = socket.getInputStream();
+				ObjectInputStream ois = new ObjectInputStream(in);
+				SimulationResult result = (SimulationResult) ois.readObject();
+				resultsQueue.add(result);
+				ois.close();
+				in.close();
+				
 			} catch (IOException e) {
 				System.out.println("Exception caught when trying to listen on port "
 						+ AtlantisServer.PORT_NUMBER + " or listening for a connection");
 				System.out.println(e.getMessage());
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				System.out.println("SimulationResult class not found");
+				e.printStackTrace();
 			}
 		}
 	}
