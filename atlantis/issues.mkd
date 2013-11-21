@@ -3,7 +3,8 @@
 
 Open Issues
 -----------
-- **[1]** Create basic game skeleton 
+- **[1]** Create basic game skeleton
+- **[9]** Format the objects need to be passed between client and server 
 
 Resolved Issues
 ---------------
