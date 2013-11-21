@@ -35,7 +35,7 @@ public class AtlantisGame extends StateBasedGame {
 	
 	private static final int DISPLAY_SIZE_X = 800;
 	private static final int DISPLAY_SIZE_Y = 600;
-	
+		
 	public static Image cursor;
 
 	public AtlantisGame(String title) {
@@ -70,6 +70,11 @@ public class AtlantisGame extends StateBasedGame {
 		container.setMouseCursor(cursor, 0, 0);
 	}	
 
+	/* -------------------------------------------------------------------- */
+	
+	protected static GameStatus game_status = new GameStatus();
+	public static GameStatus getGameStatus() { return game_status; };
+	
 	/* -------------------------------------------------------------------- */
 	
 	public static void main(String[] args) {

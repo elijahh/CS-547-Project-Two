@@ -51,6 +51,23 @@ public class StartMenuState extends BasicGameState {
 				// TODO: create game -- enter PlayingState with server mode
 			} else if (posX > 500 && posX < 725 && posY > 190 && posY < 233) {
 				String address = serverAddr.getText();
+				
+				/* Probably need some "Connecting" status messages, a timeout,
+				 * and error handling here. This is bare bones just to get
+				 * things moving.  
+				 */
+				
+				GameStatus game_status = AtlantisGame.getGameStatus();
+				
+				try {
+					if (game_status.connect(address)) {
+						while (!game_status.connected())
+							Thread.sleep(100);
+					}
+				} catch (Exception e) {
+					System.err.println(e);
+				}
+				
 				game.enterState(AtlantisGame.PLAYING);
 				// TODO: join game -- enter PlayingState with client mode
 			}
