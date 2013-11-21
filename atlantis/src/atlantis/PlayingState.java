@@ -37,7 +37,7 @@ public class PlayingState extends BasicGameState{
 	@Override
 	public void update(GameContainer container, StateBasedGame game,
 			int delta) throws SlickException {
-		
+		AtlantisGame.getGameStatus().update(delta);
 	}
 
 	@Override

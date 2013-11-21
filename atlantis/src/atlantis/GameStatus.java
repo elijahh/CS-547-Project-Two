@@ -22,4 +22,10 @@ public class GameStatus {
 		
 		return true;
 	}
+	
+	public void update(final int delta) {
+		
+		// TODO
+		
+	}
 }
