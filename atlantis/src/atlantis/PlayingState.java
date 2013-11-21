@@ -9,9 +9,11 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.tiled.TiledMap;
 
+
 import atlantis.networking.AtlantisClient;
 import atlantis.networking.AtlantisServer;
 import atlantis.networking.SimulationResult;
+
 
 public class PlayingState extends BasicGameState{
 
@@ -31,12 +33,13 @@ public class PlayingState extends BasicGameState{
 	
 	TiledMap map;
 	String mapName;
-
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
-		
+
+		map = new TiledMap("atlantis/resource/densemap.tmx", "atlantis/resource");
+
 	}
 	
 	@Override
@@ -80,10 +83,11 @@ public class PlayingState extends BasicGameState{
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
-
-		overlay.render(container, game, g);
 		
 		map.render(0, 0);
+
+		overlay.render(container, game, g);
+
 		
 		/* Client receive results from server */
 
