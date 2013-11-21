@@ -43,7 +43,7 @@ public class Worker extends GroundEntity {
 //		ResourceManager.loadImage(FACE_UR_GRAPHIC_FILE);
 	}
 	
-	private static final String getMovementAnimationFilename(
+	public final String getMovementAnimationFilename(
 			final Vector direction) {
 		String animation_filename;
 
@@ -68,7 +68,7 @@ public class Worker extends GroundEntity {
 		return animation_filename;
 	}
 	
-	private static final String getStillImageFilename(final Vector direction) {
+	public final String getStillImageFilename(final Vector direction) {
 		String graphic_filename;
 
 		if (direction.equals(LEFT_UNIT_VECTOR)) {
@@ -90,22 +90,5 @@ public class Worker extends GroundEntity {
 		}
 
 		return graphic_filename;
-	}
-	
-	@Override
-	public void render(final Graphics g) {
-		
-		/* TEMPORARY FOR issue7 */
-		
-		if(0 == this.getNumImages()) {
-			String graphic_filename = getStillImageFilename(face_direction);
-
-			Image still_image = ResourceManager.getImage(graphic_filename);
-			
-			if (0 == this.getNumShapes()) 
-				addImageWithBoundingBox(still_image);
-		}
-		
-		super.render(g);
 	}
 }

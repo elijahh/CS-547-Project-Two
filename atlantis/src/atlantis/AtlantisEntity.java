@@ -8,13 +8,15 @@ import java.util.Random;
 import java.util.Set;
 
 import org.newdawn.slick.Animation;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 
 import jig.Entity;
+import jig.ResourceManager;
 import jig.Vector;
+
 import dijkstra.engine.DijkstraAlgorithm;
-import dijkstra.model.Edge;
-import dijkstra.model.Graph;
+
 import dijkstra.model.Vertex;
 
 abstract class AtlantisEntity extends Entity implements
@@ -238,4 +240,23 @@ abstract class AtlantisEntity extends Entity implements
 	protected Vector face_direction = STOPPED_VECTOR;
 	protected Vector movement_last_direction = STOPPED_VECTOR;
 
+	abstract String getMovementAnimationFilename(Vector movement_direction);
+	abstract String getStillImageFilename(Vector face_direction);
+		
+	@Override
+	public void render(final Graphics g) {
+		
+		/* TEMPORARY FOR issue7 */
+		
+		if(0 == this.getNumImages()) {
+			String graphic_filename = getStillImageFilename(face_direction);
+
+			Image still_image = ResourceManager.getImage(graphic_filename);
+			
+			if (0 == this.getNumShapes()) 
+				addImageWithBoundingBox(still_image);
+		}
+		
+		super.render(g);
+	}
 }
