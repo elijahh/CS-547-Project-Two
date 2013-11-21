@@ -12,6 +12,7 @@ Resolved Issues
 - **[4]** Add Parallel Dijkstra work in progress from Greg's Project One. Single thread active.
 - **[6]** Fix StartUpState by separating the gameState branches into BasicGameStates.
 - **[7]** Add overlay with actions for selected unit
+- **[8]** Basic networking with client and server model. Server sends map name to client.
 
 Need to Revisit
 ---------------
