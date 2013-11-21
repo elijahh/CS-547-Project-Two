@@ -14,7 +14,7 @@ public class PlayingState extends BasicGameState{
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
-		map = new TiledMap("atlantis/resource/densemap.tmx");
+		map = new TiledMap("atlantis/resource/densemap.tmx", "atlantis/resource");
 	}
 	
 	@Override
@@ -25,6 +25,7 @@ public class PlayingState extends BasicGameState{
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
+		map.render(0, 0);
 		overlay.render(container, game, g);
 	}
 	
