@@ -7,9 +7,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -32,16 +36,16 @@ public class AtlantisClient {
 	public String result;
 	public static int PORT_NUMBER;
 	
-	public BlockingQueue<SimulationResult> resultsQueue;
+	public BlockingQueue<ResultLockStep> incomingLockSteps;
 	
 	public AtlantisClient(int portNumber) {
 		PORT_NUMBER = portNumber;
-		resultsQueue = new LinkedBlockingQueue<SimulationResult>();
+		incomingLockSteps = new LinkedBlockingQueue<ResultLockStep>();
 	}
 	
-	public void connect() {
+	public void connect(String address) {
 		try{
-			socket = new Socket("localhost", PORT_NUMBER);
+			socket = new Socket(address, PORT_NUMBER);
 			createListener();
 		}catch ( IOException e ) {
 			System.out.println( "No socket! " + e.toString());
@@ -53,22 +57,12 @@ public class AtlantisClient {
 		sl.start();
 	}
 	
-	public void tellServer(GameContainer container) {
+	public void sendCommand(GameContainer container, int frameNum, CommandLockStep step) {
 		try {
-			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-			BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-			
-//			String fromClient;
-//			fromClient = stdIn.readLine();
-//			if(fromClient != null) {
-//				System.out.println("Client: "+ fromClient);
-//				out.println(fromClient);
-//			}
-			
-			Input input = container.getInput();
-			if(input.isKeyDown(Input.KEY_SPACE)) {
-				out.println("press space");
-			}
+		
+			OutputStream out = socket.getOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(out);
+			oos.writeObject(step);
 			
 		} catch (IOException e){
 			
@@ -78,22 +72,15 @@ public class AtlantisClient {
 	public class serverListener extends Thread{
 		
 		serverListener(Socket socket) {
-
 		}
 		
 		public void run() {
 			try {
-
-//				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-//				String inputLine;
-//				while ((inputLine = in.readLine()) != null) {
-//					result = inputLine;
-//				}
 				
 				InputStream in = socket.getInputStream();
 				ObjectInputStream ois = new ObjectInputStream(in);
-				SimulationResult result = (SimulationResult) ois.readObject();
-				resultsQueue.add(result);
+				ResultLockStep result = (ResultLockStep) ois.readObject();
+				incomingLockSteps.add(result);
 				ois.close();
 				in.close();
 				
@@ -108,4 +95,5 @@ public class AtlantisClient {
 			}
 		}
 	}
+	
 }

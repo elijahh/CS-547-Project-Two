@@ -1,6 +1,7 @@
 package atlantis;
 
 import java.util.ArrayList;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -9,9 +10,10 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.tiled.TiledMap;
 
-
 import atlantis.networking.AtlantisClient;
 import atlantis.networking.AtlantisServer;
+import atlantis.networking.CommandLockStep;
+import atlantis.networking.ResultLockStep;
 import atlantis.networking.SimulationResult;
 
 
@@ -33,12 +35,11 @@ public class PlayingState extends BasicGameState{
 	
 	TiledMap map;
 	String mapName;
+	int currentFrame;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
-
-		map = new TiledMap("atlantis/resource/densemap.tmx", "atlantis/resource");
 
 	}
 	
@@ -47,36 +48,41 @@ public class PlayingState extends BasicGameState{
 
 		overlay = new Overlay();
 		currentNumberOfPlayers = 0;
-		map  = new TiledMap("atlantis/resource/densemap.tmx");
+		currentFrame = 0;
 		
+		/*If in server mode, create a server thread*/
 		if(StartMenuState.GAME_TYPE.equals("server")){
-			System.out.println("server mode");
+			System.out.println("Server mode");
 			server = new AtlantisServer(PORT_NUMBER);
-			server.start(); 
-
-			//If in host mode, create another thread of client
-			client = new AtlantisClient(PORT_NUMBER);
-			client.connect();
-			
-			while(currentNumberOfPlayers < 2){}
-			
-			server.sendMap("new map");
-					
-		}else if(StartMenuState.GAME_TYPE.equals("client")){
-			System.out.println("client mode");
-			client = new AtlantisClient(PORT_NUMBER);
-			client.connect();
-			//client waiting for map info
-			while (client.resultsQueue.isEmpty()) {}
-			while (!client.resultsQueue.isEmpty()) {
-				SimulationResult result = client.resultsQueue.poll();
-				if(result.type == SimulationResult.MAP) {
-					mapName = result.stringContent;
-					System.out.println(mapName);
-				}
-				break;
-			}
+			server.start(); 				
 		}
+		
+		
+		System.out.println("New client join");
+		client = new AtlantisClient(PORT_NUMBER);
+		client.connect(StartMenuState.ADDRESS);
+		
+		if(StartMenuState.GAME_TYPE.equals("server")) {
+			while(currentNumberOfPlayers < 2){} //Stuck here, waiting for two players both join and starts to send map
+			//TODO: This is test case, need to change map and map name
+			mapName = "atlantis/resource/densemap.tmx"; 		
+			server.sendMap(mapName, currentFrame);
+		}
+		
+		//client waiting for map info
+		while (client.incomingLockSteps.isEmpty()) {}
+
+		while (!client.incomingLockSteps.isEmpty()) {
+			ResultLockStep step = client.incomingLockSteps.poll();
+			if(step.frameNum == 0) {
+				SimulationResult result = step.frameResults.get(0);
+				System.out.println("Map reveived!");
+				mapName = result.mapName;
+				map = new TiledMap(mapName);
+			}
+			break;
+		}
+		
 		
 	}
 	
@@ -89,13 +95,7 @@ public class PlayingState extends BasicGameState{
 		overlay.render(container, game, g);
 
 		
-		/* Client receive results from server */
-
-		if(StartMenuState.GAME_TYPE.equals("server"))
-			g.drawString("Command: "+ server.command, 25, 200);
-		
-		if(StartMenuState.GAME_TYPE.equals("client"))
-			g.drawString("Result: "+ client.result, 25, 200);
+		/* Client render frame result from server */
 
 	}
 	
@@ -108,11 +108,22 @@ public class PlayingState extends BasicGameState{
 	@Override
 	public void update(GameContainer container, StateBasedGame game,
 			int delta) throws SlickException {
-//		if(StartMenuState.GAME_TYPE.equals("server"))
-//			server.tellClient(container);
-//		
-//		if(StartMenuState.GAME_TYPE.equals("client"))
-//			client.tellServer(container);
+		
+		// If in server mode, wait for current frame commands, send simulation of current frame result 
+		//CommandLockStep incomingCommands = server.incomingLockSteps.poll();
+		
+		/* do computation */
+		
+		//Store simulation results in outgoingResults
+		//ResultLockStep outgoingResults = new ResultLockStep(currentFrame);
+		
+		/* -------------------------------------------------------------------- */
+		
+		//CommandLockStep outgoingCommands = new CommandLockStep(currentFrame);
+		/* Add commands to outgoingCommands and send current frame commands to server */
+		
+		// Wait and get incoming simulation results of current frame from server 
+		//ResultLockStep incomingResults = client.incomingLockSteps.poll(); 
 	}
 
 	@Override

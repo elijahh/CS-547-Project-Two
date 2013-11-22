@@ -52,6 +52,7 @@ public class StartMenuState extends BasicGameState {
 			if (posX > 280 && posX < 505 && posY > 350 && posY < 393) {
 				// TODO: create game -- enter PlayingState with server mode
 				GAME_TYPE = "server";
+				ADDRESS = "localhost";
 				game.enterState(AtlantisGame.PLAYING);
 			} else if (posX > 500 && posX < 725 && posY > 190 && posY < 233) {
 
@@ -76,13 +77,13 @@ public class StartMenuState extends BasicGameState {
 				game.enterState(AtlantisGame.PLAYING);
 
 				ADDRESS = serverAddr.getText();
-
+				
 				// TODO: join game -- enter PlayingState with client mode
 				GAME_TYPE = "client";
 				game.enterState(AtlantisGame.PLAYING);
 			}
 		} else if (serverAddr.hasFocus() && input.isKeyDown(Input.KEY_ENTER)) {
-			String address = serverAddr.getText();
+			ADDRESS = serverAddr.getText();
 			// TODO: join game -- enter PlayingState with client mode
 		}
 	}
