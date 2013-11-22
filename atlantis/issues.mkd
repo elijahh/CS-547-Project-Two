@@ -5,6 +5,14 @@ Open Issues
 -----------
 - **[1]** Create basic game skeleton
 - **[9]** Format the objects need to be passed between client and server 
+- **[10]** Create basic AtlantisEntity and Worker classes. Make one worker appear on screen when
+           client starts.
+- **[11]** Add enough functionality to GameStatus to move one character around screen with position
+           updates retrieved from Woker list provided by GameStatus. At this point, no network
+           interaction will take place and GameStatus should calculate positions for client.
+- **[12]** Repeat [9] Receiving movement updates from dummy server TestServer.tcl located in 
+           atlantis.scripts directory. GameStatus should retrieve position updates across
+           network connection using contrived protocol to test timing.
 
 Resolved Issues
 ---------------
