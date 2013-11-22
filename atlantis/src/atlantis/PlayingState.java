@@ -21,7 +21,7 @@ public class PlayingState extends BasicGameState{
 
 	Overlay overlay;
 
-	public static final int NUMBER_OF_PLAYERS = 2;
+	public static final int NUMBER_OF_PLAYERS = 1;
 	
 	public static volatile int currentNumberOfPlayers;
 	
@@ -63,7 +63,11 @@ public class PlayingState extends BasicGameState{
 		client.connect(StartMenuState.ADDRESS);
 		
 		if(StartMenuState.GAME_TYPE.equals("server")) {
-			while(currentNumberOfPlayers < 2){} //Stuck here, waiting for two players both join and starts to send map
+			/*
+			 * Stuck when currentNumberOfPlayer is less than NUMBER_OF_PLAYERS, waiting for two players both join and starts to send map.
+			 * Set NUMBER_OF_PLAYERS equal to 1 for single player and purpose of easy developing.
+			 */
+			while(currentNumberOfPlayers < NUMBER_OF_PLAYERS){} 
 			//TODO: This is test case, need to change map and map name
 			mapName = "atlantis/resource/densemap.tmx"; 		
 			server.sendMap(mapName, currentFrame);
