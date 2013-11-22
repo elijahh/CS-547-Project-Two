@@ -2,6 +2,7 @@ package atlantis.networking;
 
 import java.io.Serializable;
 
+
 /*
  * Format of simulation results that host might send to clients
  */
@@ -16,11 +17,12 @@ public class SimulationResult implements Serializable{
 	public static final transient int MAP = 0;
 	
 	public int type;
-	public int frame;
-	public String stringContent;
+	public int frameNum;
+	public String mapName;
 	
 	public void setMap(String mapName) {
 		type = MAP;
-		stringContent = mapName;
+		this.mapName = mapName;
+		frameNum = 0;
 	}
 }

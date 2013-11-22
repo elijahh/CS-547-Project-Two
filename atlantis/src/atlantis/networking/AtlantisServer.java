@@ -4,17 +4,22 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.tiled.TiledMap;
 
 import atlantis.PlayingState;
 
@@ -31,11 +36,13 @@ public class AtlantisServer extends Thread{
 	public ArrayList<Socket> socketList;
 	public String command;
 	
-	public BlockingQueue<Command> commands;
+	public BlockingQueue<CommandLockStep> incomingLockSteps;
+
 	
 	public AtlantisServer(int portNumber) {
 		PORT_NUMBER = portNumber;
 		socketList = new ArrayList<Socket>();
+		incomingLockSteps = new LinkedBlockingQueue<CommandLockStep>();
 	}
 	
 	public void run() {
@@ -43,10 +50,10 @@ public class AtlantisServer extends Thread{
 			ServerSocket serverSocket = new ServerSocket(PORT_NUMBER);
 			try{
 				while(PlayingState.currentNumberOfPlayers < PlayingState.NUMBER_OF_PLAYERS) {
-					System.out.println("waiting for client");
+					System.out.println("Waiting for client...");
 					Socket clientSocket = serverSocket.accept();
 					socketList.add(clientSocket);
-					System.out.println("connected!");
+					System.out.println("Connected!");
 					createListener(clientSocket);
 					PlayingState.currentNumberOfPlayers++;
 				}
@@ -61,39 +68,31 @@ public class AtlantisServer extends Thread{
 	public void createListener(Socket clientSocket) {
 		ClientListener cl = new ClientListener(clientSocket);
 		cl.start();
-		System.out.println("create a listener!");
+		System.out.println("Create a listener!");
 	}
 	
-	public void tellClient(GameContainer container) {
-//		try {
-//			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-//			BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-//			
-//		
-//			Input input = container.getInput();
-//			
-//			if(input.isKeyDown(Input.KEY_ENTER)) {
-//				out.println("press enter");
-//			}
-//			String fromServer;
-//			fromServer = stdIn.readLine();
-//			if(fromServer != null) {
-//				System.out.println("Server: "+ fromServer);
-//				out.println(fromServer);
-//			}
-//		} catch (IOException e){
-//			
-//		}
+	public void sendResult(GameContainer container, int frameNum, ResultLockStep step) {
+		try {
+			for(Socket socket: socketList) {
+				OutputStream out = socket.getOutputStream();
+				ObjectOutputStream oos = new ObjectOutputStream(out);
+				oos.writeObject(step);
+			}
+		} catch (IOException e){
+			
+		}
 	}
 	
-	public void sendMap(String mapName) {
+	public void sendMap(String mapName, int frameNum) {
 		SimulationResult result = new SimulationResult();
 		result.setMap(mapName);
+		ResultLockStep step = new ResultLockStep(frameNum);
+		step.addResult(result);
 		try {
 			for(Socket clientSocket: socketList) {
 				OutputStream out = clientSocket.getOutputStream();
 				ObjectOutputStream oos = new ObjectOutputStream(out);
-				oos.writeObject(result);
+				oos.writeObject(step);
 				oos.close();
 				out.close();
 			}
@@ -111,20 +110,24 @@ public class AtlantisServer extends Thread{
 		
 		public void run() {
 			try {
-
-				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-
-				String inputLine;
-
-				while ((inputLine = in.readLine()) != null) {
-					command = inputLine;
-				}
+				
+				InputStream in = socket.getInputStream();
+				ObjectInputStream ois = new ObjectInputStream(in);
+				CommandLockStep commands = (CommandLockStep) ois.readObject();
+				incomingLockSteps.add(commands);
+				ois.close();
+				in.close();
+				
 			} catch (IOException e) {
 				System.out.println("Exception caught when trying to listen on port "
-						+ PORT_NUMBER + " or listening for a connection");
+						+ AtlantisServer.PORT_NUMBER + " or listening for a connection");
 				System.out.println(e.getMessage());
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				System.out.println("SimulationResult class not found");
+				e.printStackTrace();
 			}
 		}
 	}
+	
 }
