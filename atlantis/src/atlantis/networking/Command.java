@@ -10,7 +10,7 @@ public class Command {
 	public static final int ATTACK = 1;
 	
 	public int type;
-	public int frame;
+	public int frameNum;
 	
 	
 }

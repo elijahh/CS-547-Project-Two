@@ -2,8 +2,12 @@ package atlantis;
 
 
 import java.util.ArrayList;
+<<<<<<< HEAD
 import java.util.PriorityQueue;
 import java.util.Queue;
+=======
+import java.util.concurrent.LinkedBlockingQueue;
+>>>>>>> branch 'develop' of git@github.com:gsnorton/CS-547-Project-Two.git
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -12,9 +16,10 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.tiled.TiledMap;
 
-
 import atlantis.networking.AtlantisClient;
 import atlantis.networking.AtlantisServer;
+import atlantis.networking.CommandLockStep;
+import atlantis.networking.ResultLockStep;
 import atlantis.networking.SimulationResult;
 
 
@@ -22,7 +27,7 @@ public class PlayingState extends BasicGameState{
 
 	Overlay overlay;
 
-	public static final int NUMBER_OF_PLAYERS = 2;
+	public static final int NUMBER_OF_PLAYERS = 1;
 	
 	public static volatile int currentNumberOfPlayers;
 	
@@ -36,12 +41,11 @@ public class PlayingState extends BasicGameState{
 	
 	TiledMap map;
 	String mapName;
+	int currentFrame;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
-
-		map = new TiledMap("atlantis/resource/densemap.tmx", "atlantis/resource");
 
 	}
 	
@@ -50,36 +54,45 @@ public class PlayingState extends BasicGameState{
 
 		overlay = new Overlay();
 		currentNumberOfPlayers = 0;
-		map  = new TiledMap("atlantis/resource/densemap.tmx");
+		currentFrame = 0;
 		
+		/*If in server mode, create a server thread*/
 		if(StartMenuState.GAME_TYPE.equals("server")){
-			System.out.println("server mode");
+			System.out.println("Server mode");
 			server = new AtlantisServer(PORT_NUMBER);
-			server.start(); 
-
-			//If in host mode, create another thread of client
-			client = new AtlantisClient(PORT_NUMBER);
-			client.connect();
-			
-			while(currentNumberOfPlayers < 2){}
-			
-			server.sendMap("new map");
-					
-		}else if(StartMenuState.GAME_TYPE.equals("client")){
-			System.out.println("client mode");
-			client = new AtlantisClient(PORT_NUMBER);
-			client.connect();
-			//client waiting for map info
-			while (client.resultsQueue.isEmpty()) {}
-			while (!client.resultsQueue.isEmpty()) {
-				SimulationResult result = client.resultsQueue.poll();
-				if(result.type == SimulationResult.MAP) {
-					mapName = result.stringContent;
-					System.out.println(mapName);
-				}
-				break;
-			}
+			server.start(); 				
 		}
+		
+		
+		System.out.println("New client join");
+		client = new AtlantisClient(PORT_NUMBER);
+		client.connect(StartMenuState.ADDRESS);
+		
+		if(StartMenuState.GAME_TYPE.equals("server")) {
+			/*
+			 * Stuck when currentNumberOfPlayer is less than NUMBER_OF_PLAYERS, waiting for two players both join and starts to send map.
+			 * Set NUMBER_OF_PLAYERS equal to 1 for single player and purpose of easy developing.
+			 */
+			while(currentNumberOfPlayers < NUMBER_OF_PLAYERS){} 
+			//TODO: This is test case, need to change map and map name
+			mapName = "atlantis/resource/densemap.tmx"; 		
+			server.sendMap(mapName, currentFrame);
+		}
+		
+		//client waiting for map info
+		while (client.incomingLockSteps.isEmpty()) {}
+
+		while (!client.incomingLockSteps.isEmpty()) {
+			ResultLockStep step = client.incomingLockSteps.poll();
+			if(step.frameNum == 0) {
+				SimulationResult result = step.frameResults.get(0);
+				System.out.println("Map reveived!");
+				mapName = result.mapName;
+				map = new TiledMap(mapName);
+			}
+			break;
+		}
+		
 		
 	}
 	
@@ -90,10 +103,9 @@ public class PlayingState extends BasicGameState{
 		map.render(0, 0);
 
 		GameStatus status = AtlantisGame.getGameStatus();
-		Queue<Worker> workers = new PriorityQueue(status.getWorkers());
-		
+		Queue<Worker> workers = new PriorityQueue<Worker>(status.getWorkers());
 		for(Worker w : workers) w.render(g); 
-		
+
 		overlay.render(container, game, g);
 
 		/* Client receive results from server */
@@ -103,7 +115,6 @@ public class PlayingState extends BasicGameState{
 		
 		if(StartMenuState.GAME_TYPE.equals("client"))
 			g.drawString("Result: "+ client.result, 25, 200);
-
 	}
 	
 	private final void doHousekeeping() {
