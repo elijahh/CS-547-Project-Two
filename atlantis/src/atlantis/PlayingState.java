@@ -2,12 +2,9 @@ package atlantis;
 
 
 import java.util.ArrayList;
-<<<<<<< HEAD
 import java.util.PriorityQueue;
 import java.util.Queue;
-=======
 import java.util.concurrent.LinkedBlockingQueue;
->>>>>>> branch 'develop' of git@github.com:gsnorton/CS-547-Project-Two.git
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
