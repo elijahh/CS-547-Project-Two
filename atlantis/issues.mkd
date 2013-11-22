@@ -5,8 +5,6 @@ Open Issues
 -----------
 - **[1]** Create basic game skeleton
 - **[9]** Format the objects need to be passed between client and server 
-- **[10]** Create basic AtlantisEntity and Worker classes. Make one worker appear on screen when
-           client starts.
 - **[11]** Add enough functionality to GameStatus to move one character around screen with position
            updates retrieved from Woker list provided by GameStatus. At this point, no network
            interaction will take place and GameStatus should calculate positions for client.
@@ -22,6 +20,8 @@ Resolved Issues
 - **[6]** Fix StartUpState by separating the gameState branches into BasicGameStates.
 - **[7]** Add overlay with actions for selected unit
 - **[8]** Basic networking with client and server model. Server sends map name to client.
+- **[10]** Create basic AtlantisEntity and Worker classes. Make one worker appear on screen when
+           client starts.
 
 Need to Revisit
 ---------------

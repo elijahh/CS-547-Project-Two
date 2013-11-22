@@ -1,6 +1,9 @@
 package atlantis;
 
+
 import java.util.ArrayList;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -86,9 +89,13 @@ public class PlayingState extends BasicGameState{
 		
 		map.render(0, 0);
 
+		GameStatus status = AtlantisGame.getGameStatus();
+		Queue<Worker> workers = new PriorityQueue(status.getWorkers());
+		
+		for(Worker w : workers) w.render(g); 
+		
 		overlay.render(container, game, g);
 
-		
 		/* Client receive results from server */
 
 		if(StartMenuState.GAME_TYPE.equals("server"))
@@ -108,11 +115,14 @@ public class PlayingState extends BasicGameState{
 	@Override
 	public void update(GameContainer container, StateBasedGame game,
 			int delta) throws SlickException {
+
 //		if(StartMenuState.GAME_TYPE.equals("server"))
 //			server.tellClient(container);
 //		
 //		if(StartMenuState.GAME_TYPE.equals("client"))
 //			client.tellServer(container);
+
+		AtlantisGame.getGameStatus().update(delta);
 	}
 
 	@Override
