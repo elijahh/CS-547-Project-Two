@@ -1,13 +1,13 @@
 package atlantis;
 
+import java.io.Serializable;
+
 import jig.ResourceManager;
 import jig.Vector;
 
-import org.newdawn.slick.Animation;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-
-public class Worker extends GroundEntity {
+public class Worker extends GroundEntity implements Serializable {
+	
+	static final long serialVersionUID = 0x0100;
 	
 	private static final String FACE_U_GRAPHIC_FILE = "atlantis/resource/worker_u.png";
 	private static final String FACE_D_GRAPHIC_FILE = "atlantis/resource/worker_d.png";
@@ -17,13 +17,13 @@ public class Worker extends GroundEntity {
 	private static final String FACE_UR_GRAPHIC_FILE = "atlantis/resource/worker_ur.png";
 	private static final String FACE_DL_GRAPHIC_FILE = "atlantis/resource/worker_dl.png";
 	private static final String FACE_DR_GRAPHIC_FILE = "atlantis/resource/worker_dr.png";
-	
-	private static final String MOVE_L_ANIMATION_FILE  = "atlantis/resource/worker_l_move.png";
-	private static final String MOVE_R_ANIMATION_FILE  = "atlantis/resource/worker_r_move.png";
-	private static final String MOVE_U_ANIMATION_FILE  = "atlantis/resource/worker_u_move.png";
+
+	private static final String MOVE_L_ANIMATION_FILE = "atlantis/resource/worker_l_move.png";
+	private static final String MOVE_R_ANIMATION_FILE = "atlantis/resource/worker_r_move.png";
+	private static final String MOVE_U_ANIMATION_FILE = "atlantis/resource/worker_u_move.png";
 	private static final String MOVE_UR_ANIMATION_FILE = "atlantis/resource/worker_ur_move.png";
 	private static final String MOVE_UL_ANIMATION_FILE = "atlantis/resource/worker_ul_move.png";
-	private static final String MOVE_D_ANIMATION_FILE  = "atlantis/resource/worker_d_move.png";
+	private static final String MOVE_D_ANIMATION_FILE = "atlantis/resource/worker_d_move.png";
 	private static final String MOVE_DL_ANIMATION_FILE = "atlantis/resource/worker_dl_move.png";
 	private static final String MOVE_DR_ANIMATION_FILE = "atlantis/resource/worker_dr_move.png";
 	
@@ -41,10 +41,18 @@ public class Worker extends GroundEntity {
 //		ResourceManager.loadImage(FACE_DR_GRAPHIC_FILE);
 //		ResourceManager.loadImage(FACE_UL_GRAPHIC_FILE);
 //		ResourceManager.loadImage(FACE_UR_GRAPHIC_FILE);
+		
+//		ResourceManager.loadImage(MOVE_D_ANIMATION_FILE);
+//		ResourceManager.loadImage(MOVE_U_ANIMATION_FILE);
+//		ResourceManager.loadImage(MOVE_L_ANIMATION_FILE);
+//		ResourceManager.loadImage(MOVE_R_ANIMATION_FILE);
+//		ResourceManager.loadImage(MOVE_DL_ANIMATION_FILE);
+//		ResourceManager.loadImage(MOVE_DR_ANIMATION_FILE);
+//		ResourceManager.loadImage(MOVE_UL_ANIMATION_FILE);
+//		ResourceManager.loadImage(MOVE_UR_ANIMATION_FILE);
 	}
 	
-	public final String getMovementAnimationFilename(
-			final Vector direction) {
+	public final String getMovementAnimationFilename(final Vector direction) {
 		String animation_filename;
 
 		if (direction.equals(LEFT_UNIT_VECTOR)) {
@@ -64,7 +72,7 @@ public class Worker extends GroundEntity {
 		} else /* Move right */{
 			animation_filename = MOVE_D_ANIMATION_FILE;
 		}
-		
+
 		return animation_filename;
 	}
 	

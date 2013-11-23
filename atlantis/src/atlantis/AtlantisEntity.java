@@ -19,7 +19,7 @@ import dijkstra.engine.DijkstraAlgorithm;
 
 import dijkstra.model.Vertex;
 
-abstract class AtlantisEntity extends Entity implements
+public abstract class AtlantisEntity extends Entity implements
 		Comparable<AtlantisEntity> {
 	
 	protected static final Vector DOWN_UNIT_VECTOR = new Vector(0, 1);

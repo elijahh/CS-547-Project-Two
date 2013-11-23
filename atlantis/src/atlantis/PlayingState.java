@@ -19,7 +19,6 @@ import atlantis.networking.CommandLockStep;
 import atlantis.networking.ResultLockStep;
 import atlantis.networking.SimulationResult;
 
-
 public class PlayingState extends BasicGameState{
 
 	Overlay overlay;
@@ -99,9 +98,10 @@ public class PlayingState extends BasicGameState{
 		
 		map.render(0, 0);
 
-		GameStatus status = AtlantisGame.getGameStatus();
-		Queue<Worker> workers = new PriorityQueue<Worker>(status.getWorkers());
-		for(Worker w : workers) w.render(g); 
+		Queue<Worker> workers = 
+				new PriorityQueue<Worker>(client.getWorkers());
+		for (Worker w : workers)
+			w.render(g); 
 
 		overlay.render(container, game, g);
 
@@ -130,7 +130,9 @@ public class PlayingState extends BasicGameState{
 //		if(StartMenuState.GAME_TYPE.equals("client"))
 //			client.tellServer(container);
 
-		AtlantisGame.getGameStatus().update(delta);
+		// TEMPORARY FOR ISSUE 11
+		
+		client.updateEntity(null);
 	}
 
 	@Override

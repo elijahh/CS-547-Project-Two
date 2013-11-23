@@ -14,12 +14,17 @@ import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 
+import atlantis.AtlantisEntity;
+import atlantis.Worker;
 import atlantis.StartMenuState;
 import atlantis.networking.AtlantisServer.ClientListener;
 
@@ -96,4 +101,31 @@ public class AtlantisClient {
 		}
 	}
 	
+	/* -------------------------------------------------------------------- */
+	
+	public void updateEntity(AtlantisEntity updated_entity) {
+		
+		// TODO
+		
+		/*
+		 * TEMPORARY FOR ISSUE 11 - Create one worker for the client to render.
+		 */
+		
+		if(0 == workers.size()) {
+			workers.add(new Worker(400, 300));
+		}
+	}
+	
+	List<Worker> workers = new LinkedList<Worker>();
+	
+	public List<Worker> getWorkers() {
+		
+		List<Worker> worker_list = new ArrayList<Worker>();
+		
+		synchronized(workers) { 
+			 worker_list.addAll(workers);
+		}
+		
+		return Collections.unmodifiableList(worker_list);
+	}
 }
