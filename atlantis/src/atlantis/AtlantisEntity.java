@@ -1,5 +1,6 @@
 package atlantis;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -14,14 +15,12 @@ import org.newdawn.slick.Image;
 import jig.Entity;
 import jig.ResourceManager;
 import jig.Vector;
-
 import dijkstra.engine.DijkstraAlgorithm;
-
 import dijkstra.model.Vertex;
 
 public abstract class AtlantisEntity extends Entity implements
-		Comparable<AtlantisEntity> {
-	
+		Comparable<AtlantisEntity>, Serializable {
+		
 	protected static final Vector DOWN_UNIT_VECTOR = new Vector(0, 1);
 	protected static final Vector DOWN_RIGHT_UNIT_VECTOR = new Vector(1, 1);
 	protected static final Vector DOWN_LEFT_UNIT_VECTOR = new Vector(-1, 1);			
@@ -43,6 +42,9 @@ public abstract class AtlantisEntity extends Entity implements
 	protected Vector velocity;
 	protected static DijkstraAlgorithm dijkstra;
 	
+	protected Vector face_direction = STOPPED_VECTOR;
+	protected Vector movement_last_direction = STOPPED_VECTOR;
+	
 	@Override
 	public int compareTo(final AtlantisEntity other) {
 		return identity.compareTo(other.identity);
@@ -61,14 +63,6 @@ public abstract class AtlantisEntity extends Entity implements
 	protected boolean homing = false;
 	
 	public void activateHoming() { homing = true; }
-	
-	public void update(final int delta) {
-		translate(velocity.scale(delta));
-	}
-	
-	public void update(final AtlantisEntity other) {
-		
-	}
 	
 	protected static float movement_min_x = -Float.MAX_VALUE; 
 	protected static float movement_max_x = Float.MAX_VALUE;
@@ -234,20 +228,35 @@ public abstract class AtlantisEntity extends Entity implements
 		
 		return movement_direction;
 	}
+	
+	Vector getCurrentMovementDirection() {
+		return new Vector(this.velocity.unit());
+	}
 
 	/* -------------------------------------------------------------------- */
-	
-	protected Vector face_direction = STOPPED_VECTOR;
-	protected Vector movement_last_direction = STOPPED_VECTOR;
+
+	/* Server-side processing */
+
+	public void update(final int delta) {
+		translate(velocity.scale(delta));
+	}
+
+	/* -------------------------------------------------------------------- */
+
+	/* Client-side processing */
 
 	abstract String getMovementAnimationFilename(Vector movement_direction);
 	abstract String getStillImageFilename(Vector face_direction);
+	
+	public void update(AtlantisEntity update_entity) {
+		this.setX(update_entity.getX());
+		this.setY(update_entity.getY());
+		
+		// TODO - Finish
+	}
 		
 	@Override
 	public void render(final Graphics g) {
-		
-		/* TEMPORARY FOR issue7 */
-		
 		if(0 == this.getNumImages()) {
 			String graphic_filename = getStillImageFilename(face_direction);
 

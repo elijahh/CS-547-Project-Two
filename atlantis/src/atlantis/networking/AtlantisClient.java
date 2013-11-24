@@ -15,8 +15,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -103,27 +105,32 @@ public class AtlantisClient {
 	
 	/* -------------------------------------------------------------------- */
 	
-	public void updateEntity(AtlantisEntity updated_entity) {
-		
-		// TODO
-		
-		/*
-		 * TEMPORARY FOR ISSUE 11 - Create one worker for the client to render.
-		 */
-		
-		if(0 == workers.size()) {
-			workers.add(new Worker(400, 300));
+	public void processUpdateEntity(AtlantisEntity update_entity) {
+		if (update_entity instanceof Worker) {
+
+			Worker updated_entity = workers.get(update_entity.getIdentity());
+
+			if (null == updated_entity)
+				updated_entity = new Worker(update_entity.getX(),
+						update_entity.getY());
+
+			updated_entity.update(update_entity);
+
+			workers.put(new Long(updated_entity.getIdentity()),
+					(Worker) updated_entity);
 		}
+
+		// TODO: update of other entity types
 	}
 	
-	List<Worker> workers = new LinkedList<Worker>();
+	Map<Long, Worker> workers = new HashMap<Long, Worker>();
 	
 	public List<Worker> getWorkers() {
 		
 		List<Worker> worker_list = new ArrayList<Worker>();
 		
 		synchronized(workers) { 
-			 worker_list.addAll(workers);
+			 worker_list.addAll(workers.values());
 		}
 		
 		return Collections.unmodifiableList(worker_list);

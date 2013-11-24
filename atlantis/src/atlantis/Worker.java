@@ -1,13 +1,9 @@
 package atlantis;
 
-import java.io.Serializable;
-
 import jig.ResourceManager;
 import jig.Vector;
 
-public class Worker extends GroundEntity implements Serializable {
-	
-	static final long serialVersionUID = 0x0100;
+public class Worker extends GroundEntity {
 	
 	private static final String FACE_U_GRAPHIC_FILE = "atlantis/resource/worker_u.png";
 	private static final String FACE_D_GRAPHIC_FILE = "atlantis/resource/worker_d.png";
@@ -29,7 +25,6 @@ public class Worker extends GroundEntity implements Serializable {
 	
 	public Worker(float x, float y) {
 		super(x, y);
-		
 	}
 	
 	static {
@@ -44,8 +39,8 @@ public class Worker extends GroundEntity implements Serializable {
 		
 //		ResourceManager.loadImage(MOVE_D_ANIMATION_FILE);
 //		ResourceManager.loadImage(MOVE_U_ANIMATION_FILE);
-//		ResourceManager.loadImage(MOVE_L_ANIMATION_FILE);
-//		ResourceManager.loadImage(MOVE_R_ANIMATION_FILE);
+		ResourceManager.loadImage(MOVE_L_ANIMATION_FILE);
+		ResourceManager.loadImage(MOVE_R_ANIMATION_FILE);
 //		ResourceManager.loadImage(MOVE_DL_ANIMATION_FILE);
 //		ResourceManager.loadImage(MOVE_DR_ANIMATION_FILE);
 //		ResourceManager.loadImage(MOVE_UL_ANIMATION_FILE);

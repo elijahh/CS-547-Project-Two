@@ -1,6 +1,10 @@
 package atlantis;
 
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -120,10 +124,15 @@ public class PlayingState extends BasicGameState{
 		// TODO
 	}
 
+	// TEMPORARY FOR ISSUE 11
+	private Worker worker_on_server = new Worker(400, 300);
+	private int worker_clock;
+	private boolean moving_left;
+	
 	@Override
 	public void update(GameContainer container, StateBasedGame game,
 			int delta) throws SlickException {
-
+		
 //		if(StartMenuState.GAME_TYPE.equals("server"))
 //			server.tellClient(container);
 //		
@@ -131,8 +140,54 @@ public class PlayingState extends BasicGameState{
 //			client.tellServer(container);
 
 		// TEMPORARY FOR ISSUE 11
+		// SIMULATE SERIALIZATION/DESERIALIZATION
 		
-		client.updateEntity(null);
+		// H/T: http://stackoverflow.com/questions/134492/
+		//		how-to-serialize-an-object-into-a-string
+		
+		// Make the worker move, serialize, deserialize, and update
+		// into the client's entity list.
+		
+		worker_clock += delta;
+		
+		if(worker_clock > 1000) {
+			worker_clock = 0;
+			
+			
+		}
+		
+		AtlantisEntity worker_update = null;
+		
+		// Deserialization doesn't work right now. We shouldn't move
+		// forward until this bit of code executes. Consider serializing
+		// and transmitting an "updater" to AtlantisEntity. GSN
+		
+//		try {
+//			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//			ObjectOutputStream os = new ObjectOutputStream(bos);
+//			os.writeObject(worker_on_server);
+//			os.close();
+//
+//			String serialized_worker = bos.toString();
+//
+//			ByteArrayInputStream bis = new ByteArrayInputStream(
+//					serialized_worker.getBytes());
+//			ObjectInputStream ois = new ObjectInputStream(bis);
+//			worker_on_client = (Worker)ois.readObject();
+//			ois.close();
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+
+		// Let's pretend that the serialization/deserialization worked
+		worker_update = worker_on_server;
+		// End pretend serialization/deserialization
+		
+		if(null != worker_update)
+			client.processUpdateEntity(worker_update);
+		
+		// END TEMPORARY CODE
 	}
 
 	@Override
