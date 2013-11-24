@@ -107,17 +107,19 @@ public class AtlantisClient {
 	
 	public void processUpdateEntity(AtlantisEntity update_entity) {
 		if (update_entity instanceof Worker) {
+			synchronized (workers) {
+				Worker updated_entity = workers
+						.get(update_entity.getIdentity());
 
-			Worker updated_entity = workers.get(update_entity.getIdentity());
+				if (null == updated_entity)
+					updated_entity = new Worker(update_entity.getX(),
+							update_entity.getY());
 
-			if (null == updated_entity)
-				updated_entity = new Worker(update_entity.getX(),
-						update_entity.getY());
+				updated_entity.update(update_entity);
 
-			updated_entity.update(update_entity);
-
-			workers.put(new Long(updated_entity.getIdentity()),
-					(Worker) updated_entity);
+				workers.put(new Long(update_entity.getIdentity()),
+						(Worker) updated_entity);
+			}
 		}
 
 		// TODO: update of other entity types

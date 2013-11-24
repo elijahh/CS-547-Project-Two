@@ -23,8 +23,15 @@ public class Worker extends GroundEntity {
 	private static final String MOVE_DL_ANIMATION_FILE = "atlantis/resource/worker_dl_move.png";
 	private static final String MOVE_DR_ANIMATION_FILE = "atlantis/resource/worker_dr_move.png";
 	
+	private static final float MAX_VELOCITY = 0.10f;       /* pixels/mS */
+	
 	public Worker(float x, float y) {
 		super(x, y);
+	}
+	
+	public Worker(float x, float y, Vector move_direction) {
+		super(x,y);
+		startMovement(move_direction);
 	}
 	
 	static {
@@ -45,6 +52,11 @@ public class Worker extends GroundEntity {
 //		ResourceManager.loadImage(MOVE_DR_ANIMATION_FILE);
 //		ResourceManager.loadImage(MOVE_UL_ANIMATION_FILE);
 //		ResourceManager.loadImage(MOVE_UR_ANIMATION_FILE);
+	}
+	
+	public void startMovement(Vector direction) {
+		velocity = new Vector(direction.scale(MAX_VELOCITY));
+		movement_direction = direction;
 	}
 	
 	public final String getMovementAnimationFilename(final Vector direction) {

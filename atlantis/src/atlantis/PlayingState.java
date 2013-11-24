@@ -10,6 +10,8 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import jig.Vector;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -125,9 +127,9 @@ public class PlayingState extends BasicGameState{
 	}
 
 	// TEMPORARY FOR ISSUE 11
-	private Worker worker_on_server = new Worker(400, 300);
+	private Worker worker_on_server = 
+			new Worker(400, 300, new Vector(1, 0));
 	private int worker_clock;
-	private boolean moving_left;
 	
 	@Override
 	public void update(GameContainer container, StateBasedGame game,
@@ -139,8 +141,8 @@ public class PlayingState extends BasicGameState{
 //		if(StartMenuState.GAME_TYPE.equals("client"))
 //			client.tellServer(container);
 
-		// TEMPORARY FOR ISSUE 11
-		// SIMULATE SERIALIZATION/DESERIALIZATION
+		// TEMPORARY FOR WORKING OUT MOVEMENT OF WORKER AND CODE FOR
+		// SERIALIZATION/DESERIALIZATION
 		
 		// H/T: http://stackoverflow.com/questions/134492/
 		//		how-to-serialize-an-object-into-a-string
@@ -153,14 +155,19 @@ public class PlayingState extends BasicGameState{
 		if(worker_clock > 1000) {
 			worker_clock = 0;
 			
-			
+			Vector move_dir =  worker_on_server.getCurrentMovementDirection();
+			move_dir = new Vector(move_dir.negate());
+			worker_on_server.startMovement(move_dir);
 		}
+		
+		worker_on_server.update(delta);
 		
 		AtlantisEntity worker_update = null;
 		
-		// Deserialization doesn't work right now. We shouldn't move
-		// forward until this bit of code executes. Consider serializing
-		// and transmitting an "updater" to AtlantisEntity. GSN
+// 		Deserialization doesn't work right now. We shouldn't move
+// 		forward until this bit of code executes. Consider serializing
+// 		and transmitting an "updater" to AtlantisEntity and making
+// 		adjustments to the client-side update arguments. 
 		
 //		try {
 //			ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -180,9 +187,13 @@ public class PlayingState extends BasicGameState{
 //			e.printStackTrace();
 //		}
 
-		// Let's pretend that the serialization/deserialization worked
+// 		Instead, let's pretend that the serialization/deserialization worked
+//		and that worker_update originated from a transmission of the
+//		worker_on_server object across the network.
+		
 		worker_update = worker_on_server;
-		// End pretend serialization/deserialization
+		
+// 		End pretend serialization/deserialization
 		
 		if(null != worker_update)
 			client.processUpdateEntity(worker_update);
