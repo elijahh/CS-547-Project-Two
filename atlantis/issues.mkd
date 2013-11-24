@@ -5,12 +5,12 @@ Open Issues
 -----------
 - **[1]** Create basic game skeleton
 - **[9]** Format the objects need to be passed between client and server 
-- **[11]** Add enough functionality to GameStatus to move one character around screen with position
-           updates retrieved from Woker list provided by GameStatus. At this point, no network
-           interaction will take place and GameStatus should calculate positions for client.
-- **[12]** Repeat [9] Receiving movement updates from dummy server TestServer.tcl located in 
-           atlantis.scripts directory. GameStatus should retrieve position updates across
-           network connection using contrived protocol to test timing.
+- **[12]** Repeat [11] Receiving movement updates from AtlantisServer. AtlantisClient should 
+		   retrieve position updates across network connection using serialization protocol to test timing.
+		   AtlantisServer will provide movements for single entity. 
+- **[13]** Interface ground unit map to Tiled data. At this point, AtlantisServer should direct
+		   single entity from [11] and [12] to locations picked at random, and entity should move
+		   as requested, avoiding obstacles. 
 
 Resolved Issues
 ---------------
@@ -22,6 +22,10 @@ Resolved Issues
 - **[8]** Basic networking with client and server model. Server sends map name to client.
 - **[10]** Create basic AtlantisEntity and Worker classes. Make one worker appear on screen when
            client starts.
+- **[11]** Add enough functionality to AtlantisClient to move one character around screen with position
+           updates retrieved from Woker list provided by AtlantisClient. At this point, no network
+           interaction will take place and PlayingState should set movement for client. The object
+           model for the client->server updates is preliminary at this point
 
 Need to Revisit
 ---------------
