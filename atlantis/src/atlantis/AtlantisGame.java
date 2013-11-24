@@ -69,13 +69,6 @@ public class AtlantisGame extends StateBasedGame {
 		cursor = ResourceManager.getImage(CURSOR);
 		container.setMouseCursor(cursor, 0, 0);
 	}	
-
-	/* -------------------------------------------------------------------- */
-	
-	protected static GameStatus game_status = new GameStatus();
-	public static GameStatus getGameStatus() { return game_status; };
-	
-	/* -------------------------------------------------------------------- */
 	
 	public static void main(String[] args) {
 		AppGameContainer app;

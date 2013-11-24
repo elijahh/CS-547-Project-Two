@@ -14,12 +14,19 @@ import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 
+import atlantis.AtlantisEntity;
+import atlantis.Worker;
 import atlantis.StartMenuState;
 import atlantis.networking.AtlantisServer.ClientListener;
 
@@ -96,4 +103,38 @@ public class AtlantisClient {
 		}
 	}
 	
+	/* -------------------------------------------------------------------- */
+	
+	public void processUpdateEntity(AtlantisEntity update_entity) {
+		if (update_entity instanceof Worker) {
+			synchronized (workers) {
+				Worker updated_entity = workers
+						.get(update_entity.getIdentity());
+
+				if (null == updated_entity)
+					updated_entity = new Worker(update_entity.getX(),
+							update_entity.getY());
+
+				updated_entity.update(update_entity);
+
+				workers.put(new Long(update_entity.getIdentity()),
+						(Worker) updated_entity);
+			}
+		}
+
+		// TODO: update of other entity types
+	}
+	
+	Map<Long, Worker> workers = new HashMap<Long, Worker>();
+	
+	public List<Worker> getWorkers() {
+		
+		List<Worker> worker_list = new ArrayList<Worker>();
+		
+		synchronized(workers) { 
+			 worker_list.addAll(workers.values());
+		}
+		
+		return Collections.unmodifiableList(worker_list);
+	}
 }

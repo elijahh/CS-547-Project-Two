@@ -1,10 +1,16 @@
 package atlantis;
 
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import jig.Vector;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -18,7 +24,6 @@ import atlantis.networking.AtlantisServer;
 import atlantis.networking.CommandLockStep;
 import atlantis.networking.ResultLockStep;
 import atlantis.networking.SimulationResult;
-
 
 public class PlayingState extends BasicGameState{
 
@@ -99,9 +104,10 @@ public class PlayingState extends BasicGameState{
 		
 		map.render(0, 0);
 
-		GameStatus status = AtlantisGame.getGameStatus();
-		Queue<Worker> workers = new PriorityQueue<Worker>(status.getWorkers());
-		for(Worker w : workers) w.render(g); 
+		Queue<Worker> workers = 
+				new PriorityQueue<Worker>(client.getWorkers());
+		for (Worker w : workers)
+			w.render(g); 
 
 		overlay.render(container, game, g);
 
@@ -120,17 +126,79 @@ public class PlayingState extends BasicGameState{
 		// TODO
 	}
 
+	// TEMPORARY FOR ISSUE 11
+	private Worker worker_on_server = 
+			new Worker(400, 300, new Vector(1, 0));
+	private int worker_clock;
+	
 	@Override
 	public void update(GameContainer container, StateBasedGame game,
 			int delta) throws SlickException {
-
+		
 //		if(StartMenuState.GAME_TYPE.equals("server"))
 //			server.tellClient(container);
 //		
 //		if(StartMenuState.GAME_TYPE.equals("client"))
 //			client.tellServer(container);
 
-		AtlantisGame.getGameStatus().update(delta);
+		// TEMPORARY FOR WORKING OUT MOVEMENT OF WORKER AND CODE FOR
+		// SERIALIZATION/DESERIALIZATION
+		
+		// H/T: http://stackoverflow.com/questions/134492/
+		//		how-to-serialize-an-object-into-a-string
+		
+		// Make the worker move, serialize, deserialize, and update
+		// into the client's entity list.
+		
+		worker_clock += delta;
+		
+		if(worker_clock > 1000) {
+			worker_clock = 0;
+			
+			Vector move_dir =  worker_on_server.getCurrentMovementDirection();
+			move_dir = new Vector(move_dir.negate());
+			worker_on_server.startMovement(move_dir);
+		}
+		
+		worker_on_server.update(delta);
+		
+		AtlantisEntity worker_update = null;
+		
+// 		Deserialization doesn't work right now. We shouldn't move
+// 		forward until this bit of code executes. Consider serializing
+// 		and transmitting an "updater" to AtlantisEntity and making
+// 		adjustments to the client-side update arguments. 
+		
+//		try {
+//			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//			ObjectOutputStream os = new ObjectOutputStream(bos);
+//			os.writeObject(worker_on_server);
+//			os.close();
+//
+//			String serialized_worker = bos.toString();
+//
+//			ByteArrayInputStream bis = new ByteArrayInputStream(
+//					serialized_worker.getBytes());
+//			ObjectInputStream ois = new ObjectInputStream(bis);
+//			worker_on_client = (Worker)ois.readObject();
+//			ois.close();
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+
+// 		Instead, let's pretend that the serialization/deserialization worked
+//		and that worker_update originated from a transmission of the
+//		worker_on_server object across the network.
+		
+		worker_update = worker_on_server;
+		
+// 		End pretend serialization/deserialization
+		
+		if(null != worker_update)
+			client.processUpdateEntity(worker_update);
+		
+		// END TEMPORARY CODE
 	}
 
 	@Override

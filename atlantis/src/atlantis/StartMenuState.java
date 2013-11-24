@@ -63,17 +63,6 @@ public class StartMenuState extends BasicGameState {
 				 * things moving.  
 				 */
 				
-				GameStatus game_status = AtlantisGame.getGameStatus();
-				
-				try {
-					if (game_status.connect(address)) {
-						while (!game_status.connected())
-							Thread.sleep(100);
-					}
-				} catch (Exception e) {
-					System.err.println(e);
-				}
-				
 				game.enterState(AtlantisGame.PLAYING);
 
 				ADDRESS = serverAddr.getText();

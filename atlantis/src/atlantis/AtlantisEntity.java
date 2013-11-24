@@ -1,5 +1,6 @@
 package atlantis;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -14,14 +15,12 @@ import org.newdawn.slick.Image;
 import jig.Entity;
 import jig.ResourceManager;
 import jig.Vector;
-
 import dijkstra.engine.DijkstraAlgorithm;
-
 import dijkstra.model.Vertex;
 
-abstract class AtlantisEntity extends Entity implements
-		Comparable<AtlantisEntity> {
-	
+public abstract class AtlantisEntity extends Entity implements
+		Comparable<AtlantisEntity>, Serializable {
+		
 	protected static final Vector DOWN_UNIT_VECTOR = new Vector(0, 1);
 	protected static final Vector DOWN_RIGHT_UNIT_VECTOR = new Vector(1, 1);
 	protected static final Vector DOWN_LEFT_UNIT_VECTOR = new Vector(-1, 1);			
@@ -43,6 +42,10 @@ abstract class AtlantisEntity extends Entity implements
 	protected Vector velocity;
 	protected static DijkstraAlgorithm dijkstra;
 	
+	protected Vector face_direction = STOPPED_VECTOR;
+	protected Vector movement_direction = STOPPED_VECTOR;
+	protected Vector movement_last_direction = STOPPED_VECTOR;
+	
 	@Override
 	public int compareTo(final AtlantisEntity other) {
 		return identity.compareTo(other.identity);
@@ -50,7 +53,6 @@ abstract class AtlantisEntity extends Entity implements
 	
 	public AtlantisEntity(final float x, final float y) {
 		super(x, y);
-		velocity = STOPPED_VECTOR;
 		identity = random_generator.nextLong();
 	}
 	
@@ -61,14 +63,6 @@ abstract class AtlantisEntity extends Entity implements
 	protected boolean homing = false;
 	
 	public void activateHoming() { homing = true; }
-	
-	public void update(final int delta) {
-		translate(velocity.scale(delta));
-	}
-	
-	public void update(final AtlantisEntity other) {
-		
-	}
 	
 	protected static float movement_min_x = -Float.MAX_VALUE; 
 	protected static float movement_max_x = Float.MAX_VALUE;
@@ -234,27 +228,91 @@ abstract class AtlantisEntity extends Entity implements
 		
 		return movement_direction;
 	}
+	
+	Vector getCurrentMovementDirection() {
+		return new Vector(this.velocity.unit());
+	}
 
 	/* -------------------------------------------------------------------- */
-	
-	protected Vector face_direction = STOPPED_VECTOR;
-	protected Vector movement_last_direction = STOPPED_VECTOR;
 
-	abstract String getMovementAnimationFilename(Vector movement_direction);
+	/* Server-side processing */
+
+	public void update(final int delta) {
+		translate(velocity.scale(delta));
+	}
+	
+	abstract void startMovement(Vector direction);
+
+	/* -------------------------------------------------------------------- */
+
+	/* Client-side processing */
+	
+	private static final int ANIMATION_FRAMES = 2;
+	private static final int ANIMATION_FRAME_DURATION = 10; /* mS */
+	
+	private static final int ANIMATION_FRAME_WIDTH = 48; /* pixels */
+	private static final int ANIMATION_FRAME_HEIGHT = 48; /* pixels */
+
+	abstract String getMovementAnimationFilename(Vector move_direction);
 	abstract String getStillImageFilename(Vector face_direction);
+	
+	public void update(AtlantisEntity update_entity) {
+		setX(update_entity.getX());
+		setY(update_entity.getY());
+		
+		movement_direction = update_entity.movement_direction;
+		velocity           = update_entity.velocity;
+		
+		// TODO - Finish
+	}
+	
+	private Animation movement_animation = null;
+	private Image still_image = null;
 		
 	@Override
 	public void render(final Graphics g) {
+
+		if(false == movement_direction.equals(STOPPED_VECTOR)) {
+			removeImage(still_image);
+			still_image = null;
+						
+			if ((null == movement_animation)
+					|| (false == movement_direction
+							.equals(movement_last_direction))) {				
+				String animation_filename = getMovementAnimationFilename(movement_direction);
+				
+				removeAnimation(movement_animation);
+				
+				movement_animation = new Animation(
+						ResourceManager.getSpriteSheet(animation_filename,
+								ANIMATION_FRAME_WIDTH, ANIMATION_FRAME_HEIGHT),
+						0, 0, ANIMATION_FRAMES - 1, 0, true,
+						ANIMATION_FRAME_DURATION, true);
+				
+				addAnimation(movement_animation);
+			}
+			
+			face_direction = movement_direction;
+		}
 		
-		/* TEMPORARY FOR issue7 */
+		movement_last_direction = movement_direction;
+				
+		if(0 == velocity.length())
+		{
+			removeAnimation(movement_animation);
+			movement_animation = null;
+		}
 		
-		if(0 == this.getNumImages()) {
+		if ((null == movement_animation) && (null == still_image)) {
 			String graphic_filename = getStillImageFilename(face_direction);
 
-			Image still_image = ResourceManager.getImage(graphic_filename);
+			still_image = ResourceManager.getImage(graphic_filename);
 			
-			if (0 == this.getNumShapes()) 
+			if (0 == this.getNumShapes()) {
 				addImageWithBoundingBox(still_image);
+			} else {
+				addImage(still_image);
+			}
 		}
 		
 		super.render(g);
