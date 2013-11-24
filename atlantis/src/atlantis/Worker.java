@@ -1,5 +1,7 @@
 package atlantis;
 
+import org.newdawn.slick.Animation;
+
 import jig.ResourceManager;
 import jig.Vector;
 
@@ -25,13 +27,19 @@ public class Worker extends GroundEntity {
 	
 	private static final float MAX_VELOCITY = 0.10f;       /* pixels/mS */
 	
+	private static final int ANIMATION_FRAMES = 2;
+	private static final int ANIMATION_FRAME_DURATION = 10; /* mS */
+	
+	private static final int ANIMATION_FRAME_WIDTH = 48; /* pixels */
+	private static final int ANIMATION_FRAME_HEIGHT = 48; /* pixels */
+	
 	public Worker(float x, float y) {
 		super(x, y);
 	}
 	
 	public Worker(float x, float y, Vector move_direction) {
 		super(x,y);
-		startMovement(move_direction);
+		beginMovement(move_direction);
 	}
 	
 	static {
@@ -54,12 +62,12 @@ public class Worker extends GroundEntity {
 //		ResourceManager.loadImage(MOVE_UR_ANIMATION_FILE);
 	}
 	
-	public void startMovement(Vector direction) {
+	public void beginMovement(Vector direction) {
 		velocity = new Vector(direction.scale(MAX_VELOCITY));
 		movement_direction = direction;
 	}
 	
-	public final String getMovementAnimationFilename(final Vector direction) {
+	private final String getMovementAnimationFilename(final Vector direction) {
 		String animation_filename;
 
 		if (direction.equals(LEFT_UNIT_VECTOR)) {
@@ -81,6 +89,17 @@ public class Worker extends GroundEntity {
 		}
 
 		return animation_filename;
+	}
+	
+	public Animation getMovementAnimation(final Vector direction) {
+		String animation_filename = getMovementAnimationFilename(direction);
+		
+		Animation movement_animation = new Animation(
+				ResourceManager.getSpriteSheet(animation_filename,
+						ANIMATION_FRAME_WIDTH, ANIMATION_FRAME_HEIGHT), 0, 0,
+				ANIMATION_FRAMES - 1, 0, true, ANIMATION_FRAME_DURATION, true);
+		
+		return movement_animation;
 	}
 	
 	public final String getStillImageFilename(final Vector direction) {

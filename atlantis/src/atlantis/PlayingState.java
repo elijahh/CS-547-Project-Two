@@ -157,7 +157,7 @@ public class PlayingState extends BasicGameState{
 			
 			Vector move_dir =  worker_on_server.getCurrentMovementDirection();
 			move_dir = new Vector(move_dir.negate());
-			worker_on_server.startMovement(move_dir);
+			worker_on_server.beginMovement(move_dir);
 		}
 		
 		worker_on_server.update(delta);

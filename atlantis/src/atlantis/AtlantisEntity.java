@@ -56,6 +56,12 @@ public abstract class AtlantisEntity extends Entity implements
 		identity = random_generator.nextLong();
 	}
 	
+	public AtlantisEntity(final float x, final float y,
+			Vector movement_direction) {
+		this(x, y);
+		beginMovement(movement_direction);
+	}
+	
 	private Long identity;
 
 	public long getIdentity() { return identity; }
@@ -241,29 +247,23 @@ public abstract class AtlantisEntity extends Entity implements
 		translate(velocity.scale(delta));
 	}
 	
-	abstract void startMovement(Vector direction);
+	abstract void beginMovement(Vector direction);
 
 	/* -------------------------------------------------------------------- */
 
 	/* Client-side processing */
-	
-	private static final int ANIMATION_FRAMES = 2;
-	private static final int ANIMATION_FRAME_DURATION = 10; /* mS */
-	
-	private static final int ANIMATION_FRAME_WIDTH = 48; /* pixels */
-	private static final int ANIMATION_FRAME_HEIGHT = 48; /* pixels */
 
-	abstract String getMovementAnimationFilename(Vector move_direction);
+	abstract Animation getMovementAnimation(Vector move_direction);
 	abstract String getStillImageFilename(Vector face_direction);
 	
 	public void update(AtlantisEntity update_entity) {
-		setX(update_entity.getX());
-		setY(update_entity.getY());
+		this.setPosition(update_entity.getPosition());
 		
 		movement_direction = update_entity.movement_direction;
 		velocity           = update_entity.velocity;
 		
-		// TODO - Finish
+		// TODO - Finish with as many variables as necessary to accurately
+		// communicate entity status to client for rendering.
 	}
 	
 	private Animation movement_animation = null;
@@ -271,6 +271,8 @@ public abstract class AtlantisEntity extends Entity implements
 		
 	@Override
 	public void render(final Graphics g) {
+		
+		/* Entity is moving. Animate appropriately. */
 
 		if(false == movement_direction.equals(STOPPED_VECTOR)) {
 			removeImage(still_image);
@@ -278,17 +280,10 @@ public abstract class AtlantisEntity extends Entity implements
 						
 			if ((null == movement_animation)
 					|| (false == movement_direction
-							.equals(movement_last_direction))) {				
-				String animation_filename = getMovementAnimationFilename(movement_direction);
-				
+							.equals(movement_last_direction))) {
 				removeAnimation(movement_animation);
-				
-				movement_animation = new Animation(
-						ResourceManager.getSpriteSheet(animation_filename,
-								ANIMATION_FRAME_WIDTH, ANIMATION_FRAME_HEIGHT),
-						0, 0, ANIMATION_FRAMES - 1, 0, true,
-						ANIMATION_FRAME_DURATION, true);
-				
+				movement_animation = 
+						this.getMovementAnimation(movement_direction);
 				addAnimation(movement_animation);
 			}
 			
@@ -297,6 +292,8 @@ public abstract class AtlantisEntity extends Entity implements
 		
 		movement_last_direction = movement_direction;
 				
+		/* Entity standing still */
+		
 		if(0 == velocity.length())
 		{
 			removeAnimation(movement_animation);
