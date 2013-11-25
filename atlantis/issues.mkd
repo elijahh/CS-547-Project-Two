@@ -4,11 +4,12 @@
 Open Issues
 -----------
 - **[1]** Create basic game skeleton
-- **[9]** Format the objects need to be passed between client and server 
-- **[13]** Repeat [12] Receiving movement updates from AtlantisServer. AtlantisClient should 
+- **[9]** Format the objects need to be passed between client and server
+- **[13]** Updater deserialization not working on Mac in example in PlayingState. Fix ASAP! 
+- **[14]** Repeat [12] Receiving movement updates from AtlantisServer. AtlantisClient should 
 		   retrieve position updates across network connection using serialization protocol to test timing.
 		   AtlantisServer will provide movements for single entity. 
-- **[14]** Interface ground unit map to Tiled data. At this point, AtlantisServer should direct
+- **[15]** Interface ground unit map to Tiled data. At this point, AtlantisServer should direct
 		   single entity from [11] and [12] to locations picked at random, and entity should move
 		   as requested, avoiding obstacles. 
 
