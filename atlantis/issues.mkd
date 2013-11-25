@@ -8,6 +8,8 @@ Open Issues
 		   single entity from [11] and [12] to locations picked at random, and entity should move
 		   as requested, avoiding obstacles. 
 - **[16]** AtlantisServer will provide movements for single entity. 
+- **[17]** Make both player screens reflect server game status. Single entity for issues 11-16 should
+           appear to move on both screens.
 
 Resolved Issues 
 ---------------
