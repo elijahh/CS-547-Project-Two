@@ -179,7 +179,7 @@ public class PlayingState extends BasicGameState{
 			ResultLockStep step = client.incomingLockSteps.poll();
 			if(step.frameNum == currentFrame) {
 				SimulationResult result = step.frameResults.get(0);
-				System.out.println("Update received!");
+				// System.out.println("Update received!");
 				deserialized_updater = result.entity_updater;
 			}
 			break;
