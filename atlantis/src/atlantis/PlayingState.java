@@ -171,15 +171,15 @@ public class PlayingState extends BasicGameState{
 					worker_on_server.getUpdater();
 			server.sendUpdate(updater, currentFrame);
 						
-			try {
-				ByteArrayOutputStream bos = new ByteArrayOutputStream();
-				ObjectOutputStream os = new ObjectOutputStream(bos);
-				os.writeObject(updater);
-				os.close();
-				serialized_updater = bos.toByteArray();	
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+//			try {
+//				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//				ObjectOutputStream os = new ObjectOutputStream(bos);
+//				os.writeObject(updater);
+//				os.close();
+//				serialized_updater = bos.toByteArray();	
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
 		}
 		
 		// BOTH SIDES PROCESS THIS
