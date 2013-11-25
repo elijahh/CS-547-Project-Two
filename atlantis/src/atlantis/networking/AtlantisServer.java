@@ -23,6 +23,8 @@ import org.newdawn.slick.tiled.TiledMap;
 
 import atlantis.PlayingState;
 
+import atlantis.AtlantisEntity;
+
 /*
  * Implement LockStepProtocol. Receive commands from clients. Send results to clients.
  */
@@ -96,7 +98,25 @@ public class AtlantisServer extends Thread{
 				oos.close();
 				out.close();
 			}
-		} catch (IOException e){
+		} catch (IOException e) {
+			
+		}
+	}
+	
+	public void sendUpdate(AtlantisEntity.Updater updater, int frameNum) {
+		SimulationResult result = new SimulationResult();
+		result.setEntityUpdater(updater);
+		ResultLockStep step = new ResultLockStep(frameNum);
+		step.addResult(result);
+		try {
+			for(Socket clientSocket: socketList) {
+				OutputStream out = clientSocket.getOutputStream();
+				ObjectOutputStream oos = new ObjectOutputStream(out);
+				oos.writeObject(step);
+				oos.close();
+				out.close();
+			}
+		} catch (IOException e) {
 			
 		}
 	}

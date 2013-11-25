@@ -2,6 +2,7 @@ package atlantis.networking;
 
 import java.io.Serializable;
 
+import atlantis.AtlantisEntity;
 
 /*
  * Format of simulation results that host might send to clients
@@ -15,14 +16,21 @@ public class SimulationResult implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	public static final transient int MAP = 0;
+	public static final transient int ENTITY_UPDATER = 0;
 	
 	public int type;
-	public int frameNum;
+	
 	public String mapName;
+	
+	public AtlantisEntity.Updater entity_updater;
 	
 	public void setMap(String mapName) {
 		type = MAP;
 		this.mapName = mapName;
-		frameNum = 0;
+	}
+	
+	public void setEntityUpdater(AtlantisEntity.Updater updater) {
+		type = ENTITY_UPDATER;
+		this.entity_updater = updater;
 	}
 }
