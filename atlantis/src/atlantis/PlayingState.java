@@ -174,12 +174,12 @@ public class PlayingState extends BasicGameState{
 			os.writeObject(updater);
 			os.close();
 
-			String serialized_updater = bos.toString();
+			byte[] serialized_updater = bos.toByteArray();
 
 			ByteArrayInputStream bis = new ByteArrayInputStream(
-					serialized_updater.getBytes());
+					serialized_updater);
 			ObjectInputStream ois = new ObjectInputStream(bis);
-			deserialized_updater = (AtlantisEntity.Updater)ois.readObject();
+			deserialized_updater = (AtlantisEntity.Updater) ois.readObject();
 			ois.close();
 			
 		} catch (Exception e) {
