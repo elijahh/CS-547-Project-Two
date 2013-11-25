@@ -27,13 +27,18 @@ abstract class GroundEntity extends AtlantisEntity {
 	/* -------------------------------------------------------------------- */
 
 	/* Ground entities have to move according to the map. Populate from 
-	 * TiledMap data. */
+	 * TiledMap data. Initialize with an empty graph. */
+	
+	static { populateTerrainMap(null); }
 	
 	public static void populateTerrainMap(TiledMap map) {
 		List<Edge> map_edges = new ArrayList<Edge>();
 		List<Vertex> map_nodes = new ArrayList<Vertex>();
 
-		// TODO
+		if(null != map) {
+			
+			/* Process TiledMap into nodes/edges. */
+		}
 
 		Graph graph = new Graph(map_nodes, map_edges);
 		dijkstra = new DijkstraAlgorithm(graph);

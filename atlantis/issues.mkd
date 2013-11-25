@@ -4,11 +4,13 @@
 Open Issues
 -----------
 - **[1]** Create basic game skeleton
-- **[15]** Interface ground unit map to Tiled data. At this point, AtlantisServer should direct
+- **[15]** Restore GameStatus object to keep track of lists of units and updates. Move Worker-related
+           code from the bottom of AtlantisClient into the GameStatus object.
+- **[16]** Interface ground unit map to Tiled data. At this point, AtlantisServer should direct
 		   single entity from [11] - [14] to locations picked at random, and entity should move
 		   as requested, avoiding obstacles. 
-- **[16]** AtlantisServer will provide movements for single entity. 
-- **[17]** Make both player screens reflect server game status. Single entity for issues 11-16 should
+- **[17]** AtlantisServer will provide movements for single entity. 
+- **[18]** Make both player screens reflect server game status. Single entity for issues 11-16 should
            appear to move on both screens.
 
 Resolved Issues 
