@@ -170,19 +170,9 @@ public class PlayingState extends BasicGameState{
 			AtlantisEntity.Updater updater = 
 					worker_on_server.getUpdater();
 			server.sendUpdate(updater, currentFrame);
-						
-			try {
-				ByteArrayOutputStream bos = new ByteArrayOutputStream();
-				ObjectOutputStream os = new ObjectOutputStream(bos);
-				os.writeObject(updater);
-				os.close();
-				serialized_updater = bos.toByteArray();	
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
 		
-		// BOTH SIDES PROCESS THIS
+		// BOTH SIDES' CLIENTS PROCESS THIS
 		
  		while (client.incomingLockSteps.isEmpty()) {}
 		while (!client.incomingLockSteps.isEmpty()) {
@@ -194,16 +184,6 @@ public class PlayingState extends BasicGameState{
 			}
 			break;
 		}
-		
-//		try {
-//			ByteArrayInputStream bis = new ByteArrayInputStream(
-//					serialized_updater);
-//			ObjectInputStream ois = new ObjectInputStream(bis);
-//			deserialized_updater = (AtlantisEntity.Updater) ois.readObject();
-//			ois.close();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
 		 		
 		if(null != deserialized_updater)
 			client.processUpdateEntity(deserialized_updater);
