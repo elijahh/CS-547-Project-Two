@@ -81,6 +81,8 @@ public class PlayingState extends BasicGameState{
 			//TODO: This is test case, need to change map and map name
 			mapName = "atlantis/resource/densemap.tmx"; 		
 			server.sendMap(mapName, currentFrame);
+			
+			GroundEntity.populateTerrainMap(map);
 		}
 		
 		//client waiting for map info
@@ -180,7 +182,7 @@ public class PlayingState extends BasicGameState{
 			ResultLockStep step = client.incomingLockSteps.poll();
 			if(step.frameNum == currentFrame) {
 				SimulationResult result = step.frameResults.get(0);
-				System.out.println("Update received!");
+				// System.out.println("Update received!");
 				deserialized_updater = result.entity_updater;
 			}
 			break;
