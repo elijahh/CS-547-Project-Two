@@ -184,26 +184,26 @@ public class PlayingState extends BasicGameState{
 		
 		// BOTH SIDES PROCESS THIS
 		
-// 		while (client.incomingLockSteps.isEmpty()) {}
-//		while (!client.incomingLockSteps.isEmpty()) {
-//			ResultLockStep step = client.incomingLockSteps.poll();
-//			if(step.frameNum != 0) {
-//				SimulationResult result = step.frameResults.get(0);
-//				System.out.println("Update received!");
-//				deserialized_updater = result.entity_updater;
-//			}
-//			break;
-//		}
-		
-		try {
-			ByteArrayInputStream bis = new ByteArrayInputStream(
-					serialized_updater);
-			ObjectInputStream ois = new ObjectInputStream(bis);
-			deserialized_updater = (AtlantisEntity.Updater) ois.readObject();
-			ois.close();
-		} catch (Exception e) {
-			e.printStackTrace();
+ 		while (client.incomingLockSteps.isEmpty()) {}
+		while (!client.incomingLockSteps.isEmpty()) {
+			ResultLockStep step = client.incomingLockSteps.poll();
+			if(step.frameNum == currentFrame) {
+				SimulationResult result = step.frameResults.get(0);
+				System.out.println("Update received!");
+				deserialized_updater = result.entity_updater;
+			}
+			break;
 		}
+		
+//		try {
+//			ByteArrayInputStream bis = new ByteArrayInputStream(
+//					serialized_updater);
+//			ObjectInputStream ois = new ObjectInputStream(bis);
+//			deserialized_updater = (AtlantisEntity.Updater) ois.readObject();
+//			ois.close();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		 		
 		if(null != deserialized_updater)
 			client.processUpdateEntity(deserialized_updater);

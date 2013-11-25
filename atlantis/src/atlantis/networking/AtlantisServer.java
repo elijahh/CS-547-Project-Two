@@ -95,8 +95,8 @@ public class AtlantisServer extends Thread{
 				OutputStream out = clientSocket.getOutputStream();
 				ObjectOutputStream oos = new ObjectOutputStream(out);
 				oos.writeObject(step);
-				oos.close();
-				out.close();
+				//oos.close();
+				//out.close();
 			}
 		} catch (IOException e) {
 			
@@ -113,8 +113,8 @@ public class AtlantisServer extends Thread{
 				OutputStream out = clientSocket.getOutputStream();
 				ObjectOutputStream oos = new ObjectOutputStream(out);
 				oos.writeObject(step);
-				oos.close();
-				out.close();
+				//oos.close();
+				//out.close();
 			}
 		} catch (IOException e) {
 			
@@ -135,8 +135,8 @@ public class AtlantisServer extends Thread{
 				ObjectInputStream ois = new ObjectInputStream(in);
 				CommandLockStep commands = (CommandLockStep) ois.readObject();
 				incomingLockSteps.add(commands);
-				ois.close();
-				in.close();
+				//ois.close();
+				//in.close();
 				
 			} catch (IOException e) {
 				System.out.println("Exception caught when trying to listen on port "
