@@ -130,6 +130,7 @@ public class PlayingState extends BasicGameState{
 	private Worker worker_on_server = 
 			new Worker(400, 300, new Vector(1, 0));
 	private int worker_clock;
+	// TEMPORARY FOR ISSUE 11
 	
 	@Override
 	public void update(GameContainer container, StateBasedGame game,
@@ -141,6 +142,8 @@ public class PlayingState extends BasicGameState{
 //		if(StartMenuState.GAME_TYPE.equals("client"))
 //			client.tellServer(container);
 
+		/* ---------------------------------------------------------------- */
+		
 		// TEMPORARY FOR WORKING OUT MOVEMENT OF WORKER AND CODE FOR
 		// SERIALIZATION/DESERIALIZATION
 		
@@ -159,8 +162,6 @@ public class PlayingState extends BasicGameState{
 			move_dir = new Vector(move_dir.negate());
 			worker_on_server.beginMovement(move_dir);
 		}
-		
-		/* ---------------------------------------------------------------- */
 		
 		worker_on_server.update(delta);
 				
@@ -185,10 +186,11 @@ public class PlayingState extends BasicGameState{
 			e.printStackTrace();
 		}
 		
-		/* ---------------------------------------------------------------- */
-		
 		if(null != deserialized_updater)
-			client.processUpdateEntity(deserialized_updater);		
+			client.processUpdateEntity(deserialized_updater);
+		
+		/* ---------------------------------------------------------------- */
+				
 	}
 
 	@Override
