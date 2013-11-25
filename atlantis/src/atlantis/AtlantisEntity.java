@@ -251,7 +251,7 @@ public abstract class AtlantisEntity extends Entity implements
 	/* -------------------------------------------------------------------- */
 	
 	public static class Updater implements Serializable {
-	
+
 		long identity;
 		
 		Vector velocity;
@@ -281,10 +281,6 @@ public abstract class AtlantisEntity extends Entity implements
 		return new Updater(this);
 	}
 	
-	public static void dumpUpdater(Updater updater) {
-		System.out.println("Identity: " + updater.identity);
-	}
-	
 	/* -------------------------------------------------------------------- */
 
 	/* Client-side processing */
@@ -307,47 +303,46 @@ public abstract class AtlantisEntity extends Entity implements
 		
 	@Override
 	public void render(final Graphics g) {
-		
+
 		/* Entity is moving. Animate appropriately. */
 
-		if(false == movement_direction.equals(STOPPED_VECTOR)) {
+		if (false == movement_direction.equals(STOPPED_VECTOR)) {
 			removeImage(still_image);
 			still_image = null;
-						
+
 			if ((null == movement_animation)
 					|| (false == movement_direction
 							.equals(movement_last_direction))) {
 				removeAnimation(movement_animation);
-				movement_animation = 
-						this.getMovementAnimation(movement_direction);
+				movement_animation = this
+						.getMovementAnimation(movement_direction);
 				addAnimation(movement_animation);
 			}
-			
+
 			face_direction = movement_direction;
 		}
-		
+
 		movement_last_direction = movement_direction;
-				
+
 		/* Entity standing still */
-		
-		if(0 == velocity.length())
-		{
+
+		if (0 == velocity.length()) {
 			removeAnimation(movement_animation);
 			movement_animation = null;
 		}
-		
+
 		if ((null == movement_animation) && (null == still_image)) {
 			String graphic_filename = getStillImageFilename(face_direction);
 
 			still_image = ResourceManager.getImage(graphic_filename);
-			
+
 			if (0 == this.getNumShapes()) {
 				addImageWithBoundingBox(still_image);
 			} else {
 				addImage(still_image);
 			}
 		}
-		
+
 		super.render(g);
 	}
 }

@@ -1,5 +1,7 @@
-package atlantis;
+// H/T: http://stackoverflow.com/questions/134492/
+// 				how-to-serialize-an-object-into-a-string
 
+package atlantis;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -88,14 +90,12 @@ public class PlayingState extends BasicGameState{
 			ResultLockStep step = client.incomingLockSteps.poll();
 			if(step.frameNum == 0) {
 				SimulationResult result = step.frameResults.get(0);
-				System.out.println("Map reveived!");
+				System.out.println("Map received!");
 				mapName = result.mapName;
 				map = new TiledMap(mapName);
 			}
 			break;
 		}
-		
-		
 	}
 	
 	@Override
@@ -126,71 +126,89 @@ public class PlayingState extends BasicGameState{
 		// TODO
 	}
 
-	// TEMPORARY FOR ISSUE 11
+	// TEMPORARY FOR DEVELOPMENT
 	private Worker worker_on_server = 
 			new Worker(400, 300, new Vector(1, 0));
 	private int worker_clock;
-	// TEMPORARY FOR ISSUE 11
+	// TEMPORARY FOR DEVELOPMENT
 	
 	@Override
 	public void update(GameContainer container, StateBasedGame game,
 			int delta) throws SlickException {
+		 currentFrame += 1;
 		
-//		if(StartMenuState.GAME_TYPE.equals("server"))
-//			server.tellClient(container);
+//		 if(StartMenuState.GAME_TYPE.equals("server"))
+//		 server.tellClient(container);
 //		
-//		if(StartMenuState.GAME_TYPE.equals("client"))
-//			client.tellServer(container);
+//		 if(StartMenuState.GAME_TYPE.equals("client"))
+//		 client.tellServer(container);
 
 		/* ---------------------------------------------------------------- */
-		
+	
 		// TEMPORARY FOR WORKING OUT MOVEMENT OF WORKER AND CODE FOR
 		// SERIALIZATION/DESERIALIZATION
-		
-		// H/T: http://stackoverflow.com/questions/134492/
-		//		how-to-serialize-an-object-into-a-string
-		
-		// Make the worker move, serialize, deserialize, and update
-		// into the client's entity list.
-		
-		worker_clock += delta;
-		
-		if(worker_clock > 1000) {
-			worker_clock = 0;
+		 
+		byte[] serialized_updater = null;
+		AtlantisEntity.Updater deserialized_updater = null;
+
+		if (StartMenuState.GAME_TYPE.equals("server")) {
+
+			// THE SERVER SIDE OF THE PROCESSING
 			
-			Vector move_dir =  worker_on_server.getMovementDirection();
-			move_dir = new Vector(move_dir.negate());
-			worker_on_server.beginMovement(move_dir);
+			worker_clock += delta;
+
+			if (worker_clock > 1000) {
+				worker_clock = 0;
+
+				Vector move_dir = worker_on_server.getMovementDirection();
+				move_dir = new Vector(move_dir.negate());
+				worker_on_server.beginMovement(move_dir);
+			}
+
+			worker_on_server.update(delta);
+			
+			AtlantisEntity.Updater updater = 
+					worker_on_server.getUpdater();
+			server.sendUpdate(updater, currentFrame);
+						
+			try {
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				ObjectOutputStream os = new ObjectOutputStream(bos);
+				os.writeObject(updater);
+				os.close();
+				serialized_updater = bos.toByteArray();	
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
-		worker_on_server.update(delta);
-				
-		AtlantisEntity.Updater updater = worker_on_server.getUpdater();
-		AtlantisEntity.Updater deserialized_updater = null;
+		// BOTH SIDES PROCESS THIS
+		
+// 		while (client.incomingLockSteps.isEmpty()) {}
+//		while (!client.incomingLockSteps.isEmpty()) {
+//			ResultLockStep step = client.incomingLockSteps.poll();
+//			if(step.frameNum != 0) {
+//				SimulationResult result = step.frameResults.get(0);
+//				System.out.println("Update received!");
+//				deserialized_updater = result.entity_updater;
+//			}
+//			break;
+//		}
 		
 		try {
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			ObjectOutputStream os = new ObjectOutputStream(bos);
-			os.writeObject(updater);
-			os.close();
-
-			byte[] serialized_updater = bos.toByteArray();
-
 			ByteArrayInputStream bis = new ByteArrayInputStream(
 					serialized_updater);
 			ObjectInputStream ois = new ObjectInputStream(bis);
 			deserialized_updater = (AtlantisEntity.Updater) ois.readObject();
 			ois.close();
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+		 		
 		if(null != deserialized_updater)
 			client.processUpdateEntity(deserialized_updater);
 		
-		/* ---------------------------------------------------------------- */
-				
+		// END TEMPORARY SECTION
 	}
 
 	@Override
