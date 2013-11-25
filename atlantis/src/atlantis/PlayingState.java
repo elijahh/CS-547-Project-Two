@@ -155,50 +155,40 @@ public class PlayingState extends BasicGameState{
 		if(worker_clock > 1000) {
 			worker_clock = 0;
 			
-			Vector move_dir =  worker_on_server.getCurrentMovementDirection();
+			Vector move_dir =  worker_on_server.getMovementDirection();
 			move_dir = new Vector(move_dir.negate());
 			worker_on_server.beginMovement(move_dir);
 		}
 		
+		/* ---------------------------------------------------------------- */
+		
 		worker_on_server.update(delta);
+				
+		AtlantisEntity.Updater updater = worker_on_server.getUpdater();
+		AtlantisEntity.Updater deserialized_updater = null;
 		
-		AtlantisEntity worker_update = null;
-		
-// 		Deserialization doesn't work right now. We shouldn't move
-// 		forward until this bit of code executes. Consider serializing
-// 		and transmitting an "updater" to AtlantisEntity and making
-// 		adjustments to the client-side update arguments. 
-		
-//		try {
-//			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//			ObjectOutputStream os = new ObjectOutputStream(bos);
-//			os.writeObject(worker_on_server);
-//			os.close();
-//
-//			String serialized_worker = bos.toString();
-//
-//			ByteArrayInputStream bis = new ByteArrayInputStream(
-//					serialized_worker.getBytes());
-//			ObjectInputStream ois = new ObjectInputStream(bis);
-//			worker_on_client = (Worker)ois.readObject();
-//			ois.close();
-//			
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		try {
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			ObjectOutputStream os = new ObjectOutputStream(bos);
+			os.writeObject(updater);
+			os.close();
 
-// 		Instead, let's pretend that the serialization/deserialization worked
-//		and that worker_update originated from a transmission of the
-//		worker_on_server object across the network.
+			String serialized_updater = bos.toString();
+
+			ByteArrayInputStream bis = new ByteArrayInputStream(
+					serialized_updater.getBytes());
+			ObjectInputStream ois = new ObjectInputStream(bis);
+			deserialized_updater = (AtlantisEntity.Updater)ois.readObject();
+			ois.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
-		worker_update = worker_on_server;
+		/* ---------------------------------------------------------------- */
 		
-// 		End pretend serialization/deserialization
-		
-		if(null != worker_update)
-			client.processUpdateEntity(worker_update);
-		
-		// END TEMPORARY CODE
+		if(null != deserialized_updater)
+			client.processUpdateEntity(deserialized_updater);		
 	}
 
 	@Override

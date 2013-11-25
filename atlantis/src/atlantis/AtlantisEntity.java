@@ -1,5 +1,7 @@
 package atlantis;
 
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,7 +21,7 @@ import dijkstra.engine.DijkstraAlgorithm;
 import dijkstra.model.Vertex;
 
 public abstract class AtlantisEntity extends Entity implements
-		Comparable<AtlantisEntity>, Serializable {
+		Comparable<AtlantisEntity> {
 		
 	protected static final Vector DOWN_UNIT_VECTOR = new Vector(0, 1);
 	protected static final Vector DOWN_RIGHT_UNIT_VECTOR = new Vector(1, 1);
@@ -51,15 +53,12 @@ public abstract class AtlantisEntity extends Entity implements
 		return identity.compareTo(other.identity);
 	}
 	
-	public AtlantisEntity(final float x, final float y) {
-		super(x, y);
-		identity = random_generator.nextLong();
-	}
-	
 	public AtlantisEntity(final float x, final float y,
 			Vector movement_direction) {
-		this(x, y);
+		super(x, y);
 		beginMovement(movement_direction);
+		identity = random_generator.nextLong();
+
 	}
 	
 	private Long identity;
@@ -235,7 +234,7 @@ public abstract class AtlantisEntity extends Entity implements
 		return movement_direction;
 	}
 	
-	Vector getCurrentMovementDirection() {
+	Vector getMovementDirection() {
 		return new Vector(this.velocity.unit());
 	}
 
@@ -250,17 +249,54 @@ public abstract class AtlantisEntity extends Entity implements
 	abstract void beginMovement(Vector direction);
 
 	/* -------------------------------------------------------------------- */
+	
+	public static class Updater implements Serializable {
+	
+		long identity;
+		
+		Vector velocity;
+		Vector position;
+		Vector movement_direction;
+		
+		Class entity_class;
+		
+		Updater(AtlantisEntity e) {
+			position = e.getPosition();
+
+			velocity = e.velocity;
+			identity = e.identity;
+			movement_direction = e.movement_direction;
+			
+			entity_class = e.getClass();
+		}
+		
+		private static final long serialVersionUID =
+				234098222823485285L;
+		
+		public long getIdentity() { return identity; }
+		public Class getEntityClass() { return entity_class; }
+	}
+	
+	public Updater getUpdater() {
+		return new Updater(this);
+	}
+	
+	public static void dumpUpdater(Updater updater) {
+		System.out.println("Identity: " + updater.identity);
+	}
+	
+	/* -------------------------------------------------------------------- */
 
 	/* Client-side processing */
 
 	abstract Animation getMovementAnimation(Vector move_direction);
 	abstract String getStillImageFilename(Vector face_direction);
 	
-	public void update(AtlantisEntity update_entity) {
-		this.setPosition(update_entity.getPosition());
+	public void update(AtlantisEntity.Updater updater) {
+		this.setPosition(updater.position);
 		
-		movement_direction = update_entity.movement_direction;
-		velocity           = update_entity.velocity;
+		movement_direction = updater.movement_direction;
+		velocity           = updater.velocity;
 		
 		// TODO - Finish with as many variables as necessary to accurately
 		// communicate entity status to client for rendering.

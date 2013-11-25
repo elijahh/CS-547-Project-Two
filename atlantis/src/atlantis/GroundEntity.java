@@ -3,16 +3,17 @@ package atlantis;
 import java.util.ArrayList;
 import java.util.List;
 
+import jig.Vector;
 import dijkstra.engine.DijkstraAlgorithm;
 import dijkstra.model.Edge;
 import dijkstra.model.Graph;
 import dijkstra.model.Vertex;
 
 abstract class GroundEntity extends AtlantisEntity {
-
-	public GroundEntity(float x, float y) {
-		super(x, y);
-		// TODO Auto-generated constructor stub
+	
+	public GroundEntity(final float x, final float y,
+			Vector movement_direction) {
+		super(x, y, movement_direction);
 	}
 	
 	@Override

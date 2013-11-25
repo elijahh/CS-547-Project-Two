@@ -33,13 +33,16 @@ public class Worker extends GroundEntity {
 	private static final int ANIMATION_FRAME_WIDTH = 48; /* pixels */
 	private static final int ANIMATION_FRAME_HEIGHT = 48; /* pixels */
 	
-	public Worker(float x, float y) {
-		super(x, y);
+	public Worker() {
+		this(0, 0);
 	}
-	
+
+	public Worker(float x, float y) {
+		this(x, y, STOPPED_VECTOR);
+	}
+
 	public Worker(float x, float y, Vector move_direction) {
-		super(x,y);
-		beginMovement(move_direction);
+		super(x, y, move_direction);
 	}
 	
 	static {
