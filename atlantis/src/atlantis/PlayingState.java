@@ -81,6 +81,8 @@ public class PlayingState extends BasicGameState{
 			//TODO: This is test case, need to change map and map name
 			mapName = "atlantis/resource/densemap.tmx"; 		
 			server.sendMap(mapName, currentFrame);
+			
+			GroundEntity.populateTerrainMap(map);
 		}
 		
 		//client waiting for map info
