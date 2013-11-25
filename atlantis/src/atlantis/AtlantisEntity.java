@@ -1,5 +1,7 @@
 package atlantis;
 
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,7 +21,7 @@ import dijkstra.engine.DijkstraAlgorithm;
 import dijkstra.model.Vertex;
 
 public abstract class AtlantisEntity extends Entity implements
-		Comparable<AtlantisEntity>, Serializable {
+		Comparable<AtlantisEntity> {
 		
 	protected static final Vector DOWN_UNIT_VECTOR = new Vector(0, 1);
 	protected static final Vector DOWN_RIGHT_UNIT_VECTOR = new Vector(1, 1);
@@ -51,9 +53,12 @@ public abstract class AtlantisEntity extends Entity implements
 		return identity.compareTo(other.identity);
 	}
 	
-	public AtlantisEntity(final float x, final float y) {
+	public AtlantisEntity(final float x, final float y,
+			Vector movement_direction) {
 		super(x, y);
+		beginMovement(movement_direction);
 		identity = random_generator.nextLong();
+
 	}
 	
 	private Long identity;
@@ -229,7 +234,7 @@ public abstract class AtlantisEntity extends Entity implements
 		return movement_direction;
 	}
 	
-	Vector getCurrentMovementDirection() {
+	Vector getMovementDirection() {
 		return new Vector(this.velocity.unit());
 	}
 
@@ -241,29 +246,60 @@ public abstract class AtlantisEntity extends Entity implements
 		translate(velocity.scale(delta));
 	}
 	
-	abstract void startMovement(Vector direction);
+	abstract void beginMovement(Vector direction);
 
+	/* -------------------------------------------------------------------- */
+	
+	public static class Updater implements Serializable {
+	
+		long identity;
+		
+		Vector velocity;
+		Vector position;
+		Vector movement_direction;
+		
+		Class entity_class;
+		
+		Updater(AtlantisEntity e) {
+			position = e.getPosition();
+
+			velocity = e.velocity;
+			identity = e.identity;
+			movement_direction = e.movement_direction;
+			
+			entity_class = e.getClass();
+		}
+		
+		private static final long serialVersionUID =
+				234098222823485285L;
+		
+		public long getIdentity() { return identity; }
+		public Class getEntityClass() { return entity_class; }
+	}
+	
+	public Updater getUpdater() {
+		return new Updater(this);
+	}
+	
+	public static void dumpUpdater(Updater updater) {
+		System.out.println("Identity: " + updater.identity);
+	}
+	
 	/* -------------------------------------------------------------------- */
 
 	/* Client-side processing */
-	
-	private static final int ANIMATION_FRAMES = 2;
-	private static final int ANIMATION_FRAME_DURATION = 10; /* mS */
-	
-	private static final int ANIMATION_FRAME_WIDTH = 48; /* pixels */
-	private static final int ANIMATION_FRAME_HEIGHT = 48; /* pixels */
 
-	abstract String getMovementAnimationFilename(Vector move_direction);
+	abstract Animation getMovementAnimation(Vector move_direction);
 	abstract String getStillImageFilename(Vector face_direction);
 	
-	public void update(AtlantisEntity update_entity) {
-		setX(update_entity.getX());
-		setY(update_entity.getY());
+	public void update(AtlantisEntity.Updater updater) {
+		this.setPosition(updater.position);
 		
-		movement_direction = update_entity.movement_direction;
-		velocity           = update_entity.velocity;
+		movement_direction = updater.movement_direction;
+		velocity           = updater.velocity;
 		
-		// TODO - Finish
+		// TODO - Finish with as many variables as necessary to accurately
+		// communicate entity status to client for rendering.
 	}
 	
 	private Animation movement_animation = null;
@@ -271,6 +307,8 @@ public abstract class AtlantisEntity extends Entity implements
 		
 	@Override
 	public void render(final Graphics g) {
+		
+		/* Entity is moving. Animate appropriately. */
 
 		if(false == movement_direction.equals(STOPPED_VECTOR)) {
 			removeImage(still_image);
@@ -278,17 +316,10 @@ public abstract class AtlantisEntity extends Entity implements
 						
 			if ((null == movement_animation)
 					|| (false == movement_direction
-							.equals(movement_last_direction))) {				
-				String animation_filename = getMovementAnimationFilename(movement_direction);
-				
+							.equals(movement_last_direction))) {
 				removeAnimation(movement_animation);
-				
-				movement_animation = new Animation(
-						ResourceManager.getSpriteSheet(animation_filename,
-								ANIMATION_FRAME_WIDTH, ANIMATION_FRAME_HEIGHT),
-						0, 0, ANIMATION_FRAMES - 1, 0, true,
-						ANIMATION_FRAME_DURATION, true);
-				
+				movement_animation = 
+						this.getMovementAnimation(movement_direction);
 				addAnimation(movement_animation);
 			}
 			
@@ -297,6 +328,8 @@ public abstract class AtlantisEntity extends Entity implements
 		
 		movement_last_direction = movement_direction;
 				
+		/* Entity standing still */
+		
 		if(0 == velocity.length())
 		{
 			removeAnimation(movement_animation);

@@ -105,24 +105,21 @@ public class AtlantisClient {
 	
 	/* -------------------------------------------------------------------- */
 	
-	public void processUpdateEntity(AtlantisEntity update_entity) {
-		if (update_entity instanceof Worker) {
-			synchronized (workers) {
-				Worker updated_entity = workers
-						.get(update_entity.getIdentity());
+	public void processUpdateEntity(AtlantisEntity.Updater updater) {
+		if(updater.getEntityClass() == Worker.class) {
+			Worker updated_entity = workers.get(updater.getIdentity());
 
-				if (null == updated_entity)
-					updated_entity = new Worker(update_entity.getX(),
-							update_entity.getY());
+			if (null == updated_entity)
+				updated_entity = new Worker();
 
-				updated_entity.update(update_entity);
+			updated_entity.update(updater);
 
-				workers.put(new Long(update_entity.getIdentity()),
-						(Worker) updated_entity);
-			}
+			workers.put(new Long(updater.getIdentity()),
+					(Worker) updated_entity);
+		} else {
+		
+			// TODO: update of other entity types
 		}
-
-		// TODO: update of other entity types
 	}
 	
 	Map<Long, Worker> workers = new HashMap<Long, Worker>();
