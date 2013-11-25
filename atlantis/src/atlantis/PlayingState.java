@@ -43,6 +43,8 @@ public class PlayingState extends BasicGameState{
 	public String command;
 	public String result;
 	
+	GameStatus status;
+	
 	TiledMap map;
 	String mapName;
 	int currentFrame;
@@ -51,6 +53,7 @@ public class PlayingState extends BasicGameState{
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
 
+		status = new GameStatus();
 	}
 	
 	@Override
@@ -107,7 +110,7 @@ public class PlayingState extends BasicGameState{
 		map.render(0, 0);
 
 		Queue<Worker> workers = 
-				new PriorityQueue<Worker>(client.getWorkers());
+				new PriorityQueue<Worker>(status.getWorkers());
 		for (Worker w : workers)
 			w.render(g); 
 
@@ -188,7 +191,7 @@ public class PlayingState extends BasicGameState{
 		}
 		 		
 		if(null != deserialized_updater)
-			client.processUpdateEntity(deserialized_updater);
+			status.processUpdateEntity(deserialized_updater);
 		
 		// END TEMPORARY SECTION
 	}
