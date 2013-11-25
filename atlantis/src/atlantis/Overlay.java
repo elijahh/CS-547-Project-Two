@@ -57,6 +57,11 @@ public class Overlay {
 				isDefaultCursorSet = false;
 			}
 			g.drawImage(targetAttack, x, y);
+		} else if (action == 0) {
+			if (!isDefaultCursorSet) {
+				container.setMouseCursor(AtlantisGame.cursor, 0, 0);
+				isDefaultCursorSet = true;
+			}
 		}
 		
 		g.drawImage(overlay, 0, 470);
@@ -83,6 +88,13 @@ public class Overlay {
 				
 				if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) action = 2;
 			}
+		} else {
+			if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON) && action !=0) action = 0;
 		}
+		
+		/* Hot keys */
+		if(input.isKeyPressed(Input.KEY_M) && action !=1) action = 1;
+		if(input.isKeyPressed(Input.KEY_A) && action !=2) action = 2;	
+		if(input.isKeyPressed(Input.KEY_ESCAPE) && action !=0) action = 0;
 	}
 }
