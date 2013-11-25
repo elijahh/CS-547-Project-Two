@@ -10,6 +10,7 @@ Open Issues
 - **[16]** AtlantisServer will provide movements for single entity. 
 - **[17]** Make both player screens reflect server game status. Single entity for issues 11-16 should
            appear to move on both screens.
+- **[19]** Capture user input and send to server.
 
 Resolved Issues 
 ---------------
@@ -31,6 +32,7 @@ Resolved Issues
 - **[13]** Updater deserialization not working on Mac in example in PlayingState. Fix ASAP! 
 - **[14]** Repeat [12] Receiving movement updates from AtlantisServer. AtlantisClient retrieve position updates 
 	       across network connection using serialization protocol to test timing.
+- **[18]** Add hot keys in overlay.
 		
 Need to Revisit
 ---------------
