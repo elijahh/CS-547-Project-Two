@@ -16,7 +16,7 @@ Open Issues
 		   clicks directing location movement, one worker per player.
 		   
 Milestone - End of day on 11/27. Anything above this point should be completed by then.
-         
+
 
 Resolved Issues 
 ---------------

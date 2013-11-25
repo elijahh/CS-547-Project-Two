@@ -144,8 +144,9 @@ public class PlayingState extends BasicGameState{
 //		
 //		 if(StartMenuState.GAME_TYPE.equals("client"))
 //		 client.tellServer(container);
-
+		 
 		status.update(container, delta);
+
 	}
 
 	@Override
