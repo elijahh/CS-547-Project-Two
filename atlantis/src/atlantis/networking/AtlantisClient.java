@@ -83,13 +83,14 @@ public class AtlantisClient {
 		
 		public void run() {
 			try {
-				InputStream in = socket.getInputStream();
-				ObjectInputStream ois = new ObjectInputStream(in);
-				ResultLockStep result = (ResultLockStep) ois.readObject();
-				incomingLockSteps.add(result);
-				ois.close();
-				in.close();
-				
+				while(true) {
+					InputStream in = socket.getInputStream();
+					ObjectInputStream ois = new ObjectInputStream(in);
+					ResultLockStep result = (ResultLockStep) ois.readObject();
+					incomingLockSteps.add(result);
+					//ois.close();
+					//in.close();
+				}	
 			} catch (IOException e) {
 				System.out.println("Exception caught when trying to listen on port "
 						+ AtlantisServer.PORT_NUMBER + " or listening for a connection");
