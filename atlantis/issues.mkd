@@ -8,7 +8,7 @@ Open Issues
 		   single entity from [11] and [12] to locations picked at random, and entity should move
 		   as requested, avoiding obstacles. 
 - **[14]** Repeat [12] Receiving movement updates from AtlantisServer. AtlantisClient retrieve position updates 
-	   across network connection using serialization protocol to test timing.
+	       across network connection using serialization protocol to test timing.
 - **[16]** AtlantisServer will provide movements for single entity. 
 
 Resolved Issues 
