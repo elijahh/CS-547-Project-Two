@@ -38,6 +38,7 @@ Resolved Issues
 - **[13]** Updater deserialization not working on Mac in example in PlayingState. Fix ASAP! 
 - **[14]** Repeat [12] Receiving movement updates from AtlantisServer. AtlantisClient retrieve position updates 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	       across network connection using serialization protocol to test timing.
 - **[15]** Restore GameStatus object to keep track of lists of units and updates. Move Worker-related
            code from the bottom of AtlantisClient into the GameStatus object.
@@ -48,6 +49,9 @@ Resolved Issues
 	       across network connection using serialization protocol to test timing.
 - **[18]** Add hot keys in overlay.
 >>>>>>> Add hot key in overlay.
+=======
+	       across network connection using serialization protocol to test timing.
+>>>>>>> Revert "Add hot key in overlay."
 		
 Need to Revisit
 ---------------
