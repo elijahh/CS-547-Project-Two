@@ -15,6 +15,7 @@ Open Issues
            Workers should avoid collision even if they are on the same team.
 - **[20]** Add player command interface to control entities. To start, entities should accept mouse 
 		   clicks directing location movement, one worker per player.
+- **[21]** Add actual entity art for "worker" class.
 		   
 Milestone - End of day on 11/27. Anything above this point should be completed by then.
          
