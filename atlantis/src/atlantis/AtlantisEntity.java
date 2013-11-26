@@ -5,8 +5,10 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -58,12 +60,17 @@ public abstract class AtlantisEntity extends Entity implements
 		super(x, y);
 		beginMovement(movement_direction);
 		identity = random_generator.nextLong();
-
 	}
 	
 	private Long identity;
 
 	public long getIdentity() { return identity; }
+	
+	public enum Team { RED, BLUE };
+	
+	private Team team = Team.RED;
+	
+	public void setTeam(Team team) { this.team = team; }
 	
 	protected boolean homing = false;
 	
@@ -241,9 +248,78 @@ public abstract class AtlantisEntity extends Entity implements
 	/* -------------------------------------------------------------------- */
 
 	/* Server-side processing */
+	
+	static Map<AtlantisEntity, Set<Integer>> entity_node_map;
+	static Map<Integer, Set<AtlantisEntity>> node_entity_map;
 
+	static {
+		entity_node_map = new HashMap<AtlantisEntity, Set<Integer>>();
+		node_entity_map = new HashMap<Integer, Set<AtlantisEntity>>();
+	}
+	
+	private void updateEntityNodeMaps() {
+		Set<Integer> node_list = getCurrentMapNodesSpanned();
+		Set<Integer> previous_node_list;
+		
+		/* entity/node */
+		
+		synchronized (entity_node_map) {
+			previous_node_list = entity_node_map.get(this);
+			entity_node_map.put(this, node_list);
+		}
+
+		/* node/entity - remove old position */
+		
+		if (null != previous_node_list) {
+			synchronized (node_entity_map) {
+				for (Integer n : previous_node_list) {
+					if (node_list.contains(n))
+						continue;
+
+					Set<AtlantisEntity> entity_list = node_entity_map.get(n);
+					
+					if(entity_list != null)
+						entity_list.remove(this);
+				}
+			}
+		}
+		
+		/* node/entity - add new position */
+		
+		synchronized(node_entity_map) {
+			for(Integer n : node_list) {
+				Set<AtlantisEntity> entity_list = node_entity_map.get(n);
+				
+				boolean need_put = false;
+				
+				if(null == entity_list) {
+					entity_list = new HashSet();
+					need_put = true;
+				}
+				
+				entity_list.add(this);
+				
+				if(need_put) node_entity_map.put(n, entity_list);
+			}
+		}
+	}
+	
 	public void update(final int delta) {
 		translate(velocity.scale(delta));
+		
+		/* We need to get one shape of the entity so that the server 
+		 * knows the size when testing for map nodes spanned.
+		 */
+		
+		if (0 == this.getNumShapes()) {
+			Image still_image = ResourceManager
+					.getImage(getStillImageFilename(STOPPED_VECTOR));
+			addImageWithBoundingBox(still_image);
+		}
+
+		/* Update the entity-node maps */
+		
+		updateEntityNodeMaps();
 	}
 	
 	abstract void beginMovement(Vector direction);
@@ -253,6 +329,8 @@ public abstract class AtlantisEntity extends Entity implements
 	public static class Updater implements Serializable {
 
 		long identity;
+		
+		Team team;
 		
 		Vector velocity;
 		Vector position;
@@ -293,6 +371,7 @@ public abstract class AtlantisEntity extends Entity implements
 		
 		movement_direction = updater.movement_direction;
 		velocity           = updater.velocity;
+		team               = updater.team;
 		
 		// TODO - Finish with as many variables as necessary to accurately
 		// communicate entity status to client for rendering.
@@ -324,7 +403,7 @@ public abstract class AtlantisEntity extends Entity implements
 
 		movement_last_direction = movement_direction;
 
-		/* Entity standing still */
+		/* Entity standing still. Replace animation with still image. */
 
 		if (0 == velocity.length()) {
 			removeAnimation(movement_animation);
