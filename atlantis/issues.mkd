@@ -17,7 +17,6 @@ Open Issues
 		   
 Milestone - End of day on 11/27. Anything above this point should be completed by then.
 
-
 Resolved Issues 
 ---------------
 - **[2]** Create a login screen so player can choose either "create new game" or "join a game" as a game state
