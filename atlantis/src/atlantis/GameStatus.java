@@ -30,17 +30,13 @@ public class GameStatus {
 	// TEMPORARY FOR DEVELOPMENT
 	
 	public void update(GameContainer container, int delta) {
-		// TEMPORARY FOR WORKING OUT MOVEMENT OF WORKER AND CODE FOR
-		// SERIALIZATION/DESERIALIZATION
-		 
-		AtlantisEntity.Updater deserialized_updater = null;
-		
 		int currentFrame = playing_state.getCurrentFrame();
 		AtlantisServer server = playing_state.getServer();
-
+		
 		if (null != server) {
 
-			// THE SERVER SIDE OF THE UPDATE PROCESSING
+			// TEMPORARY FOR WORKING OUT MOVEMENT OF WORKER AND CODE FOR
+			// SYNCHRONIZATION
 			
 			worker_clock += delta;
 
@@ -64,9 +60,9 @@ public class GameStatus {
 					worker_on_server.getUpdater();
 						
 			server.sendUpdate(updater, playing_state.getCurrentFrame());
+			
+			// END TEMPORARY SECTION
 		}
-		
-		// END TEMPORARY SECTION
 		
 		AtlantisClient client = playing_state.getClient();
 				
@@ -76,15 +72,14 @@ public class GameStatus {
 			if(step.frameNum == currentFrame) {
 				SimulationResult result = step.frameResults.get(0);
 				// System.out.println("Update received!");
-				deserialized_updater = result.entity_updater;
-				if(null != deserialized_updater)
-					processUpdateEntity(deserialized_updater);
+				AtlantisEntity.Updater updater = result.entity_updater;
+				if(null != updater) processUpdater(updater);
 			}
 			break;
 		}
 	}
 	
-	public void processUpdateEntity(AtlantisEntity.Updater updater) {
+	private void processUpdater(AtlantisEntity.Updater updater) {
 		if(updater.getEntityClass() == Worker.class) {			
 			synchronized (workers) {
 				Worker updated_entity = workers.get(updater.getIdentity());
