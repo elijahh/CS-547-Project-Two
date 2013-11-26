@@ -162,12 +162,18 @@ public class PlayingState extends BasicGameState{
 			
 			worker_clock += delta;
 
-			if (worker_clock > 1000) {
+			if (worker_clock > 200) {
 				worker_clock = 0;
 
-				Vector move_dir = worker_on_server.getMovementDirection();
-				move_dir = new Vector(move_dir.negate());
-				worker_on_server.beginMovement(move_dir);
+				//Vector move_dir = worker_on_server.getMovementDirection();
+				//move_dir = new Vector(move_dir.negate());
+				//worker_on_server.beginMovement(move_dir);
+				Vector[] directions = {new Vector(0, 1),
+						new Vector(0, -1),
+						new Vector(1, 0),
+						new Vector(-1, 0)
+				};
+				worker_on_server.beginMovement(directions[(int) (Math.random() * 4 % 4)]);
 			}
 
 			worker_on_server.update(delta);

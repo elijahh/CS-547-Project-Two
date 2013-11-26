@@ -3,13 +3,21 @@
 
 Open Issues
 -----------
-<<<<<<< HEAD
 - **[1]** Create basic game skeleton
-- **[16]** Interface ground unit map to Tiled data. At this point, AtlantisServer should direct
-		   single entity from [11] - [14] to locations picked at random, and entity should move
-		   as requested, avoiding obstacles. 
-- **[17]** AtlantisServer will provide movements for single entity. 
-- **[18]** Make both player screens reflect server game status. Single entity for issues 11-16 should
+
+- **[16]** Server->client will provide movement coordination for single entity 
+- **[17]** Interface ground unit map to Tiled data. At this point, AtlantisServer should direct
+		   single entity from [11] - [16] to locations picked at random, and entity should move
+- **[18]** Make both player screens reflect server game status. Single entity for issues [11] - [17] 
+		   should appear to move on both screens.
+- **[19]** Add second worker entity which moves randomly. Divide workers into red and blue teams. 
+           Workers should avoid collision even if they are on the same team.
+- **[20]** Add player command interface to control entities. To start, entities should accept mouse 
+		   clicks directing location movement, one worker per player.
+		   
+Milestone - End of day on 11/27. Anything above this point should be completed by then.
+         
+>>>>>>> branch 'develop' of https://github.com/gsnorton/CS-547-Project-Two.git
 
 Resolved Issues 
 ---------------
@@ -33,6 +41,7 @@ Resolved Issues
 	       across network connection using serialization protocol to test timing.
 - **[15]** Restore GameStatus object to keep track of lists of units and updates. Move Worker-related
            code from the bottom of AtlantisClient into the GameStatus object.
+- **[21]** Add actual entity art for "worker" class.
 		
 Need to Revisit
 ---------------
