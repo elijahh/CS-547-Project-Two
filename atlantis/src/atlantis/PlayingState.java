@@ -53,8 +53,12 @@ public class PlayingState extends BasicGameState{
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
 
-		status = new GameStatus();
+		status = new GameStatus(this);
 	}
+	
+	public AtlantisServer getServer() { return server; }
+	public AtlantisClient getClient() { return client; }
+	public int getCurrentFrame() { return currentFrame; }
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) throws SlickException {
@@ -69,7 +73,6 @@ public class PlayingState extends BasicGameState{
 			server = new AtlantisServer(PORT_NUMBER);
 			server.start(); 				
 		}
-		
 		
 		System.out.println("New client join");
 		client = new AtlantisClient(PORT_NUMBER);
@@ -130,12 +133,6 @@ public class PlayingState extends BasicGameState{
 		
 		// TODO
 	}
-
-	// TEMPORARY FOR DEVELOPMENT
-	private Worker worker_on_server = 
-			new Worker(400, 300, new Vector(1, 0));
-	private int worker_clock;
-	// TEMPORARY FOR DEVELOPMENT
 	
 	@Override
 	public void update(GameContainer container, StateBasedGame game,
@@ -148,58 +145,7 @@ public class PlayingState extends BasicGameState{
 //		 if(StartMenuState.GAME_TYPE.equals("client"))
 //		 client.tellServer(container);
 
-		/* ---------------------------------------------------------------- */
-	
-		// TEMPORARY FOR WORKING OUT MOVEMENT OF WORKER AND CODE FOR
-		// SERIALIZATION/DESERIALIZATION
-		 
-		byte[] serialized_updater = null;
-		AtlantisEntity.Updater deserialized_updater = null;
-
-		if (StartMenuState.GAME_TYPE.equals("server")) {
-
-			// THE SERVER SIDE OF THE PROCESSING
-			
-			worker_clock += delta;
-
-			if (worker_clock > 200) {
-				worker_clock = 0;
-
-				//Vector move_dir = worker_on_server.getMovementDirection();
-				//move_dir = new Vector(move_dir.negate());
-				//worker_on_server.beginMovement(move_dir);
-				Vector[] directions = {new Vector(0, 1),
-						new Vector(0, -1),
-						new Vector(1, 0),
-						new Vector(-1, 0)
-				};
-				worker_on_server.beginMovement(directions[(int) (Math.random() * 4 % 4)]);
-			}
-
-			worker_on_server.update(delta);
-			
-			AtlantisEntity.Updater updater = 
-					worker_on_server.getUpdater();
-			server.sendUpdate(updater, currentFrame);
-		}
-		
-		// BOTH SIDES' CLIENTS PROCESS THIS
-		
- 		while (client.incomingLockSteps.isEmpty()) {}
-		while (!client.incomingLockSteps.isEmpty()) {
-			ResultLockStep step = client.incomingLockSteps.poll();
-			if(step.frameNum == currentFrame) {
-				SimulationResult result = step.frameResults.get(0);
-				// System.out.println("Update received!");
-				deserialized_updater = result.entity_updater;
-			}
-			break;
-		}
-		 		
-		if(null != deserialized_updater)
-			status.processUpdateEntity(deserialized_updater);
-		
-		// END TEMPORARY SECTION
+		status.update(container, delta);
 	}
 
 	@Override

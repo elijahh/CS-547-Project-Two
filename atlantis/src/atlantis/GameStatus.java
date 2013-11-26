@@ -6,7 +6,83 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jig.Vector;
+
+import org.newdawn.slick.GameContainer;
+
+import atlantis.networking.AtlantisClient;
+import atlantis.networking.AtlantisServer;
+import atlantis.networking.ResultLockStep;
+import atlantis.networking.SimulationResult;
+
 public class GameStatus {
+	
+	private PlayingState playing_state;
+	
+	public GameStatus(PlayingState playing_state) {
+		this.playing_state = playing_state;
+	}
+	
+	// TEMPORARY FOR DEVELOPMENT
+	private Worker worker_on_server = 
+			new Worker(400, 300, new Vector(1, 0));
+	private int worker_clock;
+	// TEMPORARY FOR DEVELOPMENT
+	
+	public void update(GameContainer container, int delta) {
+		// TEMPORARY FOR WORKING OUT MOVEMENT OF WORKER AND CODE FOR
+		// SERIALIZATION/DESERIALIZATION
+		 
+		AtlantisEntity.Updater deserialized_updater = null;
+		
+		int currentFrame = playing_state.getCurrentFrame();
+		AtlantisServer server = playing_state.getServer();
+
+		if (null != server) {
+
+			// THE SERVER SIDE OF THE UPDATE PROCESSING
+			
+			worker_clock += delta;
+
+			if (worker_clock > 200) {
+				worker_clock = 0;
+
+				//Vector move_dir = worker_on_server.getMovementDirection();
+				//move_dir = new Vector(move_dir.negate());
+				//worker_on_server.beginMovement(move_dir);
+				Vector[] directions = {new Vector(0, 1),
+						new Vector(0, -1),
+						new Vector(1, 0),
+						new Vector(-1, 0)
+				};
+				worker_on_server.beginMovement(directions[(int) (Math.random() * 4 % 4)]);
+			}
+
+			worker_on_server.update(delta);
+			
+			AtlantisEntity.Updater updater = 
+					worker_on_server.getUpdater();
+						
+			server.sendUpdate(updater, playing_state.getCurrentFrame());
+		}
+		
+		// END TEMPORARY SECTION
+		
+		AtlantisClient client = playing_state.getClient();
+				
+ 		while (client.incomingLockSteps.isEmpty()) {}
+		while (!client.incomingLockSteps.isEmpty()) {
+			ResultLockStep step = client.incomingLockSteps.poll();
+			if(step.frameNum == currentFrame) {
+				SimulationResult result = step.frameResults.get(0);
+				// System.out.println("Update received!");
+				deserialized_updater = result.entity_updater;
+				if(null != deserialized_updater)
+					processUpdateEntity(deserialized_updater);
+			}
+			break;
+		}
+	}
 	
 	public void processUpdateEntity(AtlantisEntity.Updater updater) {
 		if(updater.getEntityClass() == Worker.class) {			
