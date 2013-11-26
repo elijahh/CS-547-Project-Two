@@ -5,7 +5,8 @@ Open Issues
 -----------
 - **[1]** Create basic game skeleton
 
-- **[16]** Server->client will provide movement coordination for single entity 
+- **[16]** Server->client will provide movement coordination for single entity. Status object on
+		   server will maintain state with updates to clients.
 - **[17]** Interface ground unit map to Tiled data. At this point, AtlantisServer should direct
 		   single entity from [11] - [16] to locations picked at random, and entity should move
 - **[18]** Make both player screens reflect server game status. Single entity for issues [11] - [17] 
