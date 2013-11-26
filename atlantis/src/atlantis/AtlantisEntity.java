@@ -267,7 +267,7 @@ public abstract class AtlantisEntity extends Entity implements
 			previous_node_list = entity_node_map.get(this);
 			entity_node_map.put(this, node_list);
 		}
-
+		
 		/* node/entity - remove old position */
 		
 		if (null != previous_node_list) {
@@ -301,7 +301,7 @@ public abstract class AtlantisEntity extends Entity implements
 				
 				if(need_put) node_entity_map.put(n, entity_list);
 			}
-		}
+		}		
 	}
 	
 	public void update(final int delta) {
