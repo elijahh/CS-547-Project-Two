@@ -16,8 +16,6 @@ Open Issues
 		   clicks directing location movement, one worker per player.
 		   
 Milestone - End of day on 11/27. Anything above this point should be completed by then.
-         
->>>>>>> branch 'develop' of https://github.com/gsnorton/CS-547-Project-Two.git
 
 Resolved Issues 
 ---------------
