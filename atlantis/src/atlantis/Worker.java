@@ -57,7 +57,6 @@ public class Worker extends GroundEntity {
 	
 	public void beginMovement(final Vector direction) {
 		velocity = new Vector(direction.scale(MAX_VELOCITY));
-		movement_direction = direction;
 	}
 	
 	private List<Worker> handling_collisions_with_these_workers = 

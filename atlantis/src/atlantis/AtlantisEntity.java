@@ -354,6 +354,12 @@ public abstract class AtlantisEntity extends Entity implements
 	}
 
 	abstract void beginMovement(Vector direction);
+	
+	int node_target = -1;
+	
+	void moveTo(Vector destination_position) {
+		
+	}
 
 	/* -------------------------------------------------------------------- */
 
