@@ -31,7 +31,11 @@ Milestone - End of day on 11/27. Anything above this point should be completed b
            overlay. Consider arrow buttons on each edge of the overlay.
 - **[29]** Modify worker addition so that new workers show up in empty spaces in top left (red) and
            bottom right corners of the virtual world.
-- **[30]** Add "base" GroundEntity to each side. Game is over when base health on one side reaches zero.
+- **[30]** Add "base" GroundEntity to each side. Game enters "game over" state when base health on one side 
+		   reaches zero. 
+
+Milestone - End of day on 12/2. 
+
 ...   
 
 Resolved Issues 
