@@ -1,9 +1,6 @@
 package atlantis;
 
-import java.io.InvalidObjectException;
-import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,6 +37,10 @@ public abstract class AtlantisEntity extends Entity implements
 
 	protected static final int MAP_GRID_Y = 12;
 	protected static final int MAP_Y_NODE_DIMENSION = 50; /* Pixels */
+	
+	protected static final int MAP_HORIZONTAL_MOVE_COST = 100; /* mS */
+	protected static final int MAP_VERTICAL_MOVE_COST   = 100; /* mS */
+	protected static final int MAP_DIAGONAL_MOVE_COST   = 141; /* mS */
 
 	private static Random random_generator = new Random();
 
@@ -189,6 +190,8 @@ public abstract class AtlantisEntity extends Entity implements
 		calculateAndAddNodeToSetIfSane(min_x, min_y, node_number_set);
 		calculateAndAddNodeToSetIfSane(max_x, min_y, node_number_set);
 
+		// System.out.println(min_x + ", " + min_y + " :" + max_x + ", " + max_y); 
+		
 		return node_number_set;
 	}
 
@@ -350,6 +353,34 @@ public abstract class AtlantisEntity extends Entity implements
 	}
 
 	abstract void beginMovement(Vector direction);
+	abstract boolean isHandlingCollision();
+	
+	private int target_node = -1;
+	
+	boolean moveTo(final Vector destination_position) {
+		boolean moving = false;
+
+		int destination_node = this.calculateMapNode(
+				destination_position.getX(), destination_position.getY());
+
+		if ((dijkstra != null) && (destination_node != target_node)) {
+			dijkstra.execute(destination_node);
+			target_node = destination_node;
+		}
+
+		if ((dijkstra != null)) {
+			List<Vertex> path = dijkstra.getPath(this.getCurrentMapNode());
+
+			Vector move_direction = this.getNextMovementFromPath(path);
+
+			if (move_direction != STOPPED_VECTOR) {
+				beginMovement(move_direction);
+				moving = true;
+			}
+		}
+
+		return moving;
+	}
 
 	/* -------------------------------------------------------------------- */
 
