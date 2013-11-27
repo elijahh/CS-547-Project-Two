@@ -54,6 +54,23 @@ public class Worker extends GroundEntity {
 		movement_direction = direction;
 	}
 	
+	@Override
+	public void update(final int delta) {
+		super.update(delta);
+		
+		for (GroundEntity e : getPotentialCollisions()) {
+			Vector my_position = getPosition();
+			Vector their_position = e.getPosition();
+			
+			final double angle_to_other = 
+					my_position.angleTo(their_position);
+			final float distance_to_other =
+					their_position.distance(my_position);
+			
+			System.out.println(distance_to_other + " " + angle_to_other);
+		}
+	}
+	
 	private final String getMovementAnimationFilename(final Vector direction) {
 		String animation_filename;
 

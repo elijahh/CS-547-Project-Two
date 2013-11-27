@@ -27,9 +27,9 @@ public class GameStatus {
 	
 	// TEMPORARY FOR DEVELOPMENT
 	private Worker worker_on_server_1 = 
-			new Worker(300, 300, new Vector(1, 0));
+			new Worker(350, 300, new Vector(1, 0));
 	private Worker worker_on_server_2 = 
-			new Worker(500, 300, new Vector(1, 0));
+			new Worker(450, 300, new Vector(1, 0));
 	private int worker_clock;
 	// TEMPORARY FOR DEVELOPMENT
 	
