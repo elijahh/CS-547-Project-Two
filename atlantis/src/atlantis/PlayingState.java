@@ -49,7 +49,7 @@ public class PlayingState extends BasicGameState{
 	
 	/* Team is assumed to be BLUE (remote player). Code which starts server 
 	 * below reassigns team as RED (local player */
-	 */
+	
 	
 	AtlantisEntity.Team team = AtlantisEntity.Team.BLUE;
 	
