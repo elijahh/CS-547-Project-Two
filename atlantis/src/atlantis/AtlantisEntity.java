@@ -67,12 +67,15 @@ public abstract class AtlantisEntity extends Entity implements
 		 * size when testing for map nodes spanned.
 		 */
 
-		Image still_image = ResourceManager
+		still_image = ResourceManager
 				.getImage(getStillImageFilename(STOPPED_VECTOR));
-		if (null != still_image)
+		if (null != still_image) {
 			addImageWithBoundingBox(still_image);
+		}
 	
 	}
+	
+	private Image still_image = null;
 
 	private Long identity;
 
@@ -443,7 +446,6 @@ public abstract class AtlantisEntity extends Entity implements
 	}
 
 	private Animation movement_animation = null;
-	private Image still_image = null;
 
 	@Override
 	public void render(final Graphics g) {
