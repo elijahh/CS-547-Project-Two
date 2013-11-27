@@ -28,10 +28,10 @@ public class GameStatus {
 	// TEMPORARY FOR DEVELOPMENT
 	private Worker worker_on_server_1 = 
 			new Worker(350, 300, new Vector(1, 0));
-	private Vector worker_on_server_1_dest;
+	private Vector worker_on_server_1_dest = new Vector(350,300);
 	private Worker worker_on_server_2 = 
 			new Worker(450, 300, new Vector(1, 0));
-	private Vector worker_on_server_2_dest;
+	private Vector worker_on_server_2_dest = new Vector(450, 300);
 	
 	Random random_generator = new Random();
 	// TEMPORARY FOR DEVELOPMENT
@@ -47,25 +47,19 @@ public class GameStatus {
 			
 			worker_on_server_1.setTeam(AtlantisEntity.Team.RED);
 			worker_on_server_2.setTeam(AtlantisEntity.Team.BLUE);
-			
-			if(null == worker_on_server_1_dest) {
-				worker_on_server_1_dest = new Vector(350, 300);
-			}
-			
-			if(null == worker_on_server_2_dest) {
-				worker_on_server_2_dest = new Vector(450, 300);
-			}
 
 			// System.out.println("delta: "+delta);
 			
-			while(false == worker_on_server_1.moveTo(worker_on_server_1_dest)) {
+			while(false == worker_on_server_1.isHandlingCollision() && 
+					false == worker_on_server_1.moveTo(worker_on_server_1_dest)) {
 				worker_on_server_1_dest = new Vector(
 						random_generator.nextInt(AtlantisGame.DISPLAY_SIZE_X),
 						random_generator.nextInt(AtlantisGame.DISPLAY_SIZE_Y));
 				System.out.println("Worker 1 moving to " + worker_on_server_1_dest);
 			}
 				
-			while(false == worker_on_server_2.moveTo(worker_on_server_2_dest)) {
+			while(false == worker_on_server_1.isHandlingCollision() &&
+					false == worker_on_server_2.moveTo(worker_on_server_2_dest)) {
 				worker_on_server_2_dest = new Vector(
 						random_generator.nextInt(AtlantisGame.DISPLAY_SIZE_X),
 						random_generator.nextInt(AtlantisGame.DISPLAY_SIZE_Y));

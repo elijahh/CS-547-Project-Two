@@ -351,6 +351,7 @@ public abstract class AtlantisEntity extends Entity implements
 	}
 
 	abstract void beginMovement(Vector direction);
+	abstract boolean isHandlingCollision();
 	
 	private int target_node = -1;
 	

@@ -55,12 +55,19 @@ public class Worker extends GroundEntity {
 		ResourceManager.loadImage(MOVE_R_ANIMATION_FILE);
 	}
 	
+	private List<Worker> handling_collisions_with_these_workers = 
+			new LinkedList<Worker>();
+	
+	public boolean isHandlingCollision() {
+		if(0 < handling_collisions_with_these_workers.size())
+			return true;
+		
+		return false;
+	}
+	
 	public void beginMovement(final Vector direction) {
 		velocity = new Vector(direction.scale(MAX_VELOCITY));
 	}
-	
-	private List<Worker> handling_collisions_with_these_workers = 
-			new LinkedList<Worker>();
 	
 	private void enforceWorkerWorkerDistance(Worker other,
 			final Vector their_position, final Vector my_position) {
