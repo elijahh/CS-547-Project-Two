@@ -190,6 +190,8 @@ public abstract class AtlantisEntity extends Entity implements
 		calculateAndAddNodeToSetIfSane(min_x, min_y, node_number_set);
 		calculateAndAddNodeToSetIfSane(max_x, min_y, node_number_set);
 
+		// System.out.println(min_x + ", " + min_y + " :" + max_x + ", " + max_y); 
+		
 		return node_number_set;
 	}
 
