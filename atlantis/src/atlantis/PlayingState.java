@@ -109,11 +109,13 @@ public class PlayingState extends BasicGameState{
 			Graphics g) throws SlickException {
 		
 		map.render(0, 0);
+		
+		//System.out.println("RENDERING WORKERS");
 
 		Queue<Worker> workers = 
 				new PriorityQueue<Worker>(status.getWorkers());
 		for (Worker w : workers) {
-			System.out.println("x:"+w.getX()+" y:"+w.getY());
+			//System.out.println("x:"+w.getX()+" y:"+w.getY());
 			w.render(g); 
 		}
 

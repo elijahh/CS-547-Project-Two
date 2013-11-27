@@ -1,11 +1,16 @@
 package atlantis;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.newdawn.slick.Animation;
 
 import jig.ResourceManager;
 import jig.Vector;
 
 public class Worker extends GroundEntity {
+	
+	private static final float MIN_WORKER_WORKER_DISTANCE = 36;
 	
 	private static final String FACE_U_GRAPHIC_FILE = "atlantis/resource/diver-up1.png";
 	private static final String FACE_D_GRAPHIC_FILE = "atlantis/resource/diver-down1.png";
@@ -49,26 +54,44 @@ public class Worker extends GroundEntity {
 		ResourceManager.loadImage(MOVE_R_ANIMATION_FILE);
 	}
 	
-	public void beginMovement(Vector direction) {
+	public void beginMovement(final Vector direction) {
 		velocity = new Vector(direction.scale(MAX_VELOCITY));
 		movement_direction = direction;
+	}
+	
+	private List<Worker> handling_collisions_with_these_workers = 
+			new ArrayList<Worker>();
+	
+	private void enforceWorkerWorkerDistance(Worker other,
+			final Vector their_position, final Vector my_position) {
+		//final double angle_to_other = my_position.angleTo(their_position);
+
+		if(false == handling_collisions_with_these_workers.contains(other)) {
+			handling_collisions_with_these_workers.add(other);
+			velocity = velocity.negate();
+		
+			// TODO - make sure that the course change takes the terrain map into consideration
+			
+			System.out.println("HANDLING WORKER-WORKER COLLISION");
+		}
 	}
 	
 	@Override
 	public void update(final int delta) {
 		super.update(delta);
-		
+
 		for (GroundEntity e : getPotentialCollisions()) {
 			Vector my_position = getPosition();
 			Vector their_position = e.getPosition();
-			
-			final double angle_to_other = 
-					my_position.angleTo(their_position);
-			final float distance_to_other =
-					their_position.distance(my_position);
-			
-			System.out.println("Potential collision: " + 
-					distance_to_other + " " + angle_to_other);
+
+			final float distance_to_other = their_position
+					.distance(my_position);
+
+			if (e instanceof Worker
+					&& distance_to_other < MIN_WORKER_WORKER_DISTANCE)
+				enforceWorkerWorkerDistance((Worker)e, their_position, my_position);
+			else
+				handling_collisions_with_these_workers.remove(e);
 		}
 	}
 	

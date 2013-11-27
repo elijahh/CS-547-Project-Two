@@ -26,7 +26,6 @@ public class GameStatus {
 	}
 	
 	// TEMPORARY FOR DEVELOPMENT
-
 	private Worker worker_on_server_1 = 
 			new Worker(350, 300, new Vector(1, 0));
 	private Worker worker_on_server_2 = 
@@ -42,6 +41,9 @@ public class GameStatus {
 
 			// TEMPORARY FOR WORKING OUT MOVEMENT OF WORKER AND CODE FOR
 			// SYNCHRONIZATION
+			
+			worker_on_server_1.setTeam(AtlantisEntity.Team.RED);
+			worker_on_server_2.setTeam(AtlantisEntity.Team.BLUE);
 			
 			worker_clock += delta;
 
@@ -62,7 +64,7 @@ public class GameStatus {
 				worker_on_server_2.beginMovement(directions[(int) (Math.random() * 4 % 4)]);
 			}
 
-			System.out.println("delta: "+delta);
+			// System.out.println("delta: "+delta);
 
 			worker_on_server_1.update(delta);
 			worker_on_server_2.update(delta);
