@@ -18,6 +18,9 @@ Milestone - End of day on 11/27. Anything above this point should be completed b
 - **[22]** Add visual indicator for Red and Blue teams to entities.
 
 - **[24]** Address collision handling between two workers. Inelegant as currently written.
+
+- **[25]** Add a GamePrepareState. Server will wait for all clients to join and send map in this state 
+		and start game at both sides. This might solve the frame desynchronize problem in a better way.
 		   
 
 Resolved Issues 
