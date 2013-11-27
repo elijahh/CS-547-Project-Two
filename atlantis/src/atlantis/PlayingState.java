@@ -47,6 +47,12 @@ public class PlayingState extends BasicGameState{
 	String mapName;
 	volatile int currentFrame;
 	
+	/* Team is assumed to be BLUE (remote player). Code which starts server 
+	 * below reassigns team as RED (local player */
+	
+	
+	AtlantisEntity.Team team = AtlantisEntity.Team.BLUE;
+	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
@@ -70,6 +76,7 @@ public class PlayingState extends BasicGameState{
 			System.out.println("Server mode");
 			server = new AtlantisServer(PORT_NUMBER);
 			server.start(); 				
+			team = AtlantisEntity.Team.RED;
 		}
 		
 		System.out.println("New client join");
@@ -109,11 +116,13 @@ public class PlayingState extends BasicGameState{
 			Graphics g) throws SlickException {
 		
 		map.render(0, 0);
+		
+		//System.out.println("RENDERING WORKERS");
 
 		Queue<Worker> workers = 
 				new PriorityQueue<Worker>(status.getWorkers());
 		for (Worker w : workers) {
-			System.out.println("x:"+w.getX()+" y:"+w.getY());
+			//System.out.println("x:"+w.getX()+" y:"+w.getY());
 			w.render(g); 
 		}
 

@@ -33,8 +33,8 @@ public class AtlantisGame extends StateBasedGame {
 	public static final String TARGET_MOVE = "atlantis/resource/targetMove.png";
 	public static final String TARGET_ATTACK = "atlantis/resource/targetAttack.png";
 	
-	private static final int DISPLAY_SIZE_X = 800;
-	private static final int DISPLAY_SIZE_Y = 600;
+	public static final int DISPLAY_SIZE_X = 800;
+	public static final int DISPLAY_SIZE_Y = 600;
 		
 	public static Image cursor;
 
