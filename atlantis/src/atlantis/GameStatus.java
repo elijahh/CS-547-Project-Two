@@ -5,13 +5,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import jig.Vector;
 
 import org.newdawn.slick.GameContainer;
 
 import atlantis.AtlantisEntity;
-
 import atlantis.networking.AtlantisClient;
 import atlantis.networking.AtlantisServer;
 import atlantis.networking.ResultLockStep;
@@ -28,9 +28,12 @@ public class GameStatus {
 	// TEMPORARY FOR DEVELOPMENT
 	private Worker worker_on_server_1 = 
 			new Worker(350, 300, new Vector(1, 0));
+	private Vector worker_on_server_1_dest;
 	private Worker worker_on_server_2 = 
 			new Worker(450, 300, new Vector(1, 0));
-	private int worker_clock;
+	private Vector worker_on_server_2_dest;
+	
+	Random random_generator = new Random();
 	// TEMPORARY FOR DEVELOPMENT
 	
 	public void update(GameContainer container, int delta) {
@@ -40,32 +43,35 @@ public class GameStatus {
 		if (null != server) {
 
 			// TEMPORARY FOR WORKING OUT MOVEMENT OF WORKER AND CODE FOR
-			// SYNCHRONIZATION
+			// SYNCHRONIZATION/MOVEMENT
 			
 			worker_on_server_1.setTeam(AtlantisEntity.Team.RED);
 			worker_on_server_2.setTeam(AtlantisEntity.Team.BLUE);
 			
-			worker_clock += delta;
-
-			if (worker_clock > 250) {
-				worker_clock = 0;
-
-//				Vector move_dir = worker_on_server.getMovementDirection();
-//				move_dir = new Vector(move_dir.negate());
-//				worker_on_server.beginMovement(move_dir);
-				
-				Vector[] directions = {new Vector(0, 1),
-						new Vector(0, -1),
-						new Vector(1, 0),
-						new Vector(-1, 0)
-				};
-
-				worker_on_server_1.beginMovement(directions[(int) (Math.random() * 4 % 4)]);
-				worker_on_server_2.beginMovement(directions[(int) (Math.random() * 4 % 4)]);
+			if(null == worker_on_server_1_dest) {
+				worker_on_server_1_dest = new Vector(350, 300);
+			}
+			
+			if(null == worker_on_server_2_dest) {
+				worker_on_server_2_dest = new Vector(450, 300);
 			}
 
 			// System.out.println("delta: "+delta);
-
+			
+			while(false == worker_on_server_1.moveTo(worker_on_server_1_dest)) {
+				worker_on_server_1_dest = new Vector(
+						random_generator.nextInt(AtlantisGame.DISPLAY_SIZE_X),
+						random_generator.nextInt(AtlantisGame.DISPLAY_SIZE_Y));
+				System.out.println("Worker 1 moving to " + worker_on_server_1_dest);
+			}
+				
+			while(false == worker_on_server_2.moveTo(worker_on_server_2_dest)) {
+				worker_on_server_2_dest = new Vector(
+						random_generator.nextInt(AtlantisGame.DISPLAY_SIZE_X),
+						random_generator.nextInt(AtlantisGame.DISPLAY_SIZE_Y));
+				System.out.println("Worker 2 moving to " + worker_on_server_2_dest);
+			}
+			
 			worker_on_server_1.update(delta);
 			worker_on_server_2.update(delta);
 

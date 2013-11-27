@@ -1,9 +1,6 @@
 package atlantis;
 
-import java.io.InvalidObjectException;
-import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -355,10 +352,31 @@ public abstract class AtlantisEntity extends Entity implements
 
 	abstract void beginMovement(Vector direction);
 	
-	int node_target = -1;
+	private int target_node = -1;
 	
-	void moveTo(Vector destination_position) {
-		
+	boolean moveTo(final Vector destination_position) {
+		boolean moving = false;
+
+		int destination_node = this.calculateMapNode(
+				destination_position.getX(), destination_position.getY());
+
+		if ((dijkstra != null) && (destination_node != target_node)) {
+			dijkstra.execute(destination_node);
+			target_node = destination_node;
+		}
+
+		if ((dijkstra != null)) {
+			List<Vertex> path = dijkstra.getPath(this.getCurrentMapNode());
+
+			Vector move_direction = this.getNextMovementFromPath(path);
+
+			if (move_direction != STOPPED_VECTOR) {
+				beginMovement(move_direction);
+				moving = true;
+			}
+		}
+
+		return moving;
 	}
 
 	/* -------------------------------------------------------------------- */
