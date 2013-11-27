@@ -18,16 +18,20 @@ Milestone - End of day on 11/27. Anything above this point should be completed b
 - **[22]** Add visual indicator for Red and Blue teams to entities.
 
 - **[24]** Address collision handling between the two workers. Inelegant as currently written.
-- **[25]** Require Worker movement to be done with the interface -- click on worker, click move, 
+
+- **[25]** Add a GamePrepareState. Server will wait for all clients to join and send map in this state 
+		and start game at both sides. This might solve the frame desynchronize problem in a better way.
+
+- **[26]** Require Worker movement to be done with the interface -- click on worker, click move, 
            click destination. Server-side list for active workers should be added.
-- **[26]** Start with a blank screen and start adding workers on each side in empty map areas according 
+- **[27]** Start with a blank screen and start adding workers on each side in empty map areas according 
            to a random schedule. Remove the temporary code that populated the two workers used in development of
            [11] - [25].
-- **[27]** Expand "world" beyond 800x600. Viewport should move when user moves mouse to edges of
+- **[28]** Expand "world" beyond 800x600. Viewport should move when user moves mouse to edges of
            overlay. Consider arrow buttons on each edge of the overlay.
-- **[28]** Modify worker addition so that new workers show up in empty spaces in top left (red) and
+- **[29]** Modify worker addition so that new workers show up in empty spaces in top left (red) and
            bottom right corners of the virtual world.
-- **[29]** Add "base" GroundEntity to each side. Game is over when base health on one side reaches zero.
+- **[30]** Add "base" GroundEntity to each side. Game is over when base health on one side reaches zero.
 ...   
 
 Resolved Issues 
