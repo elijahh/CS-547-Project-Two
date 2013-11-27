@@ -1,6 +1,7 @@
 package atlantis;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.newdawn.slick.Animation;
@@ -60,7 +61,7 @@ public class Worker extends GroundEntity {
 	}
 	
 	private List<Worker> handling_collisions_with_these_workers = 
-			new ArrayList<Worker>();
+			new LinkedList<Worker>();
 	
 	private void enforceWorkerWorkerDistance(Worker other,
 			final Vector their_position, final Vector my_position) {
