@@ -31,8 +31,6 @@ public class PlayingState extends BasicGameState{
 
 	Overlay overlay;
 
-	public static final int NUMBER_OF_PLAYERS = 1;
-	
 	public static volatile int currentNumberOfPlayers;
 	
 	ArrayList<AtlantisClient> clients;
@@ -47,14 +45,18 @@ public class PlayingState extends BasicGameState{
 	
 	TiledMap map;
 	String mapName;
-	int currentFrame;
+	volatile int currentFrame;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
 
-		status = new GameStatus();
+		status = new GameStatus(this);
 	}
+	
+	public AtlantisServer getServer() { return server; }
+	public AtlantisClient getClient() { return client; }
+	public int getCurrentFrame() { return currentFrame; }
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) throws SlickException {
@@ -70,7 +72,6 @@ public class PlayingState extends BasicGameState{
 			server.start(); 				
 		}
 		
-		
 		System.out.println("New client join");
 		client = new AtlantisClient(PORT_NUMBER);
 		client.connect(StartMenuState.ADDRESS);
@@ -80,7 +81,7 @@ public class PlayingState extends BasicGameState{
 			 * Stuck when currentNumberOfPlayer is less than NUMBER_OF_PLAYERS, waiting for two players both join and starts to send map.
 			 * Set NUMBER_OF_PLAYERS equal to 1 for single player and purpose of easy developing.
 			 */
-			while(currentNumberOfPlayers < NUMBER_OF_PLAYERS){} 
+			while(currentNumberOfPlayers < StartMenuState.NUMBER_OF_PLAYERS){} 
 			//TODO: This is test case, need to change map and map name
 			mapName = "atlantis/resource/densemap.tmx"; 		
 			server.sendMap(mapName, currentFrame);
@@ -111,18 +112,20 @@ public class PlayingState extends BasicGameState{
 
 		Queue<Worker> workers = 
 				new PriorityQueue<Worker>(status.getWorkers());
-		for (Worker w : workers)
+		for (Worker w : workers) {
+			System.out.println("x:"+w.getX()+" y:"+w.getY());
 			w.render(g); 
+		}
 
 		overlay.render(container, game, g);
 
 		/* Client receive results from server */
 
 		if(StartMenuState.GAME_TYPE.equals("server"))
-			g.drawString("Command: "+ server.command, 25, 200);
+			g.drawString("Server "+ server.command, 25, 200);
 		
 		if(StartMenuState.GAME_TYPE.equals("client"))
-			g.drawString("Result: "+ client.result, 25, 200);
+			g.drawString("Client "+ client.result, 25, 200);
 	}
 	
 	private final void doHousekeeping() {
@@ -130,77 +133,13 @@ public class PlayingState extends BasicGameState{
 		
 		// TODO
 	}
-
-	// TEMPORARY FOR DEVELOPMENT
-	private Worker worker_on_server = 
-			new Worker(400, 300, new Vector(1, 0));
-	private int worker_clock;
-	// TEMPORARY FOR DEVELOPMENT
 	
 	@Override
 	public void update(GameContainer container, StateBasedGame game,
 			int delta) throws SlickException {
-		 currentFrame += 1;
-		
-//		 if(StartMenuState.GAME_TYPE.equals("server"))
-//		 server.tellClient(container);
-//		
-//		 if(StartMenuState.GAME_TYPE.equals("client"))
-//		 client.tellServer(container);
-
-		/* ---------------------------------------------------------------- */
-	
-		// TEMPORARY FOR WORKING OUT MOVEMENT OF WORKER AND CODE FOR
-		// SERIALIZATION/DESERIALIZATION
+		currentFrame += 1;
 		 
-		byte[] serialized_updater = null;
-		AtlantisEntity.Updater deserialized_updater = null;
-
-		if (StartMenuState.GAME_TYPE.equals("server")) {
-
-			// THE SERVER SIDE OF THE PROCESSING
-			
-			worker_clock += delta;
-
-			if (worker_clock > 200) {
-				worker_clock = 0;
-
-				//Vector move_dir = worker_on_server.getMovementDirection();
-				//move_dir = new Vector(move_dir.negate());
-				//worker_on_server.beginMovement(move_dir);
-				Vector[] directions = {new Vector(0, 1),
-						new Vector(0, -1),
-						new Vector(1, 0),
-						new Vector(-1, 0)
-				};
-				worker_on_server.beginMovement(directions[(int) (Math.random() * 4 % 4)]);
-			}
-
-			worker_on_server.update(delta);
-			
-			AtlantisEntity.Updater updater = 
-					worker_on_server.getUpdater();
-			server.sendUpdate(updater, currentFrame);
-			
-		}
-		
-		// BOTH SIDES' CLIENTS PROCESS THIS
-		
- 		while (client.incomingLockSteps.isEmpty()) {}
-		while (!client.incomingLockSteps.isEmpty()) {
-			ResultLockStep step = client.incomingLockSteps.poll();
-			if(step.frameNum == currentFrame) {
-				SimulationResult result = step.frameResults.get(0);
-				// System.out.println("Update received!");
-				deserialized_updater = result.entity_updater;
-			}
-			break;
-		}
-		 		
-		if(null != deserialized_updater)
-			status.processUpdateEntity(deserialized_updater);
-		
-		// END TEMPORARY SECTION
+		status.update(container, delta);
 	}
 
 	@Override

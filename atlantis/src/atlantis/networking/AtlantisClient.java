@@ -26,6 +26,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 
 import atlantis.AtlantisEntity;
+import atlantis.PlayingState;
 import atlantis.Worker;
 import atlantis.StartMenuState;
 import atlantis.networking.AtlantisServer.ClientListener;
@@ -93,7 +94,7 @@ public class AtlantisClient {
 				}	
 			} catch (IOException e) {
 				System.out.println("Exception caught when trying to listen on port "
-						+ AtlantisServer.PORT_NUMBER + " or listening for a connection");
+						+ PORT_NUMBER + " or listening for a connection");
 				System.out.println(e.getMessage());
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
