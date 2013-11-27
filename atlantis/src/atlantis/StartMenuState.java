@@ -14,8 +14,10 @@ import org.newdawn.slick.state.StateBasedGame;
 public class StartMenuState extends BasicGameState {
 
 	private TextField serverAddr;
+	private TextField numPlayer;
 	public static String GAME_TYPE;
 	public static String ADDRESS;
+	public static int NUMBER_OF_PLAYERS = 1;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
@@ -26,7 +28,12 @@ public class StartMenuState extends BasicGameState {
 	public void enter(GameContainer container, StateBasedGame game) {
 		serverAddr = new TextField(container, container.getDefaultFont(),
 				170, 195, 320, 25);
+		
 		serverAddr.setBackgroundColor(Color.darkGray);
+		
+		numPlayer = new TextField(container, container.getDefaultFont(),
+				170, 225, 320, 25);
+		numPlayer.setBackgroundColor(Color.darkGray);
 	}
 
 	@Override
@@ -37,6 +44,8 @@ public class StartMenuState extends BasicGameState {
 		g.setColor(Color.orange);
 		g.drawString("Server address:", 25, 200);
 		serverAddr.render(container, g);
+		g.drawString("Number of players:", 10, 225);
+		numPlayer.render(container, g);
 		g.drawImage(ResourceManager.getImage(AtlantisGame.JOIN_GAME),
 				500, 190);
 	}
@@ -53,6 +62,7 @@ public class StartMenuState extends BasicGameState {
 				// TODO: create game -- enter PlayingState with server mode
 				GAME_TYPE = "server";
 				ADDRESS = "localhost";
+				if(numPlayer.getText().length() > 0) NUMBER_OF_PLAYERS = Integer.parseInt(numPlayer.getText());
 				game.enterState(AtlantisGame.PLAYING);
 			} else if (posX > 500 && posX < 725 && posY > 190 && posY < 233) {
 

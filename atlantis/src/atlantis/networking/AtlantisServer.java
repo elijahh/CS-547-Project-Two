@@ -22,8 +22,8 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.tiled.TiledMap;
 
 import atlantis.PlayingState;
-
 import atlantis.AtlantisEntity;
+import atlantis.StartMenuState;
 
 /*
  * Implement LockStepProtocol. Receive commands from clients. Send results to clients.
@@ -52,7 +52,7 @@ public class AtlantisServer extends Thread{
 		try{
 			ServerSocket serverSocket = new ServerSocket(PORT_NUMBER);
 			try{
-				while(PlayingState.currentNumberOfPlayers < PlayingState.NUMBER_OF_PLAYERS) {
+				while(PlayingState.currentNumberOfPlayers < StartMenuState.NUMBER_OF_PLAYERS) {
 					System.out.println("Waiting for client...");
 					clientSocket = serverSocket.accept();
 					socketList.add(clientSocket);
