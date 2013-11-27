@@ -10,6 +10,8 @@ import jig.Vector;
 
 import org.newdawn.slick.GameContainer;
 
+import atlantis.AtlantisEntity;
+
 import atlantis.networking.AtlantisClient;
 import atlantis.networking.AtlantisServer;
 import atlantis.networking.ResultLockStep;
@@ -24,8 +26,11 @@ public class GameStatus {
 	}
 	
 	// TEMPORARY FOR DEVELOPMENT
-	private Worker worker_on_server = 
-			new Worker(400, 300, new Vector(0, 0));
+
+	private Worker worker_on_server_1 = 
+			new Worker(350, 300, new Vector(1, 0));
+	private Worker worker_on_server_2 = 
+			new Worker(450, 300, new Vector(1, 0));
 	private int worker_clock;
 	// TEMPORARY FOR DEVELOPMENT
 	
@@ -40,7 +45,7 @@ public class GameStatus {
 			
 			worker_clock += delta;
 
-			if (worker_clock > 200) {
+			if (worker_clock > 250) {
 				worker_clock = 0;
 
 //				Vector move_dir = worker_on_server.getMovementDirection();
@@ -52,30 +57,40 @@ public class GameStatus {
 						new Vector(1, 0),
 						new Vector(-1, 0)
 				};
-				
-				worker_on_server.beginMovement(directions[(int) (Math.random() * 4 % 4)]);
+
+				worker_on_server_1.beginMovement(directions[(int) (Math.random() * 4 % 4)]);
+				worker_on_server_2.beginMovement(directions[(int) (Math.random() * 4 % 4)]);
 			}
+
 			System.out.println("delta: "+delta);
-			worker_on_server.update(delta);
+
+			worker_on_server_1.update(delta);
+			worker_on_server_2.update(delta);
+
+			List<AtlantisEntity.Updater> updaters = 
+					new ArrayList<AtlantisEntity.Updater>();
 			
-			AtlantisEntity.Updater updater = 
-					worker_on_server.getUpdater();
-			
-			server.sendUpdate(updater, playing_state.getCurrentFrame());
+			updaters.add(worker_on_server_1.getUpdater());
+			updaters.add(worker_on_server_2.getUpdater());
+						
+			server.sendUpdates(updaters, playing_state.getCurrentFrame());
 			
 			// END TEMPORARY SECTION
 		}
 		
+		/* Process the updates sent by the server above. */
+		
 		AtlantisClient client = playing_state.getClient();
-				
- 		while (client.incomingLockSteps.isEmpty()) {}
+						
+ 		while (client.incomingLockSteps.isEmpty()) {} 		
 		while (!client.incomingLockSteps.isEmpty()) {
 			ResultLockStep step = client.incomingLockSteps.poll();
 			if(step.frameNum == currentFrame) {
-				SimulationResult result = step.frameResults.get(0);
-				// System.out.println("Update received!");
-				AtlantisEntity.Updater updater = result.entity_updater;
-				if(null != updater) processUpdater(updater);
+				for (SimulationResult result : step.frameResults) {
+					AtlantisEntity.Updater updater = result.entity_updater;
+					if (null != updater)
+						processUpdater(updater);
+				}
 			}
 			break;
 		}
