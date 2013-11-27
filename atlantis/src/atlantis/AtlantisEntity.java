@@ -61,6 +61,17 @@ public abstract class AtlantisEntity extends Entity implements
 		super(x, y);
 		beginMovement(movement_direction);
 		identity = random_generator.nextLong();
+		
+		/*
+		 * We need to get one shape of the entity so that the server knows the
+		 * size when testing for map nodes spanned.
+		 */
+
+		Image still_image = ResourceManager
+				.getImage(getStillImageFilename(STOPPED_VECTOR));
+		if (null != still_image)
+			addImageWithBoundingBox(still_image);
+	
 	}
 
 	private Long identity;
@@ -336,16 +347,6 @@ public abstract class AtlantisEntity extends Entity implements
 	public void update(final int delta) {
 		translate(velocity.scale(delta));
 
-		/*
-		 * We need to get one shape of the entity so that the server knows the
-		 * size when testing for map nodes spanned.
-		 */
-
-		if (0 == this.getNumShapes()) {
-			Image still_image = ResourceManager
-					.getImage(getStillImageFilename(STOPPED_VECTOR));
-			addImageWithBoundingBox(still_image);
-		}
 
 		/* Update the entity-node maps */
 
