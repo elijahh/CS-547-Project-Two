@@ -361,7 +361,6 @@ public abstract class AtlantisEntity extends Entity implements
 
 		Vector velocity;
 		Vector position;
-		Vector movement_direction;
 
 		Class entity_class;
 
@@ -371,8 +370,7 @@ public abstract class AtlantisEntity extends Entity implements
 			//System.out.println("server x:"+position.getX()+" server y:"+position.getY());
 			velocity = e.velocity;
 			identity = e.identity;
-			movement_direction = e.movement_direction;
-
+			
 			entity_class = e.getClass();
 		}
 
@@ -401,10 +399,12 @@ public abstract class AtlantisEntity extends Entity implements
 
 	public void update(AtlantisEntity.Updater updater) {
 		this.setPosition(updater.position);
-
-		movement_direction = updater.movement_direction;
 		velocity = updater.velocity;
+		
 		team = updater.team;
+
+		/* Derived values */
+		movement_direction = getMovementDirection();
 
 		// TODO - Finish with as many variables as necessary to accurately
 		// communicate entity status to client for rendering.

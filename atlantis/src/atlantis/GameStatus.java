@@ -62,7 +62,7 @@ public class GameStatus {
 				worker_on_server_2.beginMovement(directions[(int) (Math.random() * 4 % 4)]);
 			}
 
-			System.out.println("delta: "+delta);
+			// System.out.println("delta: "+delta);
 
 			worker_on_server_1.update(delta);
 			worker_on_server_2.update(delta);
