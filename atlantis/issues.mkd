@@ -6,9 +6,12 @@ Open Issues
 - **[1]** Create basic game skeleton
 
 - **[20]** Add player command interface to control entities. To start, entities should accept mouse 
-		   clicks directing location movement, one worker per player.
+		   clicks directing location movement, one worker per player. Dependent on having moveTo()
+		   which will be added in [23].
 		   
-- **[23]** Set GroundEntity Dijkstra map to grid for now.
+- **[23]** Set GroundEntity Dijkstra map to grid for now. Add moveTo(Vector position) method
+           to AtlantisEntity to move entity to destination specified by Vector argument. [20] will 
+           depend on having the moveTo().
 
 Milestone - End of day on 11/27. Anything above this point should be completed by then.
 
