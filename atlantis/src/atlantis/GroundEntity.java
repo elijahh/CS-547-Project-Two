@@ -57,7 +57,7 @@ abstract class GroundEntity extends AtlantisEntity {
 			if(false == (e instanceof GroundEntity)) 
 				continue;
 			
-			
+			System.out.println(this + ":" + e);
 		}
 	}
 }

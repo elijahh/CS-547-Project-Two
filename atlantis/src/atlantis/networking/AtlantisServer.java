@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -22,7 +23,6 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.tiled.TiledMap;
 
 import atlantis.PlayingState;
-
 import atlantis.AtlantisEntity;
 
 /*
@@ -73,7 +73,7 @@ public class AtlantisServer extends Thread{
 		System.out.println("Create a listener!");
 	}
 	
-	public void sendResult(GameContainer container, int frameNum, ResultLockStep step) {
+	public void sendResult(ResultLockStep step, int frameNum) {
 		try {
 			for(Socket socket: socketList) {
 				OutputStream out = socket.getOutputStream();
@@ -103,22 +103,16 @@ public class AtlantisServer extends Thread{
 		}
 	}
 	
-	public void sendUpdate(AtlantisEntity.Updater updater, int frameNum) {
-		SimulationResult result = new SimulationResult();
-		result.setEntityUpdater(updater);
+	public void sendUpdates(List<AtlantisEntity.Updater> updaters, int frameNum) {
 		ResultLockStep step = new ResultLockStep(frameNum);
-		step.addResult(result);
-		try {
-			for(Socket clientSocket: socketList) {
-				OutputStream out = clientSocket.getOutputStream();
-				ObjectOutputStream oos = new ObjectOutputStream(out);
-				oos.writeObject(step);
-				//oos.close();
-				//out.close();
-			}
-		} catch (IOException e) {
-			
+
+		for (AtlantisEntity.Updater u : updaters) {
+			SimulationResult result = new SimulationResult();
+			result.setEntityUpdater(u);
+			step.addResult(result);
 		}
+
+		sendResult(step, frameNum);
 	}
 	
 	public class ClientListener extends Thread{
