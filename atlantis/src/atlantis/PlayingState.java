@@ -31,7 +31,7 @@ public class PlayingState extends BasicGameState{
 
 	Overlay overlay;
 
-	public static final int NUMBER_OF_PLAYERS = 1;
+	public static final int NUMBER_OF_PLAYERS = 2;
 	
 	public static volatile int currentNumberOfPlayers;
 	
@@ -47,7 +47,7 @@ public class PlayingState extends BasicGameState{
 	
 	TiledMap map;
 	String mapName;
-	int currentFrame;
+	volatile int currentFrame;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
@@ -114,18 +114,20 @@ public class PlayingState extends BasicGameState{
 
 		Queue<Worker> workers = 
 				new PriorityQueue<Worker>(status.getWorkers());
-		for (Worker w : workers)
+		for (Worker w : workers) {
+			System.out.println("x:"+w.getX()+" y:"+w.getY());
 			w.render(g); 
+		}
 
 		overlay.render(container, game, g);
 
 		/* Client receive results from server */
 
 		if(StartMenuState.GAME_TYPE.equals("server"))
-			g.drawString("Command: "+ server.command, 25, 200);
+			g.drawString("Server "+ server.command, 25, 200);
 		
 		if(StartMenuState.GAME_TYPE.equals("client"))
-			g.drawString("Result: "+ client.result, 25, 200);
+			g.drawString("Client "+ client.result, 25, 200);
 	}
 	
 	private final void doHousekeeping() {
@@ -137,13 +139,7 @@ public class PlayingState extends BasicGameState{
 	@Override
 	public void update(GameContainer container, StateBasedGame game,
 			int delta) throws SlickException {
-		 currentFrame += 1;
-		
-//		 if(StartMenuState.GAME_TYPE.equals("server"))
-//		 server.tellClient(container);
-//		
-//		 if(StartMenuState.GAME_TYPE.equals("client"))
-//		 client.tellServer(container);
+		currentFrame += 1;
 		 
 		status.update(container, delta);
 

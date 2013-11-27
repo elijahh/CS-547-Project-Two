@@ -261,8 +261,9 @@ public abstract class AtlantisEntity extends Entity implements
 		Class entity_class;
 		
 		Updater(AtlantisEntity e) {
-			position = e.getPosition();
 
+			position = e.getPosition();
+			//System.out.println("server x:"+position.getX()+" server y:"+position.getY());
 			velocity = e.velocity;
 			identity = e.identity;
 			movement_direction = e.movement_direction;
@@ -318,7 +319,6 @@ public abstract class AtlantisEntity extends Entity implements
 						.getMovementAnimation(movement_direction);
 				addAnimation(movement_animation);
 			}
-
 			face_direction = movement_direction;
 		}
 

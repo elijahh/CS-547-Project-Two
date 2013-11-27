@@ -77,6 +77,8 @@ public class AtlantisGame extends StateBasedGame {
 			app = new AppGameContainer(new AtlantisGame("Atlantis"));
 			app.setDisplayMode(DISPLAY_SIZE_X, DISPLAY_SIZE_Y, false);
 			app.setVSync(true);
+			app.setMaximumLogicUpdateInterval(20); // Max. 200 miliseconds can pass
+			app.setMinimumLogicUpdateInterval(10);
 			app.start();
 		} catch (SlickException e) {
 			e.printStackTrace();

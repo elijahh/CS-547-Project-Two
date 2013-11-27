@@ -39,7 +39,8 @@ public class AtlantisServer extends Thread{
 	public String command;
 	
 	public BlockingQueue<CommandLockStep> incomingLockSteps;
-
+	
+	public Socket clientSocket,clientSocket1;
 	
 	public AtlantisServer(int portNumber) {
 		PORT_NUMBER = portNumber;
@@ -53,7 +54,7 @@ public class AtlantisServer extends Thread{
 			try{
 				while(PlayingState.currentNumberOfPlayers < PlayingState.NUMBER_OF_PLAYERS) {
 					System.out.println("Waiting for client...");
-					Socket clientSocket = serverSocket.accept();
+					clientSocket = serverSocket.accept();
 					socketList.add(clientSocket);
 					System.out.println("Connected!");
 					createListener(clientSocket);
@@ -90,16 +91,15 @@ public class AtlantisServer extends Thread{
 		result.setMap(mapName);
 		ResultLockStep step = new ResultLockStep(frameNum);
 		step.addResult(result);
-		try {
-			for(Socket clientSocket: socketList) {
+	
+		for(Socket clientSocket: socketList) {
+			try {
 				OutputStream out = clientSocket.getOutputStream();
 				ObjectOutputStream oos = new ObjectOutputStream(out);
 				oos.writeObject(step);
-				//oos.close();
-				//out.close();
+			} catch (IOException e) {
+
 			}
-		} catch (IOException e) {
-			
 		}
 	}
 	
@@ -108,22 +108,22 @@ public class AtlantisServer extends Thread{
 		result.setEntityUpdater(updater);
 		ResultLockStep step = new ResultLockStep(frameNum);
 		step.addResult(result);
-		try {
-			for(Socket clientSocket: socketList) {
+
+		for(Socket clientSocket: socketList) {
+			try {
 				OutputStream out = clientSocket.getOutputStream();
 				ObjectOutputStream oos = new ObjectOutputStream(out);
 				oos.writeObject(step);
-				//oos.close();
-				//out.close();
+			} catch (IOException e) {
+
 			}
-		} catch (IOException e) {
-			
-		}
+		}	
 	}
 	
 	public class ClientListener extends Thread{
 		
 		Socket socket;
+		
 		public ClientListener(Socket clientSocket) {
 			socket = clientSocket;
 		}
@@ -149,5 +149,6 @@ public class AtlantisServer extends Thread{
 			}
 		}
 	}
+	
 	
 }

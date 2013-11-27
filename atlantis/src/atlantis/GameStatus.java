@@ -25,7 +25,7 @@ public class GameStatus {
 	
 	// TEMPORARY FOR DEVELOPMENT
 	private Worker worker_on_server = 
-			new Worker(400, 300, new Vector(1, 0));
+			new Worker(400, 300, new Vector(0, 0));
 	private int worker_clock;
 	// TEMPORARY FOR DEVELOPMENT
 	
@@ -43,22 +43,24 @@ public class GameStatus {
 			if (worker_clock > 200) {
 				worker_clock = 0;
 
-				//Vector move_dir = worker_on_server.getMovementDirection();
-				//move_dir = new Vector(move_dir.negate());
-				//worker_on_server.beginMovement(move_dir);
+//				Vector move_dir = worker_on_server.getMovementDirection();
+//				move_dir = new Vector(move_dir.negate());
+//				worker_on_server.beginMovement(move_dir);
+				
 				Vector[] directions = {new Vector(0, 1),
 						new Vector(0, -1),
 						new Vector(1, 0),
 						new Vector(-1, 0)
 				};
+				
 				worker_on_server.beginMovement(directions[(int) (Math.random() * 4 % 4)]);
 			}
-
+			System.out.println("delta: "+delta);
 			worker_on_server.update(delta);
 			
 			AtlantisEntity.Updater updater = 
 					worker_on_server.getUpdater();
-						
+			
 			server.sendUpdate(updater, playing_state.getCurrentFrame());
 			
 			// END TEMPORARY SECTION
@@ -84,8 +86,9 @@ public class GameStatus {
 			synchronized (workers) {
 				Worker updated_entity = workers.get(updater.getIdentity());
 
-				if (null == updated_entity)
+				if (null == updated_entity) {
 					updated_entity = new Worker();
+				}
 
 				updated_entity.update(updater);
 
