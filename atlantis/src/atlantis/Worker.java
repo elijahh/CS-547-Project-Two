@@ -17,13 +17,13 @@ public class Worker extends GroundEntity {
 	private static final String MOVE_U_ANIMATION_FILE = "atlantis/resource/diver-up.png";
 	private static final String MOVE_D_ANIMATION_FILE = "atlantis/resource/diver-down.png";
 	
-	private static final float MAX_VELOCITY = 0.015f;       /* pixels/mS */
+	private static final float MAX_VELOCITY = 0.07f;       /* pixels/mS */
 	
 	private static final int ANIMATION_FRAMES = 2;
-	private static final int ANIMATION_FRAME_DURATION = 150; /* mS */
+	private static final int ANIMATION_FRAME_DURATION = 200; /* mS */
 	
-	private static final int ANIMATION_FRAME_WIDTH = 108; /* pixels */
-	private static final int ANIMATION_FRAME_HEIGHT = 170; /* pixels */
+	private static final int ANIMATION_FRAME_WIDTH = 54; /* pixels */
+	private static final int ANIMATION_FRAME_HEIGHT = 85; /* pixels */
 	
 	public Worker() {
 		this(0, 0);
