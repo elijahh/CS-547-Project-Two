@@ -40,6 +40,10 @@ public abstract class AtlantisEntity extends Entity implements
 
 	protected static final int MAP_GRID_Y = 12;
 	protected static final int MAP_Y_NODE_DIMENSION = 50; /* Pixels */
+	
+	protected static final int MAP_HORIZONTAL_MOVE_COST = 100; /* mS */
+	protected static final int MAP_VERTICAL_MOVE_COST   = 100; /* mS */
+	protected static final int MAP_DIAGONAL_MOVE_COST   = 141; /* mS */
 
 	private static Random random_generator = new Random();
 

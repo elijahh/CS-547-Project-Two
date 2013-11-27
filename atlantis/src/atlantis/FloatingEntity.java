@@ -26,10 +26,6 @@ abstract class FloatingEntity extends AtlantisEntity {
 
 	/* Floating entities move on a simple grid model. */
 	
-	private static final int MAP_HORIZONTAL_MOVE_COST = 100; /* mS */
-	private static final int MAP_VERTICAL_MOVE_COST   = 100; /* mS */
-	private static final int MAP_DIAGONAL_MOVE_COST   = 141; /* mS */
-	
 	static {
 		List<Edge> map_edges = new ArrayList<Edge>();
 		List<Vertex> map_nodes = new ArrayList<Vertex>();
