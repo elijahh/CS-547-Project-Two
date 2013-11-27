@@ -67,7 +67,8 @@ public class Worker extends GroundEntity {
 			final float distance_to_other =
 					their_position.distance(my_position);
 			
-			System.out.println(distance_to_other + " " + angle_to_other);
+			System.out.println("Potential collision: " + 
+					distance_to_other + " " + angle_to_other);
 		}
 	}
 	
