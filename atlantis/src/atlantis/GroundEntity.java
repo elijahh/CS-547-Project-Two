@@ -46,4 +46,18 @@ abstract class GroundEntity extends AtlantisEntity {
 	
 	/* -------------------------------------------------------------------- */
 
+	/* Collision avoidance - ground entities should avoid each other. 
+	 * Overriding update to handle task. */
+	
+	@Override
+	public void update(final int delta) {
+		super.update(delta);
+		
+		for(AtlantisEntity e : listNearbyEntities()) {
+			if(false == (e instanceof GroundEntity)) 
+				continue;
+			
+			
+		}
+	}
 }

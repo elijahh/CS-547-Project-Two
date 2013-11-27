@@ -347,9 +347,6 @@ public abstract class AtlantisEntity extends Entity implements
 		/* Update the entity-node maps */
 
 		updateEntityNodeMaps();
-		
-		/* Collision avoidance */
-		
 	}
 
 	abstract void beginMovement(Vector direction);
