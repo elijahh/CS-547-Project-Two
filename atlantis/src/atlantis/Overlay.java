@@ -1,6 +1,6 @@
 package atlantis;
 
-import java.util.List;
+import java.util.Map;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -24,7 +24,7 @@ public class Overlay {
 	boolean isDefaultCursorSet = true;
 	
 	PlayingState playingState;
-	public AtlantisEntity selectedUnit = null;
+	public long selectedUnitID = -1;
 	public short action = 0; // 1 = move, 2 = attack
 	
 	public Overlay(PlayingState ps) {
@@ -47,8 +47,10 @@ public class Overlay {
 		int x = input.getMouseX();
 		int y = input.getMouseY();
 		
-		if (selectedUnit != null) { // highlight selected unit
+		if (selectedUnitID != -1) { // highlight selected unit
 			g.setColor(Color.yellow);
+			AtlantisEntity selectedUnit = playingState.getStatus()
+					.workers.get(selectedUnitID);
 			g.drawRect(selectedUnit.getCoarseGrainedMinX(),
 					selectedUnit.getCoarseGrainedMinY(),
 					selectedUnit.getCoarseGrainedWidth(),
@@ -67,13 +69,15 @@ public class Overlay {
 			}
 			
 			if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
-				List<Worker> workers = playingState.getStatus().getWorkers();
-				for (Worker worker : workers) {
+				Map<Long, Worker> workers = playingState.getStatus()
+						.workers;
+				for (Long id : workers.keySet()) {
+					Worker worker = workers.get(id);
 					if (y > worker.getCoarseGrainedMinY() &&
 							y < worker.getCoarseGrainedMaxY() &&
 							x > worker.getCoarseGrainedMinX() &&
 							x < worker.getCoarseGrainedMaxX()) {
-						selectedUnit = worker;
+						selectedUnitID = id.longValue();
 						break;
 					}
 				}
@@ -87,9 +91,11 @@ public class Overlay {
 			
 			if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) ||
 					input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON)) {
-				System.out.println(selectedUnit.moveTo(new Vector(x, y)));
+				Worker selectedUnit = playingState.getStatus()
+						.workers.get(selectedUnitID);
+				selectedUnit.setDestination(new Vector(x, y));
 				action = 0;
-				selectedUnit = null;
+				selectedUnitID = -1;
 			}
 		} else if (action == 2) { // attack
 			if (isDefaultCursorSet) {
@@ -100,12 +106,12 @@ public class Overlay {
 		}
 		
 		g.drawImage(overlay, 0, 470);
-		if (selectedUnit != null) {
+		if (selectedUnitID != -1) {
 			g.drawImage(actionMove, 290, 520);
 			g.drawImage(actionAttack, 350, 520);
 		}
 		
-		if (y > 520 && y < 570 && selectedUnit != null) {
+		if (y > 520 && y < 570 && selectedUnitID != -1) {
 			if (x > 290 && x < 340) { // move button
 				// tooltip
 				x += 20;

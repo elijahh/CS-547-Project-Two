@@ -33,12 +33,12 @@ public class GameStatus {
 	}
 	
 	// TEMPORARY FOR DEVELOPMENT
-	private Worker worker_on_server_1 = 
-			new Worker(350, 300, new Vector(1, 0));
-	private Vector worker_on_server_1_dest = new Vector(100,100);
-	private Worker worker_on_server_2 = 
-			new Worker(450, 300, new Vector(1, 0));
-	private Vector worker_on_server_2_dest = new Vector(700,500);
+	public Worker worker_on_server_1 = 
+			new Worker(350, 300, new Vector(0, 0));
+	//public Vector worker_on_server_1_dest = new Vector(100,100);
+	public Worker worker_on_server_2 = 
+			new Worker(450, 300, new Vector(0, 0));
+	//private Vector worker_on_server_2_dest = new Vector(700,500);
 	
 	// TEMPORARY FOR DEVELOPMENT
 	
@@ -50,13 +50,10 @@ public class GameStatus {
 
 			// TEMPORARY FOR WORKING OUT MOVEMENT OF WORKER AND CODE FOR
 			// SYNCHRONIZATION/MOVEMENT
-			
-			worker_on_server_1.setTeam(AtlantisEntity.Team.RED);
-			worker_on_server_2.setTeam(AtlantisEntity.Team.BLUE);
 
-			// System.out.println("delta: "+delta);
+			//System.out.println("delta: "+delta);
 			
-			while(false == worker_on_server_1.isHandlingCollision() && 
+			/*while(false == worker_on_server_1.isHandlingCollision() && 
 					false == worker_on_server_1.moveTo(worker_on_server_1_dest)) {
 				worker_on_server_1_dest = new Vector(
 						random_generator.nextInt(AtlantisGame.DISPLAY_SIZE_X),
@@ -70,20 +67,30 @@ public class GameStatus {
 						random_generator.nextInt(AtlantisGame.DISPLAY_SIZE_X),
 						random_generator.nextInt(AtlantisGame.DISPLAY_SIZE_Y));
 				System.out.println("Worker 2 moving to " + worker_on_server_2_dest);
+			}*/
+			
+			synchronized (workers) {
+				List<AtlantisEntity.Updater> updaters = 
+						new ArrayList<AtlantisEntity.Updater>();
+				
+				if (workers.isEmpty()) {
+					worker_on_server_1.setTeam(AtlantisEntity.Team.RED);
+					worker_on_server_2.setTeam(AtlantisEntity.Team.BLUE);
+					worker_on_server_1.update(delta);
+					worker_on_server_2.update(delta);
+					updaters.add(worker_on_server_1.getUpdater());
+					updaters.add(worker_on_server_2.getUpdater());
+				} else {
+					for (Worker worker : workers.values()) {
+						if (worker.getDestination() != null)
+							worker.moveTo(worker.getDestination());
+						worker.update(delta);
+						updaters.add(worker.getUpdater());
+					}
+				}
+				
+				server.sendUpdates(updaters, playing_state.getCurrentFrame());
 			}
-			
-			worker_on_server_1.update(delta);
-			worker_on_server_2.update(delta);
-
-			List<AtlantisEntity.Updater> updaters = 
-					new ArrayList<AtlantisEntity.Updater>();
-			
-			updaters.add(worker_on_server_1.getUpdater());
-			updaters.add(worker_on_server_2.getUpdater());
-						
-			server.sendUpdates(updaters, playing_state.getCurrentFrame());
-			
-			// END TEMPORARY SECTION
 		}
 		
 		/* Process the updates sent by the server above. */

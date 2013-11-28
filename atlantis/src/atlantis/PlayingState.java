@@ -3,20 +3,11 @@
 
 package atlantis;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.concurrent.LinkedBlockingQueue;
-
-import jig.Vector;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -24,9 +15,6 @@ import org.newdawn.slick.tiled.TiledMap;
 
 import atlantis.networking.AtlantisClient;
 import atlantis.networking.AtlantisServer;
-import atlantis.networking.CommandLockStep;
-import atlantis.networking.ResultLockStep;
-import atlantis.networking.SimulationResult;
 
 public class PlayingState extends BasicGameState{
 
@@ -61,13 +49,7 @@ public class PlayingState extends BasicGameState{
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) throws SlickException {
-<<<<<<< HEAD
-
 		overlay = new Overlay(this);
-		currentNumberOfPlayers = 0;
-=======
-		overlay = new Overlay();
->>>>>>> refs/heads/develop
 		currentFrame = 0;
 		map = GamePrepareState.getMap();
 	}
@@ -107,15 +89,6 @@ public class PlayingState extends BasicGameState{
 	public void update(GameContainer container, StateBasedGame game,
 			int delta) throws SlickException {
 		currentFrame += 1;
-<<<<<<< HEAD
-		
-		Input input = container.getInput();
-		if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
-			
-		}
-		 
-=======
->>>>>>> refs/heads/develop
 		status.update(container, delta);
 	}
 
