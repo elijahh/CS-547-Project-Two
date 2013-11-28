@@ -16,6 +16,7 @@ import jig.Vector;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -63,11 +64,12 @@ public class PlayingState extends BasicGameState{
 	public AtlantisServer getServer() { return server; }
 	public AtlantisClient getClient() { return client; }
 	public int getCurrentFrame() { return currentFrame; }
+	public GameStatus getStatus() { return status; }
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) throws SlickException {
 
-		overlay = new Overlay();
+		overlay = new Overlay(this);
 		currentNumberOfPlayers = 0;
 		currentFrame = 0;
 		
@@ -147,6 +149,11 @@ public class PlayingState extends BasicGameState{
 	public void update(GameContainer container, StateBasedGame game,
 			int delta) throws SlickException {
 		currentFrame += 1;
+		
+		Input input = container.getInput();
+		if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
+			
+		}
 		 
 		status.update(container, delta);
 	}

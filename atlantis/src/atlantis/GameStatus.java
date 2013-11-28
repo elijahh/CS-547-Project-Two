@@ -28,10 +28,10 @@ public class GameStatus {
 	// TEMPORARY FOR DEVELOPMENT
 	private Worker worker_on_server_1 = 
 			new Worker(350, 300, new Vector(1, 0));
-	private Vector worker_on_server_1_dest = new Vector(350,300);
+	private Vector worker_on_server_1_dest = new Vector(100,100);
 	private Worker worker_on_server_2 = 
 			new Worker(450, 300, new Vector(1, 0));
-	private Vector worker_on_server_2_dest = new Vector(450, 300);
+	private Vector worker_on_server_2_dest = new Vector(700,500);
 	
 	Random random_generator = new Random();
 	// TEMPORARY FOR DEVELOPMENT
@@ -58,7 +58,7 @@ public class GameStatus {
 				System.out.println("Worker 1 moving to " + worker_on_server_1_dest);
 			}
 				
-			while(false == worker_on_server_1.isHandlingCollision() &&
+			while(false == worker_on_server_2.isHandlingCollision() &&
 					false == worker_on_server_2.moveTo(worker_on_server_2_dest)) {
 				worker_on_server_2_dest = new Vector(
 						random_generator.nextInt(AtlantisGame.DISPLAY_SIZE_X),
