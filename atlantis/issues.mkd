@@ -17,6 +17,9 @@ Milestone - End of day on 11/27. Anything above this point should be completed b
 
 - **[25]** Add a GamePrepareState. Server will wait for all clients to join and send map in this state 
 		and start game at both sides. This might solve the frame desynchronize problem in a better way.
+		
+- **[26]** Fix team movement -- currently only server player controls both teams' workers;
+		allow each player to control one but not the other.
 		   
 
 Resolved Issues 
