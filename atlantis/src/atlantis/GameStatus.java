@@ -21,6 +21,13 @@ public class GameStatus {
 	
 	private PlayingState playing_state;
 	
+	static Random random_generator;
+	
+	static {
+		random_generator = new Random();
+		random_generator.setSeed(System.currentTimeMillis());
+	}
+	
 	public GameStatus(PlayingState playing_state) {
 		this.playing_state = playing_state;
 	}
@@ -33,7 +40,6 @@ public class GameStatus {
 			new Worker(450, 300, new Vector(1, 0));
 	private Vector worker_on_server_2_dest = new Vector(700,500);
 	
-	Random random_generator = new Random();
 	// TEMPORARY FOR DEVELOPMENT
 	
 	public void update(GameContainer container, int delta) {

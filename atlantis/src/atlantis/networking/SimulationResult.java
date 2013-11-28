@@ -17,11 +17,12 @@ public class SimulationResult implements Serializable{
 
 	public static final transient int MAP = 0;
 	public static final transient int ENTITY_UPDATER = 0;
+	public static final transient int MESSAGE = 2;
 	
 	public int type;
 	
 	public String mapName;
-	
+	public String message;
 	public AtlantisEntity.Updater entity_updater;
 	
 	public void setMap(String mapName) {
@@ -32,5 +33,10 @@ public class SimulationResult implements Serializable{
 	public void setEntityUpdater(AtlantisEntity.Updater updater) {
 		type = ENTITY_UPDATER;
 		this.entity_updater = updater;
+	}
+	
+	public void setMessage(String message) {
+		type = MESSAGE;
+		this.message = message;
 	}
 }

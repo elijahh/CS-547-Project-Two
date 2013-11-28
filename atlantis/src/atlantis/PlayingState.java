@@ -30,13 +30,7 @@ import atlantis.networking.SimulationResult;
 
 public class PlayingState extends BasicGameState{
 
-	Overlay overlay;
-
-	public static volatile int currentNumberOfPlayers;
-	
-	ArrayList<AtlantisClient> clients;
-	
-	private static final int PORT_NUMBER = 6000;
+	Overlay overlay;	
 	AtlantisServer server;
 	AtlantisClient client;
 	public String command;
@@ -51,7 +45,6 @@ public class PlayingState extends BasicGameState{
 	/* Team is assumed to be BLUE (remote player). Code which starts server 
 	 * below reassigns team as RED (local player */
 	
-	
 	AtlantisEntity.Team team = AtlantisEntity.Team.BLUE;
 	
 	@Override
@@ -61,56 +54,22 @@ public class PlayingState extends BasicGameState{
 		status = new GameStatus(this);
 	}
 	
-	public AtlantisServer getServer() { return server; }
-	public AtlantisClient getClient() { return client; }
+	public AtlantisServer getServer() { return GamePrepareState.server; }
+	public AtlantisClient getClient() { return GamePrepareState.client; }
 	public int getCurrentFrame() { return currentFrame; }
 	public GameStatus getStatus() { return status; }
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) throws SlickException {
+<<<<<<< HEAD
 
 		overlay = new Overlay(this);
 		currentNumberOfPlayers = 0;
+=======
+		overlay = new Overlay();
+>>>>>>> refs/heads/develop
 		currentFrame = 0;
-		
-		/*If in server mode, create a server thread*/
-		if(StartMenuState.GAME_TYPE.equals("server")){
-			System.out.println("Server mode");
-			server = new AtlantisServer(PORT_NUMBER);
-			server.start(); 				
-			team = AtlantisEntity.Team.RED;
-		}
-		
-		System.out.println("New client join");
-		client = new AtlantisClient(PORT_NUMBER);
-		client.connect(StartMenuState.ADDRESS);
-		
-		if(StartMenuState.GAME_TYPE.equals("server")) {
-			/*
-			 * Stuck when currentNumberOfPlayer is less than NUMBER_OF_PLAYERS, waiting for two players both join and starts to send map.
-			 * Set NUMBER_OF_PLAYERS equal to 1 for single player and purpose of easy developing.
-			 */
-			while(currentNumberOfPlayers < StartMenuState.NUMBER_OF_PLAYERS){} 
-			//TODO: This is test case, need to change map and map name
-			mapName = "atlantis/resource/densemap.tmx"; 		
-			server.sendMap(mapName, currentFrame);
-			
-			GroundEntity.populateTerrainMap(map);
-		}
-		
-		//client waiting for map info
-		while (client.incomingLockSteps.isEmpty()) {}
-
-		while (!client.incomingLockSteps.isEmpty()) {
-			ResultLockStep step = client.incomingLockSteps.poll();
-			if(step.frameNum == 0) {
-				SimulationResult result = step.frameResults.get(0);
-				System.out.println("Map received!");
-				mapName = result.mapName;
-				map = new TiledMap(mapName);
-			}
-			break;
-		}
+		map = GamePrepareState.getMap();
 	}
 	
 	@Override
@@ -124,7 +83,6 @@ public class PlayingState extends BasicGameState{
 		Queue<Worker> workers = 
 				new PriorityQueue<Worker>(status.getWorkers());
 		for (Worker w : workers) {
-			//System.out.println("x:"+w.getX()+" y:"+w.getY());
 			w.render(g); 
 		}
 
@@ -133,10 +91,10 @@ public class PlayingState extends BasicGameState{
 		/* Client receive results from server */
 
 		if(StartMenuState.GAME_TYPE.equals("server"))
-			g.drawString("Server "+ server.command, 25, 200);
+			g.drawString("Server ", 25, 200);
 		
 		if(StartMenuState.GAME_TYPE.equals("client"))
-			g.drawString("Client "+ client.result, 25, 200);
+			g.drawString("Client ", 25, 200);
 	}
 	
 	private final void doHousekeeping() {
@@ -149,12 +107,15 @@ public class PlayingState extends BasicGameState{
 	public void update(GameContainer container, StateBasedGame game,
 			int delta) throws SlickException {
 		currentFrame += 1;
+<<<<<<< HEAD
 		
 		Input input = container.getInput();
 		if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
 			
 		}
 		 
+=======
+>>>>>>> refs/heads/develop
 		status.update(container, delta);
 	}
 
