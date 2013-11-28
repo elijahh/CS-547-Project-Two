@@ -5,10 +5,6 @@ Open Issues
 -----------
 - **[1]** Create basic game skeleton. Ongoing until Worker fully functional.
 
-- **[20]** Add player command interface to control entities. To start, entities should accept mouse 
-		   clicks directing location movement, one worker per player. Dependent on having moveTo()
-		   which will be added in [23].
-
 Milestone - End of day on 11/27. Anything above this point should be completed by then.
 
 - **[17]** Interface ground unit map to Tiled data. At this point, AtlantisServer should direct
@@ -17,23 +13,11 @@ Milestone - End of day on 11/27. Anything above this point should be completed b
 
 - **[22]** Add visual indicator for Red and Blue teams to entities.
 
-- **[24]** Address collision handling between the two workers. Inelegant as currently written.
+- **[24]** Address collision handling between two workers. Inelegant as currently written.
 
-- **[26]** Require Worker movement to be done with the interface -- click on worker, click move, 
-           click destination. Server-side list for active workers should be added.
-- **[27]** Start with a blank screen and start adding workers on each side in empty map areas according 
-           to a random schedule. Remove the temporary code that populated the two workers used in development of
-           [11] - [25].
-- **[28]** Expand "world" beyond 800x600. Viewport should move when user moves mouse to edges of
-           overlay. Consider arrow buttons on each edge of the overlay.
-- **[29]** Modify worker addition so that new workers show up in empty spaces in top left (red) and
-           bottom right corners of the virtual world.
-- **[30]** Add "base" GroundEntity to each side. Game enters "game over" state when base health on one side 
-		   reaches zero. 
-
-Milestone - End of day on 12/2. 
-
-...   
+- **[25]** Add a GamePrepareState. Server will wait for all clients to join and send map in this state 
+		and start game at both sides. This might solve the frame desynchronize problem in a better way.
+		   
 
 Resolved Issues 
 ---------------
@@ -64,15 +48,14 @@ Resolved Issues
 		   should appear to move on both screens.
 - **[19]** Add second worker entity which moves randomly. Workers should avoid collision even if they 
 		   are on the same team.
-
+- **[20]** Add player command interface to control entities. To start, entities should accept mouse 
+		   clicks directing location movement, one worker per player. Dependent on having moveTo()
+		   which will be added in [23].
 - **[21]** Add actual entity art for "worker" class.
 
 - **[23]** Set GroundEntity Dijkstra map to grid for now. Add moveTo(Vector position) method
            to AtlantisEntity to move entity to destination specified by Vector argument. [20] will 
            depend on having the moveTo().
-
-- **[25]** Add a GamePrepareState. Server will wait for all clients to join and send map in this state 
-		and start game at both sides. This might solve the frame desynchronize problem in a better way.
 		
 Need to Revisit
 ---------------

@@ -3,16 +3,8 @@
 
 package atlantis;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.concurrent.LinkedBlockingQueue;
-
-import jig.Vector;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -23,9 +15,6 @@ import org.newdawn.slick.tiled.TiledMap;
 
 import atlantis.networking.AtlantisClient;
 import atlantis.networking.AtlantisServer;
-import atlantis.networking.CommandLockStep;
-import atlantis.networking.ResultLockStep;
-import atlantis.networking.SimulationResult;
 
 public class PlayingState extends BasicGameState{
 
@@ -56,10 +45,11 @@ public class PlayingState extends BasicGameState{
 	public AtlantisServer getServer() { return GamePrepareState.server; }
 	public AtlantisClient getClient() { return GamePrepareState.client; }
 	public int getCurrentFrame() { return currentFrame; }
+	public GameStatus getStatus() { return status; }
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) throws SlickException {
-		overlay = new Overlay();
+		overlay = new Overlay(this);
 		currentFrame = 0;
 		map = GamePrepareState.getMap();
 	}

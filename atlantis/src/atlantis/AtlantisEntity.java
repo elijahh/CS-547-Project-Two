@@ -49,6 +49,7 @@ public abstract class AtlantisEntity extends Entity implements
 
 	protected Vector velocity;
 	protected DijkstraAlgorithm dijkstra;
+	public Vector destination_position;
 
 	protected Vector face_direction = STOPPED_VECTOR;
 	protected Vector movement_direction = STOPPED_VECTOR;
@@ -388,6 +389,14 @@ public abstract class AtlantisEntity extends Entity implements
 
 		return moving;
 	}
+	
+	public void setDestination(final Vector dest) {
+		this.destination_position = dest.copy();
+	}
+	
+	public Vector getDestination() {
+		return this.destination_position;
+	}
 
 	/* -------------------------------------------------------------------- */
 
@@ -446,6 +455,8 @@ public abstract class AtlantisEntity extends Entity implements
 
 		// TODO - Finish with as many variables as necessary to accurately
 		// communicate entity status to client for rendering.
+		
+		identity = updater.identity;
 	}
 
 	private Animation movement_animation = null;
