@@ -17,6 +17,7 @@ import jig.Entity;
 import jig.ResourceManager;
 import jig.Vector;
 import dijkstra.engine.DijkstraAlgorithm;
+import dijkstra.model.Graph;
 import dijkstra.model.Vertex;
 
 public abstract class AtlantisEntity extends Entity implements
@@ -43,9 +44,11 @@ public abstract class AtlantisEntity extends Entity implements
 	protected static final int MAP_DIAGONAL_MOVE_COST   = 141; /* mS */
 
 	private static Random random_generator = new Random();
+	
+	protected static Graph graph;
 
 	protected Vector velocity;
-	protected static DijkstraAlgorithm dijkstra;
+	protected DijkstraAlgorithm dijkstra;
 
 	protected Vector face_direction = STOPPED_VECTOR;
 	protected Vector movement_direction = STOPPED_VECTOR;
@@ -61,6 +64,9 @@ public abstract class AtlantisEntity extends Entity implements
 		super(x, y);
 		beginMovement(movement_direction);
 		identity = random_generator.nextLong();
+		
+		if(null != graph)
+			dijkstra = new DijkstraAlgorithm(graph);
 		
 		/*
 		 * We need to get one shape of the entity so that the server knows the
@@ -349,9 +355,6 @@ public abstract class AtlantisEntity extends Entity implements
 
 	public void update(final int delta) {
 		translate(velocity.scale(delta));
-
-
-		/* Update the entity-node maps */
 
 		updateEntityNodeMaps();
 	}

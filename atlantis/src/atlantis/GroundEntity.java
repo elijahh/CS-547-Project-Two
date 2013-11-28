@@ -60,8 +60,7 @@ abstract class GroundEntity extends AtlantisEntity {
 			/* Process TiledMap into nodes/edges. issue17 */
 		}
 
-		Graph graph = new Graph(map_nodes, map_edges);
-		dijkstra = new DijkstraAlgorithm(graph);
+		graph = new Graph(map_nodes, map_edges);
 	}
 	
 	/* -------------------------------------------------------------------- */

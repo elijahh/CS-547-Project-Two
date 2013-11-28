@@ -52,8 +52,7 @@ abstract class FloatingEntity extends AtlantisEntity {
 			}
 		}
 
-		Graph graph = new Graph(map_nodes, map_edges);
-		dijkstra = new DijkstraAlgorithm(graph);
+		graph = new Graph(map_nodes, map_edges);
 	}
 	
 	/* -------------------------------------------------------------------- */
