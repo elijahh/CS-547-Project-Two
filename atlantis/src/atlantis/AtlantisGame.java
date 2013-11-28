@@ -18,12 +18,14 @@ public class AtlantisGame extends StateBasedGame {
 	
 	public static final int SPLASH = 1;
 	public static final int MENU = 2;
-	public static final int PLAYING = 3;
-	public static final int GAME_OVER = 4;
+	public static final int PREPARE = 3;
+	public static final int PLAYING = 4;
+	public static final int GAME_OVER = 5;
 	
 	public static final String PIXEL = "atlantis/resource/pixel.png"; // "hides" cursor
 	public static final String CURSOR = "atlantis/resource/cursor.png";
 	public static final String SPLASH_SCREEN_GRAPHIC = "atlantis/resource/splash.png";
+	public static final String START_GAME = "atlantis/resource/PressSpace.png";
 	public static final String GAME_OVER_PROMPT_GRAPHIC = "atlantis/resource/GameOver.png";
 	public static final String CREATE_GAME = "atlantis/resource/create_game.png";
 	public static final String JOIN_GAME = "atlantis/resource/join_game.png";
@@ -51,12 +53,14 @@ public class AtlantisGame extends StateBasedGame {
 	public void initStatesList(GameContainer container) throws SlickException {
 		addState(new SplashState());
 		addState(new StartMenuState());
+		addState(new GamePrepareState());
 		addState(new PlayingState());
 		addState(new GameOverState());
 		
 		ResourceManager.loadImage(PIXEL);
 		ResourceManager.loadImage(CURSOR);
 		ResourceManager.loadImage(SPLASH_SCREEN_GRAPHIC);
+		ResourceManager.loadImage(START_GAME);
 		ResourceManager.loadImage(GAME_OVER_PROMPT_GRAPHIC);
 		ResourceManager.loadImage(CREATE_GAME);
 		ResourceManager.loadImage(JOIN_GAME);
@@ -77,8 +81,6 @@ public class AtlantisGame extends StateBasedGame {
 			app = new AppGameContainer(new AtlantisGame("Atlantis"));
 			app.setDisplayMode(DISPLAY_SIZE_X, DISPLAY_SIZE_Y, false);
 			app.setVSync(true);
-			app.setMaximumLogicUpdateInterval(20); // Max. 200 miliseconds can pass
-			app.setMinimumLogicUpdateInterval(10);
 			app.start();
 		} catch (SlickException e) {
 			e.printStackTrace();

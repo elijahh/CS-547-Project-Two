@@ -22,6 +22,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.tiled.TiledMap;
 
+import atlantis.GamePrepareState;
 import atlantis.PlayingState;
 import atlantis.AtlantisEntity;
 import atlantis.StartMenuState;
@@ -53,13 +54,13 @@ public class AtlantisServer extends Thread{
 		try{
 			ServerSocket serverSocket = new ServerSocket(PORT_NUMBER);
 			try{
-				while(PlayingState.currentNumberOfPlayers < StartMenuState.NUMBER_OF_PLAYERS) {
+				while(GamePrepareState.currentNumberOfPlayers < StartMenuState.NUMBER_OF_PLAYERS) {
 					System.out.println("Waiting for client...");
 					clientSocket = serverSocket.accept();
 					socketList.add(clientSocket);
 					System.out.println("Connected!");
 					createListener(clientSocket);
-					PlayingState.currentNumberOfPlayers++;
+					GamePrepareState.currentNumberOfPlayers++;
 				}
 			}catch (IOException e  ) {
 				System.out.println( "client error " + e.toString() );
@@ -84,6 +85,23 @@ public class AtlantisServer extends Thread{
 			}
 		} catch (IOException e){
 			
+		}
+	}
+	
+	public void startGame(int frameNum){
+		SimulationResult result = new SimulationResult();
+		result.setMessage("start");	
+		ResultLockStep step = new ResultLockStep(frameNum);
+		step.addResult(result);
+	
+		for(Socket clientSocket: socketList) {
+			try {
+				OutputStream out = clientSocket.getOutputStream();
+				ObjectOutputStream oos = new ObjectOutputStream(out);
+				oos.writeObject(step);
+			} catch (IOException e) {
+
+			}
 		}
 	}
 	
