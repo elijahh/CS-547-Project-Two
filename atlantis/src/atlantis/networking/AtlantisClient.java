@@ -51,13 +51,14 @@ public class AtlantisClient {
 		incomingLockSteps = new LinkedBlockingQueue<ResultLockStep>();
 	}
 	
-	public void connect(String address) {
+	public boolean connect(String address) {
 		try{
 			socket = new Socket(address, PORT_NUMBER);
 			createListener();
 		}catch ( IOException e ) {
 			System.out.println( "No socket! " + e.toString());
-		} 
+		}		
+		return true;
 	}
 	
 	public void createListener() {
