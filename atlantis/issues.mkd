@@ -19,9 +19,6 @@ Milestone - End of day on 11/27. Anything above this point should be completed b
 
 - **[24]** Address collision handling between the two workers. Inelegant as currently written.
 
-- **[25]** Add a GamePrepareState. Server will wait for all clients to join and send map in this state 
-		and start game at both sides. This might solve the frame desynchronize problem in a better way.
-
 - **[26]** Require Worker movement to be done with the interface -- click on worker, click move, 
            click destination. Server-side list for active workers should be added.
 - **[27]** Start with a blank screen and start adding workers on each side in empty map areas according 
@@ -73,6 +70,9 @@ Resolved Issues
 - **[23]** Set GroundEntity Dijkstra map to grid for now. Add moveTo(Vector position) method
            to AtlantisEntity to move entity to destination specified by Vector argument. [20] will 
            depend on having the moveTo().
+
+- **[25]** Add a GamePrepareState. Server will wait for all clients to join and send map in this state 
+		and start game at both sides. This might solve the frame desynchronize problem in a better way.
 		
 Need to Revisit
 ---------------
