@@ -29,13 +29,7 @@ import atlantis.networking.SimulationResult;
 
 public class PlayingState extends BasicGameState{
 
-	Overlay overlay;
-
-	public static volatile int currentNumberOfPlayers;
-	
-	ArrayList<AtlantisClient> clients;
-	
-	private static final int PORT_NUMBER = 6000;
+	Overlay overlay;	
 	AtlantisServer server;
 	AtlantisClient client;
 	public String command;
@@ -82,7 +76,6 @@ public class PlayingState extends BasicGameState{
 		Queue<Worker> workers = 
 				new PriorityQueue<Worker>(status.getWorkers());
 		for (Worker w : workers) {
-			//System.out.println("x:"+w.getX()+" y:"+w.getY());
 			w.render(g); 
 		}
 
@@ -107,7 +100,6 @@ public class PlayingState extends BasicGameState{
 	public void update(GameContainer container, StateBasedGame game,
 			int delta) throws SlickException {
 		currentFrame += 1;
-		System.out.println("Frame: "+currentFrame);
 		status.update(container, delta);
 	}
 
