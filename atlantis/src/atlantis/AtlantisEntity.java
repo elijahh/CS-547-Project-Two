@@ -381,10 +381,10 @@ public abstract class AtlantisEntity extends Entity implements
 
 			Vector move_direction = this.getNextMovementFromPath(path);
 
-			if (move_direction != STOPPED_VECTOR) {
-				beginMovement(move_direction);
+			if (move_direction != STOPPED_VECTOR) 
 				moving = true;
-			}
+			
+			beginMovement(move_direction);
 		}
 
 		return moving;
