@@ -66,7 +66,7 @@ public class AtlantisClient {
 		sl.start();
 	}
 	
-	public void sendCommand(GameContainer container, int frameNum, CommandLockStep step) {
+	public void sendCommand(CommandLockStep step) {
 		try {
 		
 			OutputStream out = socket.getOutputStream();
@@ -76,6 +76,15 @@ public class AtlantisClient {
 		} catch (IOException e){
 			
 		}
+	}
+	
+	public void sendCommands(List<Command> commands, int frameNum) {
+		CommandLockStep step = new CommandLockStep(frameNum);
+		
+		for(Command c : commands)
+			step.addCommand(c);
+		
+		// sendCommand(step);
 	}
 	
 	public class serverListener extends Thread{

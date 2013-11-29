@@ -50,7 +50,7 @@ public class Overlay {
 		if (selectedUnitID != -1) { // highlight selected unit
 			g.setColor(Color.yellow);
 			AtlantisEntity selectedUnit = playingState.getStatus()
-					.workers.get(selectedUnitID);
+					.getIdWorkersMap().get(selectedUnitID);
 			g.drawRect(selectedUnit.getCoarseGrainedMinX(),
 					selectedUnit.getCoarseGrainedMinY(),
 					selectedUnit.getCoarseGrainedWidth(),
@@ -70,7 +70,7 @@ public class Overlay {
 			
 			if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
 				Map<Long, Worker> workers = playingState.getStatus()
-						.workers;
+						.getIdWorkersMap();
 				for (Long id : workers.keySet()) {
 					Worker worker = workers.get(id);
 					if (y > worker.getCoarseGrainedMinY() &&
@@ -92,7 +92,7 @@ public class Overlay {
 			if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) ||
 					input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON)) {
 				Worker selectedUnit = playingState.getStatus()
-						.workers.get(selectedUnitID);
+						.getIdWorkersMap().get(selectedUnitID);
 				selectedUnit.setDestination(new Vector(x, y));
 				action = 0;
 				selectedUnitID = -1;
