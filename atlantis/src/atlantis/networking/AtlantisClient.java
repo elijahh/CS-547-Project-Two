@@ -85,7 +85,7 @@ public class AtlantisClient {
 			step.addCommand(c);
 		
 		// TODO: Program locks up when this next line is uncommented. Network issue?
-		// sendCommand(step);
+		sendCommand(step);
 	}
 	
 	public class serverListener extends Thread{
