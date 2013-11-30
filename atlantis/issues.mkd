@@ -11,8 +11,6 @@ Milestone - End of day on 11/27. Anything above this point should be completed b
 		   single entity from [11] - [16] to locations picked at random, and entity should move
 		   according to the map.
 
-- **[22]** Add visual indicator for Red and Blue teams to entities.
-
 - **[24]** Separate entity "model" on server from "view" on client. Mouse interaction with the view should 
            result in server receiving commands across the network to update the model. 
 - **[25]** Address collision handling between two workers. Inelegant as currently written. Requires [24] to
@@ -68,7 +66,7 @@ Resolved Issues
 		   clicks directing location movement, one worker per player. Dependent on having moveTo()
 		   which will be added in [23].
 - **[21]** Add actual entity art for "worker" class.
-
+- **[22]** Add visual indicator for Red and Blue teams to entities.
 - **[23]** Set GroundEntity Dijkstra map to grid for now. Add moveTo(Vector position) method
            to AtlantisEntity to move entity to destination specified by Vector argument. [20] will 
            depend on having the moveTo().

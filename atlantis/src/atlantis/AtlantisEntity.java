@@ -79,7 +79,6 @@ public abstract class AtlantisEntity extends Entity implements
 		if (null != still_image) {
 			addImageWithBoundingBox(still_image);
 		}
-	
 	}
 	
 	private Image still_image = null;
@@ -98,6 +97,10 @@ public abstract class AtlantisEntity extends Entity implements
 
 	public void setTeam(Team team) {
 		this.team = team;
+	}
+	
+	public Team getTeam() {
+		return this.team;
 	}
 
 	protected boolean homing = false;
@@ -417,6 +420,7 @@ public abstract class AtlantisEntity extends Entity implements
 			//System.out.println("server x:"+position.getX()+" server y:"+position.getY());
 			velocity = e.velocity;
 			identity = e.identity;
+			team = e.team;
 			
 			entity_class = e.getClass();
 		}
@@ -443,6 +447,7 @@ public abstract class AtlantisEntity extends Entity implements
 	abstract Animation getMovementAnimation(Vector move_direction);
 
 	abstract String getStillImageFilename(Vector face_direction);
+	abstract String getIconFilename();
 
 	public void update(AtlantisEntity.Updater updater) {
 		this.setPosition(updater.position);
@@ -464,6 +469,10 @@ public abstract class AtlantisEntity extends Entity implements
 	@Override
 	public void render(final Graphics g) {
 
+		g.drawImage(ResourceManager.getImage(getIconFilename()),
+				(getCoarseGrainedMinX() + getCoarseGrainedMaxX())/2f - 12,
+				getCoarseGrainedMinY() - 30);
+		
 		/* Entity is moving. Animate appropriately. */
 
 		if (false == movement_direction.equals(STOPPED_VECTOR)) {
