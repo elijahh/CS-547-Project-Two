@@ -177,10 +177,9 @@ public abstract class AtlantisEntity extends Entity implements
 		return angle_vector;
 	}
 
-	private final int calculateMapNode(final float x, final float y) {
+	public static final int calculateMapNode(final float x, final float y) {
 		final int g_x = (int) (x) / MAP_X_NODE_DIMENSION;
 		final int g_y = (int) (y) / MAP_Y_NODE_DIMENSION;
-
 		return (g_y * MAP_GRID_X + g_x);
 	}
 
@@ -290,6 +289,14 @@ public abstract class AtlantisEntity extends Entity implements
 
 		return returned_value;
 	}
+	
+	public static final Set<AtlantisEntity> listEntitiesInMapNode(final int node) {
+		Set<AtlantisEntity> entities_in_node = new HashSet<AtlantisEntity>();
+		
+		entities_in_node.addAll(node_entity_map.get(node));
+		
+		return Collections.unmodifiableSet(entities_in_node);
+	}
 
 	public final Set<AtlantisEntity> listNearbyEntities() {
 		Set<AtlantisEntity> nearby_entities = new HashSet<AtlantisEntity>();
@@ -384,10 +391,10 @@ public abstract class AtlantisEntity extends Entity implements
 
 			Vector move_direction = this.getNextMovementFromPath(path);
 
-			if (move_direction != STOPPED_VECTOR) {
-				beginMovement(move_direction);
+			if (move_direction != STOPPED_VECTOR) 
 				moving = true;
-			}
+			
+			beginMovement(move_direction);
 		}
 
 		return moving;
@@ -451,8 +458,9 @@ public abstract class AtlantisEntity extends Entity implements
 
 	public void update(AtlantisEntity.Updater updater) {
 		this.setPosition(updater.position);
-		velocity = updater.velocity;
 		
+		/* Set values */
+		velocity = updater.velocity;
 		team = updater.team;
 
 		/* Derived values */
@@ -461,6 +469,7 @@ public abstract class AtlantisEntity extends Entity implements
 		// TODO - Finish with as many variables as necessary to accurately
 		// communicate entity status to client for rendering.
 		
+		/* Identity - very important to keep consistent */
 		identity = updater.identity;
 	}
 

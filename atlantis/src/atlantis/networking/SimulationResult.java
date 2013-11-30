@@ -16,7 +16,7 @@ public class SimulationResult implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	public static final transient int MAP = 0;
-	public static final transient int ENTITY_UPDATER = 0;
+	public static final transient int ENTITY_UPDATER = 1;
 	public static final transient int MESSAGE = 2;
 	
 	public int type;

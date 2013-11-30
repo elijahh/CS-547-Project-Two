@@ -14,6 +14,8 @@ import org.newdawn.slick.GameContainer;
 import atlantis.AtlantisEntity;
 import atlantis.networking.AtlantisClient;
 import atlantis.networking.AtlantisServer;
+import atlantis.networking.Command;
+import atlantis.networking.CommandLockStep;
 import atlantis.networking.ResultLockStep;
 import atlantis.networking.SimulationResult;
 
@@ -39,7 +41,6 @@ public class GameStatus {
 	public Worker worker_on_server_2 = 
 			new Worker(450, 300, new Vector(0, 0));
 	//private Vector worker_on_server_2_dest = new Vector(700,500);
-	
 	// TEMPORARY FOR DEVELOPMENT
 	
 	public void update(GameContainer container, int delta) {
@@ -68,11 +69,11 @@ public class GameStatus {
 						random_generator.nextInt(AtlantisGame.DISPLAY_SIZE_Y));
 				System.out.println("Worker 2 moving to " + worker_on_server_2_dest);
 			}*/
+
+			List<AtlantisEntity.Updater> updaters = 
+					new ArrayList<AtlantisEntity.Updater>();
 			
 			synchronized (workers) {
-				List<AtlantisEntity.Updater> updaters = 
-						new ArrayList<AtlantisEntity.Updater>();
-				
 				if (workers.isEmpty()) {
 					worker_on_server_1.setTeam(AtlantisEntity.Team.RED);
 					worker_on_server_2.setTeam(AtlantisEntity.Team.BLUE);
@@ -88,12 +89,20 @@ public class GameStatus {
 						updaters.add(worker.getUpdater());
 					}
 				}
+			}
 				
-				server.sendUpdates(updaters, playing_state.getCurrentFrame());
+			server.sendUpdates(updaters, playing_state.getCurrentFrame());
+			
+			/* Process the commands sent by the clients */
+			
+			while(!server.incomingLockSteps.isEmpty()) {
+				CommandLockStep step = server.incomingLockSteps.poll();
+				System.out.println(currentFrame + " "+ step.frameNum);
+				// TODO Process individual Command objects inside lock step
 			}
 		}
 		
-		/* Process the updates sent by the server above. */
+		/* Process the entity updates sent by the server above. */
 		
 		AtlantisClient client = playing_state.getClient();
 						
@@ -106,10 +115,21 @@ public class GameStatus {
 					if (null != updater)
 						processUpdater(updater);
 				}
+				
+				break;
 			}
-			break;
 		}
+		
+		/* Send commands to the server */		
+		
+		client.sendCommands(commands_to_server, playing_state.getCurrentFrame());
+		commands_to_server.clear();
 	}
+
+	/* -------------------------------------------------------------------- */
+	
+	private Map<Long, Worker> workers = new HashMap<Long, Worker>();
+	private List<Command> commands_to_server = new ArrayList<Command>();
 	
 	private void processUpdater(AtlantisEntity.Updater updater) {
 		if(updater.getEntityClass() == Worker.class) {			
@@ -130,8 +150,6 @@ public class GameStatus {
 		}
 	}
 	
-	Map<Long, Worker> workers = new HashMap<Long, Worker>();
-	
 	public List<Worker> getWorkers() {
 		List<Worker> worker_list = new ArrayList<Worker>();
 		
@@ -140,5 +158,21 @@ public class GameStatus {
 		}
 		
 		return Collections.unmodifiableList(worker_list);
+	}
+	
+	public Map<Long, Worker> getIdWorkersMap() {
+		Map<Long, Worker> id_worker_map;
+		
+		synchronized(workers) {
+			id_worker_map = Collections.unmodifiableMap(workers);
+		}
+		
+		return id_worker_map;
+	}
+	
+	/* -------------------------------------------------------------------- */
+	
+	private void processCommand(Command command) {
+		
 	}
 }
