@@ -26,8 +26,8 @@ public class GamePrepareState extends BasicGameState {
 	boolean isClientConnected;
 	static TiledMap map;
 	
-	static String mapName = "atlantis/resource/densemap.tmx"; 
-	
+	//static String mapName = "atlantis/resource/densemap.tmx"; 
+	static String mapName = "atlantis/resource/bigmap.tmx"; 
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)

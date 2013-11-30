@@ -6,8 +6,11 @@ package atlantis;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+import jig.ResourceManager;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -29,6 +32,9 @@ public class PlayingState extends BasicGameState{
 	TiledMap map;
 	String mapName;
 	volatile int currentFrame;
+	
+	public static int viewportOffsetX;
+	public static int viewportOffsetY;
 	
 	/* Team is assumed to be BLUE (remote player). Code which starts server 
 	 * below reassigns team as RED (local player */
@@ -52,13 +58,16 @@ public class PlayingState extends BasicGameState{
 		overlay = new Overlay(this);
 		currentFrame = 0;
 		map = GamePrepareState.getMap();
+		
+		viewportOffsetX = 0;
+		viewportOffsetY = 0;
 	}
 	
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
 		
-		map.render(0, 0);
+		map.render(viewportOffsetX, viewportOffsetY);
 		
 		//System.out.println("RENDERING WORKERS");
 

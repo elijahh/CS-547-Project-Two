@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="40" height="40" tilewidth="32" tileheight="32" backgroundcolor="#999999">
+ <tileset firstgid="1" name="Terrain" tilewidth="32" tileheight="32">
+  <image source="densemap-terrain.png" width="128" height="128"/>
+  <terraintypes>
+   <terrain name="blackstuff" tile="0"/>
+   <terrain name="greenstuff" tile="2"/>
+   <terrain name="orangestuff" tile="8"/>
+   <terrain name="pinkstuff" tile="10"/>
+  </terraintypes>
+ </tileset>
+ <imagelayer name="Image Layer 1" width="40" height="40">
+  <image source="densemap-background.png"/>
+ </imagelayer>
+ <layer name="Tile Layer 1" width="40" height="40">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+2YSQrDMAxF03luev/TVlkYhIl+HUse6wdaGBPQ8GWJTFMb7Mj2wt2N7J7RlzVOZGfh7kX2ZmcUC6dUXCgWjh+XA/n9IHtG+mWF5PfCTPYR7g5kR3YOqY//TUouZFd2RnFK35QmtDccqAYW/ePrNbQ3HKgGIfX5BdJrKZDmS/U/1xXSPM+nRj9b40S6kvKp0Y+lbjRvSA2zG2HRo2v8a9wtUsPOgig1A4aGBxpy7sYxbJlr2lhSvzHaPb/GPTOUnt7vWJ3lykGszlrW10JPGqudmFznnDUxua7hP4xFjlL2gUWOeuqDgZ4v8PKu8wAZAAA=
+  </data>
+ </layer>
+</map>
