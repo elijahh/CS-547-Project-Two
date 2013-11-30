@@ -95,10 +95,11 @@ public class GameStatus {
 			
 			/* Process the commands sent by the clients */
 			
-//			while(!server.incomingLockSteps.isEmpty()) {
-//				CommandLockStep step = server.incomingLockSteps.poll();
-//				System.out.println(currentFrame + " "+ step.frameNum);
-//			}
+			while(!server.incomingLockSteps.isEmpty()) {
+				CommandLockStep step = server.incomingLockSteps.poll();
+				System.out.println(currentFrame + " "+ step.frameNum);
+				// TODO Process individual Command objects inside lock step
+			}
 		}
 		
 		/* Process the entity updates sent by the server above. */
@@ -114,8 +115,9 @@ public class GameStatus {
 					if (null != updater)
 						processUpdater(updater);
 				}
+				
+				break;
 			}
-			break;
 		}
 		
 		/* Send commands to the server */		
