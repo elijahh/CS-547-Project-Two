@@ -163,6 +163,4 @@ public class AtlantisServer extends Thread{
 			}
 		}
 	}
-	
-	
 }

@@ -69,11 +69,11 @@ public class GameStatus {
 						random_generator.nextInt(AtlantisGame.DISPLAY_SIZE_Y));
 				System.out.println("Worker 2 moving to " + worker_on_server_2_dest);
 			}*/
+
+			List<AtlantisEntity.Updater> updaters = 
+					new ArrayList<AtlantisEntity.Updater>();
 			
 			synchronized (workers) {
-				List<AtlantisEntity.Updater> updaters = 
-						new ArrayList<AtlantisEntity.Updater>();
-				
 				if (workers.isEmpty()) {
 					worker_on_server_1.setTeam(AtlantisEntity.Team.RED);
 					worker_on_server_2.setTeam(AtlantisEntity.Team.BLUE);
@@ -89,9 +89,9 @@ public class GameStatus {
 						updaters.add(worker.getUpdater());
 					}
 				}
-				
-				server.sendUpdates(updaters, playing_state.getCurrentFrame());
 			}
+				
+			server.sendUpdates(updaters, playing_state.getCurrentFrame());
 			
 			/* Process the commands sent by the clients */
 			
