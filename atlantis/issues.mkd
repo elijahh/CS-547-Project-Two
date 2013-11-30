@@ -15,20 +15,17 @@ Milestone - End of day on 11/27. Anything above this point should be completed b
            result in server receiving commands across the network to update the model. Server-side list for
            active workers should be added at this point.
 - **[25]** Address collision handling between two workers. Inelegant as currently written. Requires [24] to
-           be complete.
-- **[26]** Add a GamePrepareState. Server will wait for all clients to join and send map in this state 
-		   and start game at both sides. This might solve the frame desynchronize problem in a better way.		
+           be complete.		
 - **[27]** Fix team movement -- currently only server player controls both teams' workers;
 		   allow each player to control one but not the other.
 - **[28]** Start with a blank screen and start adding workers on each side in empty map areas according 
            to a random schedule. Remove the temporary code that populated the two workers used in development of
            [11] - [25].
-- **[29]** Expand "world" beyond 800x600. Viewport should move when user moves mouse to edges of
-           overlay. Consider arrow buttons on each edge of the overlay.
 - **[30]** Modify worker addition so that new workers show up in empty spaces in top left (red) and
            bottom right corners of the virtual world.
 - **[31]** Add "base" GroundEntity to each side. Game enters "game over" state when base health on one side 
-		   reaches zero. 
+		   reaches zero.
+- **[32]** Translate world coordinates to local coordinates according to viewport offset. 
 
 Milestone - End of day on 12/2. 
 
@@ -69,6 +66,10 @@ Resolved Issues
 - **[23]** Set GroundEntity Dijkstra map to grid for now. Add moveTo(Vector position) method
            to AtlantisEntity to move entity to destination specified by Vector argument. [20] will 
            depend on having the moveTo().
+- **[26]** Add a GamePrepareState. Server will wait for all clients to join and send map in this state 
+		   and start game at both sides. This might solve the frame desynchronize problem in a better way.
+- **[29]** Expand "world" beyond 800x600. Viewport should move when user moves mouse to edges of
+           overlay. Consider arrow buttons on each edge of the overlay.
 		
 Need to Revisit
 ---------------
