@@ -59,8 +59,12 @@ public class PlayingState extends BasicGameState{
 		currentFrame = 0;
 		map = GamePrepareState.getMap();
 		
+<<<<<<< Upstream, based on develop
 		viewportOffsetX = 0;
 		viewportOffsetY = 0;
+=======
+		GroundEntity.populateTerrainMap(map);
+>>>>>>> 069fae5 Began taking apart TiledMap format. Interim check-in
 	}
 	
 	@Override
@@ -106,8 +110,5 @@ public class PlayingState extends BasicGameState{
 		return AtlantisGame.PLAYING;
 	}
 	
-	/* -------------------------------------------------------------------- */
-	
-	/* Game state methods/fields */	
-	
+	public TiledMap getMap() { return map; }
 }
