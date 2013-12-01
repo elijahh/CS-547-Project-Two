@@ -24,7 +24,7 @@ public class GamePrepareState extends BasicGameState {
 	int frameNum = 0;
 	boolean hasSentMap;
 	boolean isClientConnected;
-	static TiledMap map;
+	static AtlantisMap map;
 	
 	//static String mapName = "atlantis/resource/densemap.tmx"; 
 	static String mapName = "atlantis/resource/bigmap.tmx"; 
@@ -107,7 +107,7 @@ public class GamePrepareState extends BasicGameState {
 				if(result.type == result.MAP) {
 					System.out.println("Map received!");
 					mapName = result.mapName;
-					map = new TiledMap(mapName);
+					map = new AtlantisMap(mapName);
 				}
 				else if(result.type == result.MESSAGE) {
 					if(result.message.equals("start")) game.enterState(AtlantisGame.PLAYING);
@@ -121,7 +121,7 @@ public class GamePrepareState extends BasicGameState {
 		return AtlantisGame.PREPARE;
 	}
 
-	public static TiledMap getMap() {
+	public static AtlantisMap getMap() {
 		return map;
 	}
 }

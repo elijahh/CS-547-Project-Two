@@ -34,27 +34,26 @@ abstract class GroundEntity extends AtlantisEntity {
 	public static void populateTerrainMap(TiledMap map) {
 		List<Edge> map_edges = new ArrayList<Edge>();
 		List<Vertex> map_nodes = new ArrayList<Vertex>();
+	
+		for (int j = 0; j < MAP_GRID_Y; j++) {
+			for (int i = 0; i < MAP_GRID_X; i++) {
+				int n = j * MAP_GRID_X + i;
 
-		if (null == map) {
-			for (int j = 0; j < MAP_GRID_Y; j++) {
-				for (int i = 0; i < MAP_GRID_X; i++) {
-					int n = j * MAP_GRID_X + i;
+				Vertex location = new Vertex("Node_" + n);
+				map_nodes.add(location);
 
-					Vertex location = new Vertex("Node_" + n);
-					map_nodes.add(location);
-
-					if (0 < i)
-						Graph.addLane(map_edges, map_nodes, n, n - 1,
-								MAP_HORIZONTAL_MOVE_COST);
-					if (0 < j)
-						Graph.addLane(map_edges, map_nodes, n, n - MAP_GRID_X,
-								MAP_VERTICAL_MOVE_COST);
-				}
+				if (0 < i)
+					Graph.addLane(map_edges, map_nodes, n, n - 1,
+							MAP_HORIZONTAL_MOVE_COST);
+				if (0 < j)
+					Graph.addLane(map_edges, map_nodes, n, n - MAP_GRID_X,
+							MAP_VERTICAL_MOVE_COST);
 			}
-			
-		} else {
+		}
+		
+		if(null != map) {
 
-			/* Process TiledMap into nodes/edges. issue17 */
+			/* Process TiledMap into modified nodes/edges. issue17 */
 			
 			System.out.println(map.getHeight() + " " + map.getWidth());
 			System.out.println(map.getLayerCount());

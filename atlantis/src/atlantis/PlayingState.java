@@ -29,7 +29,7 @@ public class PlayingState extends BasicGameState{
 	
 	GameStatus status;
 	
-	TiledMap map;
+	AtlantisMap map;
 	String mapName;
 	volatile int currentFrame;
 	
@@ -57,11 +57,11 @@ public class PlayingState extends BasicGameState{
 	public void enter(GameContainer container, StateBasedGame game) throws SlickException {
 		overlay = new Overlay(this);
 		currentFrame = 0;
-		map = GamePrepareState.getMap();
 		
 		viewportOffsetX = 0;
 		viewportOffsetY = 0;
 		
+		map = GamePrepareState.getMap();
 		GroundEntity.populateTerrainMap(map);
 	}
 	
