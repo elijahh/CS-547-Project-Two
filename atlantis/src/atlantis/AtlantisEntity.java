@@ -177,6 +177,10 @@ public abstract class AtlantisEntity extends Entity implements
 		return angle_vector;
 	}
 
+	public static List<Vector> getMapNodeCenterCoords() {
+	 
+	}
+
 	public static final int calculateMapNode(final float x, final float y) {
 		final int g_x = (int) (x) / MAP_X_NODE_DIMENSION;
 		final int g_y = (int) (y) / MAP_Y_NODE_DIMENSION;

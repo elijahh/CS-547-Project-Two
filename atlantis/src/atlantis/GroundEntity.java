@@ -55,8 +55,7 @@ abstract class GroundEntity extends AtlantisEntity {
 
 			/* Process TiledMap into modified nodes/edges. issue17 */
 			
-			System.out.println(map.getHeight() + " " + map.getWidth());
-			System.out.println(map.getLayerCount());
+
 		}
 
 		graph = new Graph(map_nodes, map_edges);

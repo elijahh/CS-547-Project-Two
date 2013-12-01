@@ -3,12 +3,20 @@ package atlantis;
 import java.io.InputStream;
 
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.tiled.TileSet;
 import org.newdawn.slick.tiled.TiledMap;
 
 public class AtlantisMap extends TiledMap {
 
 	public AtlantisMap(String ref) throws SlickException {
 		super(ref);
+		
+		System.out.println("objectGroups.size() = "+ this.objectGroups.size());
+		System.out.println("tileSets.size() = " + this.tileSets.size());
+		
+		TileSet tileset = getTileSet(0);
+		
+		System.out.println(tileset);
 	}
 
 	public AtlantisMap(InputStream in) throws SlickException {
