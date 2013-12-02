@@ -66,7 +66,7 @@ public class AtlantisMap extends TiledMap {
 				}
 			}
 		
-		edges.addAll(add_edges);
-		edges.removeAll(remove_edges);
+		//edges.addAll(add_edges);
+		//edges.removeAll(remove_edges);
 	}
 }
