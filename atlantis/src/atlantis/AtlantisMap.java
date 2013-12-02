@@ -37,12 +37,14 @@ public class AtlantisMap extends TiledMap {
 
 	public void processMovementCostsIntoEdges(final List<Vertex> nodes,
 			List<Edge> edges) {
-		List<Edge> remove_edges = new ArrayList(edges.size());
-		List<Edge> add_edges = new ArrayList(edges.size());
+		List<Edge> remove_edges = new ArrayList<Edge>(edges.size());
+		List<Edge> add_edges = new ArrayList<Edge>(edges.size());
 		
-		for (int i = 0; i < this.getWidth(); i++)
-			for (int j = 0; j < this.getHeight(); j++) {
-				int tile_id = this.getTileId(i, j, 0);
+		// System.out.println(edges.size());
+		
+		for (int i = 0; i < getWidth(); i++)
+			for (int j = 0; j < getHeight(); j++) {
+				int tile_id = getTileId(i, j, 0);
 
 				/*
 				 * Avoid non-zero tiles for now. Refinement will be possible
@@ -50,12 +52,11 @@ public class AtlantisMap extends TiledMap {
 				 */
 
 				if (tile_id != 0) {
-					int map_node_id = j * AtlantisEntity.MAP_GRID_X + j;
+					int map_node_id = j * AtlantisEntity.MAP_GRID_X + i;
 					Vertex map_node = nodes.get(map_node_id);
 
 					for (Edge edge : edges) {
-						if (edge.getDestination() == map_node
-								|| edge.getSource() == map_node) {
+						if (edge.getDestination() == map_node) {
 							remove_edges.add(edge);
 							Edge new_edge = new Edge(edge.getId(),
 									edge.getSource(), edge.getDestination(),
@@ -66,7 +67,14 @@ public class AtlantisMap extends TiledMap {
 				}
 			}
 		
-		//edges.addAll(add_edges);
-		//edges.removeAll(remove_edges);
+		edges.removeAll(remove_edges);
+		
+		// System.out.println(remove_edges.size());
+		// System.out.println(edges.size());
+		
+		edges.addAll(add_edges);
+		
+		// System.out.println(add_edges.size());
+		// System.out.println(edges.size());
 	}
 }
