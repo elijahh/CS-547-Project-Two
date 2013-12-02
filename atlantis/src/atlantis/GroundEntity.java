@@ -55,12 +55,7 @@ abstract class GroundEntity extends AtlantisEntity {
 
 			/* Process AtlantisMap into modified nodes/edges. issue17 */
 			
-			List<Vector> node_centers = 
-					AtlantisEntity.getMapNodeCenterCoords();
-			
-			for(Vector node : node_centers) {
-				
-			}
+			map.processMovementCostsIntoEdges(map_nodes, map_edges);
 		}
 
 		graph = new Graph(map_nodes, map_edges);
