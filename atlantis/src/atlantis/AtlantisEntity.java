@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -175,6 +176,23 @@ public abstract class AtlantisEntity extends Entity implements
 		}
 
 		return angle_vector;
+	}
+
+	public static List<Vector> getMapNodeCenterCoords() {
+		List<Vector> node_centers = new ArrayList<Vector>(MAP_GRID_X * MAP_GRID_Y);
+	 
+		for (int i = 0; i < MAP_GRID_X; i++) {
+			float node_center_x = 
+					MAP_X_NODE_DIMENSION / 2.0f + i * MAP_X_NODE_DIMENSION;
+			for (int j = 0; j < MAP_GRID_Y; j++) {
+				float node_center_y = 
+						MAP_Y_NODE_DIMENSION / 2.0f + j * MAP_Y_NODE_DIMENSION;
+				Vector node_center = new Vector(node_center_x, node_center_y);
+				node_centers.add(node_center);
+			}
+		}
+		
+	    return Collections.unmodifiableList(node_centers);
 	}
 
 	public static final int calculateMapNode(final float x, final float y) {
@@ -378,8 +396,8 @@ public abstract class AtlantisEntity extends Entity implements
 	boolean moveTo(final Vector destination_position) {
 		boolean moving = false;
 
-		int destination_node = this.calculateMapNode(
-				destination_position.getX(), destination_position.getY());
+		int destination_node = calculateMapNode(destination_position.getX(),
+				destination_position.getY());
 
 		if ((dijkstra != null) && (destination_node != target_node)) {
 			dijkstra.execute(destination_node);

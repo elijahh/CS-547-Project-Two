@@ -31,12 +31,10 @@ abstract class GroundEntity extends AtlantisEntity {
 	
 	static { populateTerrainMap(null); }
 	
-	public static void populateTerrainMap(TiledMap map) {
+	public static void populateTerrainMap(AtlantisMap map) {
 		List<Edge> map_edges = new ArrayList<Edge>();
 		List<Vertex> map_nodes = new ArrayList<Vertex>();
-
-		// TEMPORARY FOR DEVELOPMENT. REPLACE IN issue17
-		
+	
 		for (int j = 0; j < MAP_GRID_Y; j++) {
 			for (int i = 0; i < MAP_GRID_X; i++) {
 				int n = j * MAP_GRID_X + i;
@@ -53,11 +51,11 @@ abstract class GroundEntity extends AtlantisEntity {
 			}
 		}
 		
-		// END TEMPORARY CODE
-		
 		if(null != map) {
+
+			/* Process AtlantisMap into modified nodes/edges. issue17 */
 			
-			/* Process TiledMap into nodes/edges. issue17 */
+			map.processMovementCostsIntoEdges(map_nodes, map_edges);
 		}
 
 		graph = new Graph(map_nodes, map_edges);

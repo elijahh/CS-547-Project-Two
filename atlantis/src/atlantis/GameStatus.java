@@ -122,7 +122,7 @@ public class GameStatus {
 		
 		/* Send commands to the server */		
 		
-		client.sendCommands(commands_to_server, playing_state.getCurrentFrame());
+		// client.sendCommands(commands_to_server, playing_state.getCurrentFrame());
 		commands_to_server.clear();
 	}
 
