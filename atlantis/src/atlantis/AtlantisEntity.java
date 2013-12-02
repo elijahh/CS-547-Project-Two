@@ -34,11 +34,11 @@ public abstract class AtlantisEntity extends Entity implements
 	protected static final Vector RIGHT_UNIT_VECTOR = new Vector(1, 0);
 	protected static final Vector STOPPED_VECTOR = new Vector(0, 0);
 
-	protected static final int MAP_GRID_X = 16;
-	protected static final int MAP_X_NODE_DIMENSION = 50; /* Pixels */
+	protected static final int MAP_GRID_X = 25;
+	protected static final int MAP_X_NODE_DIMENSION = 32; /* Pixels */
 
-	protected static final int MAP_GRID_Y = 12;
-	protected static final int MAP_Y_NODE_DIMENSION = 50; /* Pixels */
+	protected static final int MAP_GRID_Y = 18;
+	protected static final int MAP_Y_NODE_DIMENSION = 32; /* Pixels */
 	
 	protected static final int MAP_HORIZONTAL_MOVE_COST = 100; /* mS */
 	protected static final int MAP_VERTICAL_MOVE_COST   = 100; /* mS */
@@ -230,8 +230,16 @@ public abstract class AtlantisEntity extends Entity implements
 
 		calculateAndAddNodeToSetIfSane(min_x, min_y, node_number_set);
 		calculateAndAddNodeToSetIfSane(max_x, min_y, node_number_set);
-
-		// System.out.println(min_x + ", " + min_y + " :" + max_x + ", " + max_y); 
+		
+		calculateAndAddNodeToSetIfSane(min_x, getY(), node_number_set);
+		calculateAndAddNodeToSetIfSane(max_x, getY(), node_number_set);
+		
+		calculateAndAddNodeToSetIfSane(getX(), min_y, node_number_set);
+		calculateAndAddNodeToSetIfSane(getX(), max_y, node_number_set);
+			
+		// System.out.println(min_x + ", " + min_y + " :" + max_x + ", " + max_y);
+		
+		System.out.println(this + ":" + node_number_set);
 		
 		return node_number_set;
 	}
