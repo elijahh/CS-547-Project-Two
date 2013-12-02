@@ -31,7 +31,7 @@ abstract class GroundEntity extends AtlantisEntity {
 	
 	static { populateTerrainMap(null); }
 	
-	public static void populateTerrainMap(TiledMap map) {
+	public static void populateTerrainMap(AtlantisMap map) {
 		List<Edge> map_edges = new ArrayList<Edge>();
 		List<Vertex> map_nodes = new ArrayList<Vertex>();
 	
@@ -53,9 +53,14 @@ abstract class GroundEntity extends AtlantisEntity {
 		
 		if(null != map) {
 
-			/* Process TiledMap into modified nodes/edges. issue17 */
+			/* Process AtlantisMap into modified nodes/edges. issue17 */
 			
-
+			List<Vector> node_centers = 
+					AtlantisEntity.getMapNodeCenterCoords();
+			
+			for(Vector node : node_centers) {
+				
+			}
 		}
 
 		graph = new Graph(map_nodes, map_edges);

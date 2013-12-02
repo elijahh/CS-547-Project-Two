@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -178,7 +179,13 @@ public abstract class AtlantisEntity extends Entity implements
 	}
 
 	public static List<Vector> getMapNodeCenterCoords() {
+		List<Vector> node_centers = new ArrayList<Vector>(MAP_GRID_X * MAP_GRID_Y);
 	 
+		for(int i = 0; i < MAP_GRID_X; i++)
+			for(int j = 0; j < MAP_GRID_Y; j++)
+				;
+	 
+	    return node_centers;
 	}
 
 	public static final int calculateMapNode(final float x, final float y) {
