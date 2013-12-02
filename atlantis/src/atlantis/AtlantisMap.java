@@ -1,6 +1,7 @@
 package atlantis;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.newdawn.slick.SlickException;
@@ -34,8 +35,38 @@ public class AtlantisMap extends TiledMap {
 		super(in, tileSetsLocation);
 	}
 
-	public void processMovementCostsIntoEdges(List<Vertex> nodes,
+	public void processMovementCostsIntoEdges(final List<Vertex> nodes,
 			List<Edge> edges) {
+		List<Edge> remove_edges = new ArrayList(edges.size());
+		List<Edge> add_edges = new ArrayList(edges.size());
+		
+		for (int i = 0; i < this.getWidth(); i++)
+			for (int j = 0; j < this.getHeight(); j++) {
+				int tile_id = this.getTileId(i, j, 0);
 
+				/*
+				 * Avoid non-zero tiles for now. Refinement will be possible
+				 * once we can pull the terrain type.
+				 */
+
+				if (tile_id != 0) {
+					int map_node_id = j * AtlantisEntity.MAP_GRID_X + j;
+					Vertex map_node = nodes.get(map_node_id);
+
+					for (Edge edge : edges) {
+						if (edge.getDestination() == map_node
+								|| edge.getSource() == map_node) {
+							remove_edges.add(edge);
+							Edge new_edge = new Edge(edge.getId(),
+									edge.getSource(), edge.getDestination(),
+									Integer.MAX_VALUE);
+							add_edges.add(new_edge);
+						}
+					}
+				}
+			}
+		
+		//edges.addAll(add_edges);
+		//edges.removeAll(remove_edges);
 	}
 }
