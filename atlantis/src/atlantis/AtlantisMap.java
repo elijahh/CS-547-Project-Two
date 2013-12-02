@@ -36,6 +36,20 @@ public class AtlantisMap extends TiledMap {
 
 	public void processMovementCostsIntoEdges(List<Vertex> nodes,
 			List<Edge> edges) {
-
+		
+		for(int i = 0; i < this.getWidth(); i++)
+			for(int j = 0; j < this.getHeight(); j++) {
+				int tile_id = this.getTileId(i, j, 0);
+				
+				/* Avoid non-zero tiles for now. Refinement will be possible once
+				 * we can pull the terrain type. */
+				
+				if(tile_id != 0) {
+					int map_node_id = j * AtlantisEntity.MAP_GRID_X + j;
+					Vertex map_node = nodes.get(map_node_id);
+					
+					
+				}
+			}
 	}
 }

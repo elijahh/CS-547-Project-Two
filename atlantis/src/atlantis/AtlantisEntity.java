@@ -34,10 +34,10 @@ public abstract class AtlantisEntity extends Entity implements
 	protected static final Vector RIGHT_UNIT_VECTOR = new Vector(1, 0);
 	protected static final Vector STOPPED_VECTOR = new Vector(0, 0);
 
-	protected static final int MAP_GRID_X = 25;
+	protected static final int MAP_GRID_X = 40;
 	protected static final int MAP_X_NODE_DIMENSION = 32; /* Pixels */
 
-	protected static final int MAP_GRID_Y = 18;
+	protected static final int MAP_GRID_Y = 40;
 	protected static final int MAP_Y_NODE_DIMENSION = 32; /* Pixels */
 	
 	protected static final int MAP_HORIZONTAL_MOVE_COST = 100; /* mS */
@@ -239,7 +239,7 @@ public abstract class AtlantisEntity extends Entity implements
 			
 		// System.out.println(min_x + ", " + min_y + " :" + max_x + ", " + max_y);
 		
-		System.out.println(this + ":" + node_number_set);
+		// System.out.println(this + ":" + node_number_set);
 		
 		return node_number_set;
 	}
@@ -412,7 +412,7 @@ public abstract class AtlantisEntity extends Entity implements
 			target_node = destination_node;
 		}
 
-		if ((dijkstra != null)) {
+		if (dijkstra != null) {
 			List<Vertex> path = dijkstra.getPath(this.getCurrentMapNode());
 
 			Vector move_direction = this.getNextMovementFromPath(path);
