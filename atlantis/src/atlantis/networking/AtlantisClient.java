@@ -84,7 +84,6 @@ public class AtlantisClient {
 		for(Command c : commands)
 			step.addCommand(c);
 		
-		// TODO: Program locks up when this next line is uncommented. Network issue?
 		sendCommand(step);
 	}
 	

@@ -30,64 +30,48 @@ public class GameStatus {
 		random_generator.setSeed(System.currentTimeMillis());
 	}
 	
+	// TEMPORARY FOR DEVELOPMENT
+	public Worker worker_on_server_1;
+	public Worker worker_on_server_2;
+	// TEMPORARY FOR DEVELOPMENT
+	
 	public GameStatus(PlayingState playing_state) {
 		this.playing_state = playing_state;
+		
+		// TEMPORARY FOR DEVELOPMENT
+		worker_on_server_1 = 
+				new Worker(350, 300, new Vector(0, 0));
+		workers_server_model.put(worker_on_server_1.getIdentity(),
+				worker_on_server_1);
+		worker_on_server_2 = 
+				new Worker(450, 300, new Vector(0, 0));
+		workers_server_model.put(worker_on_server_2.getIdentity(),
+				worker_on_server_2);
+		// TEMPORARY FOR DEVELOPMENT
 	}
-	
-	// TEMPORARY FOR DEVELOPMENT
-	public Worker worker_on_server_1 = 
-			new Worker(350, 300, new Vector(0, 0));
-	//public Vector worker_on_server_1_dest = new Vector(100,100);
-	public Worker worker_on_server_2 = 
-			new Worker(450, 300, new Vector(0, 0));
-	//private Vector worker_on_server_2_dest = new Vector(700,500);
-	// TEMPORARY FOR DEVELOPMENT
+
+	private List<Command> commands_to_server = new ArrayList<Command>();
+
+	public void sendCommand(Command command) {
+		synchronized (commands_to_server) {
+			commands_to_server.add(command);
+		}
+	}
 	
 	public void update(GameContainer container, int delta) {
 		int currentFrame = playing_state.getCurrentFrame();
 		AtlantisServer server = playing_state.getServer();
 		
 		if (null != server) {
-
-			// TEMPORARY FOR WORKING OUT MOVEMENT OF WORKER AND CODE FOR
-			// SYNCHRONIZATION/MOVEMENT
-
-			//System.out.println("delta: "+delta);
-			
-			/*while(false == worker_on_server_1.isHandlingCollision() && 
-					false == worker_on_server_1.moveTo(worker_on_server_1_dest)) {
-				worker_on_server_1_dest = new Vector(
-						random_generator.nextInt(AtlantisGame.DISPLAY_SIZE_X),
-						random_generator.nextInt(AtlantisGame.DISPLAY_SIZE_Y));
-				System.out.println("Worker 1 moving to " + worker_on_server_1_dest);
-			}
-				
-			while(false == worker_on_server_2.isHandlingCollision() &&
-					false == worker_on_server_2.moveTo(worker_on_server_2_dest)) {
-				worker_on_server_2_dest = new Vector(
-						random_generator.nextInt(AtlantisGame.DISPLAY_SIZE_X),
-						random_generator.nextInt(AtlantisGame.DISPLAY_SIZE_Y));
-				System.out.println("Worker 2 moving to " + worker_on_server_2_dest);
-			}*/
-
 			List<AtlantisEntity.Updater> updaters = 
 					new ArrayList<AtlantisEntity.Updater>();
 			
-			synchronized (workers) {
-				if (workers.isEmpty()) {
-					worker_on_server_1.setTeam(AtlantisEntity.Team.RED);
-					worker_on_server_2.setTeam(AtlantisEntity.Team.BLUE);
-					worker_on_server_1.update(delta);
-					worker_on_server_2.update(delta);
-					updaters.add(worker_on_server_1.getUpdater());
-					updaters.add(worker_on_server_2.getUpdater());
-				} else {
-					for (Worker worker : workers.values()) {
-						if (worker.getDestination() != null)
-							worker.moveTo(worker.getDestination());
-						worker.update(delta);
-						updaters.add(worker.getUpdater());
-					}
+			synchronized(workers_server_model) {
+				for(Worker worker : workers_server_model.values()) {
+					if(worker.getDestination() != null)
+						worker.moveTo(worker.getDestination());
+					worker.update(delta);
+					updaters.add(worker.getUpdater());
 				}
 			}
 				
@@ -97,8 +81,10 @@ public class GameStatus {
 			
 			while(!server.incomingLockSteps.isEmpty()) {
 				CommandLockStep step = server.incomingLockSteps.poll();
-
-				// TODO Process individual Command objects inside lock step
+				if (step.frameNum < playing_state.getCurrentFrame()) {
+					for(Command c : step.frameCommands)
+						processCommand(c);
+				}
 			}
 		}
 		
@@ -122,14 +108,16 @@ public class GameStatus {
 		
 		/* Send commands to the server */		
 		
-		client.sendCommands(commands_to_server, playing_state.getCurrentFrame());
-		commands_to_server.clear();
+		synchronized (commands_to_server) {
+			client.sendCommands(commands_to_server,
+					playing_state.getCurrentFrame());
+			commands_to_server.clear();
+		}
 	}
 
 	/* -------------------------------------------------------------------- */
 	
 	private Map<Long, Worker> workers = new HashMap<Long, Worker>();
-	private List<Command> commands_to_server = new ArrayList<Command>();
 	
 	private void processUpdater(AtlantisEntity.Updater updater) {
 		if(updater.getEntityClass() == Worker.class) {			
@@ -172,7 +160,17 @@ public class GameStatus {
 	
 	/* -------------------------------------------------------------------- */
 	
+	private Map<Long, Worker> workers_server_model = new HashMap<Long, Worker>();
+	
 	private void processCommand(Command command) {
-		
+		switch (command.type) {
+		case Command.MOVEMENT:
+			synchronized (workers_server_model) {
+				Worker worker = workers_server_model.get(command.entityId);
+				System.out.println(worker + " MOVE TO " + command.target);
+				worker.setDestination(command.target);
+			}
+			break;
+		}
 	}
 }

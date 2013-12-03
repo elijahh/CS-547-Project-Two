@@ -2,6 +2,8 @@ package atlantis.networking;
 
 import java.io.Serializable;
 
+import jig.Vector;
+
 /*
  * Need to include any form of command clients might send to host 
  */
@@ -15,4 +17,16 @@ public class Command implements Serializable {
 	
 	public int type;
 	public int frameNum;
+	public Vector target;
+	
+	public long entityId;
+	
+	public Command(int type, int frameNum, Vector target, long entityId) {
+		this.type = type;
+		this.frameNum = frameNum;
+		
+		this.target = target;
+		
+		this.entityId = entityId;
+	}
 }
