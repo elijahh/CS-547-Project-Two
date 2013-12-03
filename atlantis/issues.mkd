@@ -19,6 +19,8 @@ Milestone - End of day on 12/3.
 - **[33]** Refactor Workers as Soldier units.
 - **[34]** Create first "floating" unit, MotherShip submarine, one per side. Game enters "game over" state when
            MotherShip health on one side reaches zero.
+- **[35]** "Arm" soldier units with weapons and enable "attack" order. Soldier units may attack each other or
+           the MotherShip submarine.
 ...
  
 
