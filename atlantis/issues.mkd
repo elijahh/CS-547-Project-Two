@@ -14,17 +14,28 @@ Milestone - End of day on 11/27. Anything above this point should be completed b
            be complete.		
 - **[27]** Fix team movement -- currently only server player controls both teams' workers;
 		   allow each player to control one but not the other.
+- **[30]** Modify worker addition so that new workers show up in empty spaces in top left (red) and
+           bottom right corners of the virtual world, scattered in such a way to avoid terrain obstacles
+           and other workers.
+- **[32]** Translate world coordinates to local coordinates according to viewport offset. 
+
+Milestone - End of day on 12/3.
+
+- **[33]** Refactor Workers as Soldier units.
+- **[34]** Create first "floating" unit, MotherShip submarine, one per side. Game enters "game over" state when
+           MotherShip health on one side reaches zero.
+...
+ 
+
+Removed As Part of Low Bar Re-evaluation on 12/2
+------------------------------------------------
 - **[28]** Start with a blank screen and start adding workers on each side in empty map areas according 
            to a random schedule. Remove the temporary code that populated the two workers used in development of
            [11] - [25].
-- **[30]** Modify worker addition so that new workers show up in empty spaces in top left (red) and
-           bottom right corners of the virtual world.
 - **[31]** Add "base" GroundEntity to each side. Game enters "game over" state when base health on one side 
 		   reaches zero.
-- **[32]** Translate world coordinates to local coordinates according to viewport offset. 
-
-Milestone - End of day on 12/2. 
-
+   
+           
 Resolved Issues 
 ---------------
 - **[2]** Create a login screen so player can choose either "create new game" or "join a game" as a game state
@@ -68,6 +79,7 @@ Resolved Issues
 		   and start game at both sides. This might solve the frame desynchronize problem in a better way.
 - **[29]** Expand "world" beyond 800x600. Viewport should move when user moves mouse to edges of
            overlay. Consider arrow buttons on each edge of the overlay.
+	
 		
 Need to Revisit
 ---------------
