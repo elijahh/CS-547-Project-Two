@@ -414,7 +414,6 @@ public abstract class AtlantisEntity extends Entity implements
 
 		if (dijkstra != null) {
 			List<Vertex> path = dijkstra.getPath(this.getCurrentMapNode());
-
 			Vector move_direction = this.getNextMovementFromPath(path);
 
 			if (move_direction != STOPPED_VECTOR) 
