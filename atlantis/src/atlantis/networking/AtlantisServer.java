@@ -145,11 +145,16 @@ public class AtlantisServer extends Thread{
 		public void run() {
 			try {
 				while (true) {
+					
 					InputStream in = socket.getInputStream();
 					ObjectInputStream ois = new ObjectInputStream(in);
 					CommandLockStep commands = (CommandLockStep) ois
 							.readObject();
-					incomingLockSteps.add(commands);
+					
+					synchronized(incomingLockSteps) { 
+						incomingLockSteps.add(commands);
+					}
+					
 					// ois.close();
 					// in.close();
 				}
