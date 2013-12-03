@@ -114,6 +114,7 @@ public class Overlay {
 						.getIdWorkersMap();
 				for (Long id : workers.keySet()) {
 					Worker worker = workers.get(id);
+					if (worker.getTeam() != playingState.team) continue;
 					if (y > worker.getCoarseGrainedMinY() &&
 							y < worker.getCoarseGrainedMaxY() &&
 							x > worker.getCoarseGrainedMinX() &&

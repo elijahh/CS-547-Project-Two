@@ -9,8 +9,6 @@ Milestone - End of day on 11/27. Anything above this point should be completed b
 
 - **[25]** Address collision handling between two workers. Inelegant as currently written. Requires [24] to
            be complete.		
-- **[27]** Fix team movement -- currently only server player controls both teams' workers;
-		   allow each player to control one but not the other.
 - **[30]** Modify worker addition so that new workers show up in empty spaces in top left (red) and
            bottom right corners of the virtual world, scattered in such a way to avoid terrain obstacles
            and other workers.
@@ -77,6 +75,8 @@ Resolved Issues
            active workers should be added at this point.
 - **[26]** Add a GamePrepareState. Server will wait for all clients to join and send map in this state 
 		   and start game at both sides. This might solve the frame desynchronize problem in a better way.
+- **[27]** Fix team movement -- currently only server player controls both teams' workers;
+		   allow each player to control one but not the other.
 - **[29]** Expand "world" beyond 800x600. Viewport should move when user moves mouse to edges of
            overlay. Consider arrow buttons on each edge of the overlay.
 	

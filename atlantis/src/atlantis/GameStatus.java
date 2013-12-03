@@ -12,6 +12,7 @@ import jig.Vector;
 import org.newdawn.slick.GameContainer;
 
 import atlantis.AtlantisEntity;
+import atlantis.AtlantisEntity.Team;
 import atlantis.networking.AtlantisClient;
 import atlantis.networking.AtlantisServer;
 import atlantis.networking.Command;
@@ -45,6 +46,7 @@ public class GameStatus {
 				worker_on_server_1);
 		worker_on_server_2 = 
 				new Worker(450, 300, new Vector(0, 0));
+		worker_on_server_2.setTeam(Team.BLUE);
 		workers_server_model.put(worker_on_server_2.getIdentity(),
 				worker_on_server_2);
 		// TEMPORARY FOR DEVELOPMENT
