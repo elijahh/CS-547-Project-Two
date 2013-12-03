@@ -30,20 +30,25 @@ public class GameStatus {
 		random_generator.setSeed(System.currentTimeMillis());
 	}
 	
+	// TEMPORARY FOR DEVELOPMENT
+	public Worker worker_on_server_1;
+	public Worker worker_on_server_2;
+	// TEMPORARY FOR DEVELOPMENT
+	
 	public GameStatus(PlayingState playing_state) {
 		this.playing_state = playing_state;
+		
+		// TEMPORARY FOR DEVELOPMENT
+		worker_on_server_1 = 
+				new Worker(350, 300, new Vector(0, 0));
+		workers_server_model.put(worker_on_server_1.getIdentity(),
+				worker_on_server_1);
+		worker_on_server_2 = 
+				new Worker(450, 300, new Vector(0, 0));
+		workers_server_model.put(worker_on_server_2.getIdentity(),
+				worker_on_server_2);
+		// TEMPORARY FOR DEVELOPMENT
 	}
-	
-	// TEMPORARY FOR DEVELOPMENT
-	public Worker worker_on_server_1 = 
-			new Worker(350, 300, new Vector(0, 0));
-	//public Vector worker_on_server_1_dest = new Vector(100,100);
-	public Worker worker_on_server_2 = 
-			new Worker(450, 300, new Vector(0, 0));
-	//private Vector worker_on_server_2_dest = new Vector(700,500);
-	// TEMPORARY FOR DEVELOPMENT
-	
-	private Map<Long, Worker> workers_server_model = new HashMap<Long, Worker>();
 
 	private List<Command> commands_to_server = new ArrayList<Command>();
 
@@ -83,6 +88,12 @@ public class GameStatus {
 			List<AtlantisEntity.Updater> updaters = 
 					new ArrayList<AtlantisEntity.Updater>();
 			
+			synchronized(workers_server_model) {
+				for(Worker worker : workers_server_model.values()) {
+					System.out.println(worker);
+				}
+			}
+			
 			synchronized (workers) {
 				if (workers.isEmpty()) {
 					worker_on_server_1.setTeam(AtlantisEntity.Team.RED);
@@ -111,8 +122,6 @@ public class GameStatus {
 					for(Command c : step.frameCommands)
 						processCommand(c);
 				}
-
-				// TODO Process individual Command objects inside lock step
 			}
 		}
 		
@@ -188,11 +197,16 @@ public class GameStatus {
 	
 	/* -------------------------------------------------------------------- */
 	
+	private Map<Long, Worker> workers_server_model = new HashMap<Long, Worker>();
+	
 	private void processCommand(Command command) {
 		switch (command.type) {
 		case Command.MOVEMENT:
-			System.out.println(command.entityId + " MOVE TO " + command.target);
-			
+			synchronized (workers_server_model) {
+				Worker worker = workers.get(command.entityId);
+				System.out.println(worker + " MOVE TO " + command.target);
+				worker.setDestination(command.target);
+			}
 			break;
 		}
 	}
