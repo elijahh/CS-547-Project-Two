@@ -95,13 +95,13 @@ public class AtlantisClient {
 		
 		public void run() {
 			try {
-				while(true) {
+				while (true) {
 					InputStream in = socket.getInputStream();
 					ObjectInputStream ois = new ObjectInputStream(in);
 					ResultLockStep result = (ResultLockStep) ois.readObject();
 					incomingLockSteps.add(result);
-					//ois.close();
-					//in.close();
+					// ois.close();
+					// in.close();
 				}	
 			} catch (IOException e) {
 				System.out.println("Exception caught when trying to listen on port "

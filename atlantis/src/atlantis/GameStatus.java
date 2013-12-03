@@ -97,8 +97,7 @@ public class GameStatus {
 			
 			while(!server.incomingLockSteps.isEmpty()) {
 				CommandLockStep step = server.incomingLockSteps.poll();
-				System.out.println("CommandLockStep currentFrame:"
-						+ currentFrame + " step.frameNum:" + step.frameNum);
+
 				// TODO Process individual Command objects inside lock step
 			}
 		}
