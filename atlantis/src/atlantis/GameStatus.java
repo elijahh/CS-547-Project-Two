@@ -63,52 +63,15 @@ public class GameStatus {
 		AtlantisServer server = playing_state.getServer();
 		
 		if (null != server) {
-
-			// TEMPORARY FOR WORKING OUT MOVEMENT OF WORKER AND CODE FOR
-			// SYNCHRONIZATION/MOVEMENT
-
-			//System.out.println("delta: "+delta);
-			
-			/*while(false == worker_on_server_1.isHandlingCollision() && 
-					false == worker_on_server_1.moveTo(worker_on_server_1_dest)) {
-				worker_on_server_1_dest = new Vector(
-						random_generator.nextInt(AtlantisGame.DISPLAY_SIZE_X),
-						random_generator.nextInt(AtlantisGame.DISPLAY_SIZE_Y));
-				System.out.println("Worker 1 moving to " + worker_on_server_1_dest);
-			}
-				
-			while(false == worker_on_server_2.isHandlingCollision() &&
-					false == worker_on_server_2.moveTo(worker_on_server_2_dest)) {
-				worker_on_server_2_dest = new Vector(
-						random_generator.nextInt(AtlantisGame.DISPLAY_SIZE_X),
-						random_generator.nextInt(AtlantisGame.DISPLAY_SIZE_Y));
-				System.out.println("Worker 2 moving to " + worker_on_server_2_dest);
-			}*/
-
 			List<AtlantisEntity.Updater> updaters = 
 					new ArrayList<AtlantisEntity.Updater>();
 			
 			synchronized(workers_server_model) {
 				for(Worker worker : workers_server_model.values()) {
-					System.out.println(worker);
-				}
-			}
-			
-			synchronized (workers) {
-				if (workers.isEmpty()) {
-					worker_on_server_1.setTeam(AtlantisEntity.Team.RED);
-					worker_on_server_2.setTeam(AtlantisEntity.Team.BLUE);
-					worker_on_server_1.update(delta);
-					worker_on_server_2.update(delta);
-					updaters.add(worker_on_server_1.getUpdater());
-					updaters.add(worker_on_server_2.getUpdater());
-				} else {
-					for (Worker worker : workers.values()) {
-						if (worker.getDestination() != null)
-							worker.moveTo(worker.getDestination());
-						worker.update(delta);
-						updaters.add(worker.getUpdater());
-					}
+					if(worker.getDestination() != null)
+						worker.moveTo(worker.getDestination());
+					worker.update(delta);
+					updaters.add(worker.getUpdater());
 				}
 			}
 				
@@ -203,7 +166,7 @@ public class GameStatus {
 		switch (command.type) {
 		case Command.MOVEMENT:
 			synchronized (workers_server_model) {
-				Worker worker = workers.get(command.entityId);
+				Worker worker = workers_server_model.get(command.entityId);
 				System.out.println(worker + " MOVE TO " + command.target);
 				worker.setDestination(command.target);
 			}
