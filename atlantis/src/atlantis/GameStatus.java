@@ -43,6 +43,16 @@ public class GameStatus {
 	//private Vector worker_on_server_2_dest = new Vector(700,500);
 	// TEMPORARY FOR DEVELOPMENT
 	
+	private Map<Long, Worker> workers_server_model = new HashMap<Long, Worker>();
+
+	private List<Command> commands_to_server = new ArrayList<Command>();
+
+	public void sendCommand(Command command) {
+		synchronized (commands_to_server) {
+			commands_to_server.add(command);
+		}
+	}
+	
 	public void update(GameContainer container, int delta) {
 		int currentFrame = playing_state.getCurrentFrame();
 		AtlantisServer server = playing_state.getServer();
@@ -97,6 +107,10 @@ public class GameStatus {
 			
 			while(!server.incomingLockSteps.isEmpty()) {
 				CommandLockStep step = server.incomingLockSteps.poll();
+				if (step.frameNum < playing_state.getCurrentFrame()) {
+					for(Command c : step.frameCommands)
+						processCommand(c);
+				}
 
 				// TODO Process individual Command objects inside lock step
 			}
@@ -122,14 +136,16 @@ public class GameStatus {
 		
 		/* Send commands to the server */		
 		
-		client.sendCommands(commands_to_server, playing_state.getCurrentFrame());
-		commands_to_server.clear();
+		synchronized (commands_to_server) {
+			client.sendCommands(commands_to_server,
+					playing_state.getCurrentFrame());
+			commands_to_server.clear();
+		}
 	}
 
 	/* -------------------------------------------------------------------- */
 	
 	private Map<Long, Worker> workers = new HashMap<Long, Worker>();
-	private List<Command> commands_to_server = new ArrayList<Command>();
 	
 	private void processUpdater(AtlantisEntity.Updater updater) {
 		if(updater.getEntityClass() == Worker.class) {			
@@ -173,6 +189,11 @@ public class GameStatus {
 	/* -------------------------------------------------------------------- */
 	
 	private void processCommand(Command command) {
-		
+		switch (command.type) {
+		case Command.MOVEMENT:
+			System.out.println(command.entityId + " MOVE TO " + command.target);
+			
+			break;
+		}
 	}
 }
