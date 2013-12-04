@@ -54,7 +54,7 @@ public class AtlantisMap extends TiledMap {
 				if (tile_id != 0) {
 					int map_node_id = j * AtlantisEntity.MAP_GRID_X + i;
 					Vertex map_node = nodes.get(map_node_id);
-
+					 
 					for (Edge edge : edges) {
 						if (edge.getDestination() == map_node) {
 							remove_edges.add(edge);

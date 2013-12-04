@@ -70,8 +70,9 @@ public class GameStatus {
 
 			synchronized(workers_server_model) {
 				for(Worker worker : workers_server_model.values()) {
-					if(worker.getDestination() != null)
-						worker.moveTo(worker.getDestination());
+					Vector position = worker.getDestination();
+					if(position != null && false == worker.isHandlingCollision())
+						worker.moveTo(position);
 					worker.update(delta);
 					updaters.add(worker.getUpdater());
 				}
@@ -119,11 +120,7 @@ public class GameStatus {
 
 	/* -------------------------------------------------------------------- */
 	
-
 	private Map<Long, Worker> workersOnClient = new HashMap<Long, Worker>();
-
-	//private Map<Long, Worker> workers = new HashMap<Long, Worker>();
-
 	
 	private void processUpdater(AtlantisEntity.Updater updater) {
 		if(updater.getEntityClass() == Worker.class) {			
@@ -173,7 +170,6 @@ public class GameStatus {
 		case Command.MOVEMENT:
 			synchronized (workers_server_model) {
 				Worker worker = workers_server_model.get(command.entityId);
-				System.out.println(worker + " MOVE TO " + command.target);
 				worker.setDestination(command.target);
 			}
 			break;

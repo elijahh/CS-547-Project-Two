@@ -44,7 +44,8 @@ public abstract class AtlantisEntity extends Entity implements
 	protected static final int MAP_VERTICAL_MOVE_COST   = 100; /* mS */
 	protected static final int MAP_DIAGONAL_MOVE_COST   = 141; /* mS */
 
-	private static Random random_generator = new Random();
+	private static Random random_generator = 
+				new Random(System.currentTimeMillis());
 	
 	protected static Graph graph;
 
@@ -413,8 +414,7 @@ public abstract class AtlantisEntity extends Entity implements
 		}
 
 		if (dijkstra != null) {
-			List<Vertex> path = dijkstra.getPath(this.getCurrentMapNode());
-
+			List<Vertex> path = dijkstra.getPath(this.getCurrentMapNode());			
 			Vector move_direction = this.getNextMovementFromPath(path);
 
 			if (move_direction != STOPPED_VECTOR) 
@@ -482,7 +482,9 @@ public abstract class AtlantisEntity extends Entity implements
 	abstract String getIconFilename();
 
 	public void update(AtlantisEntity.Updater updater) {
-		Vector localPosition = new Vector(updater.position.getX()+PlayingState.viewportOffsetX,updater.position.getY()+PlayingState.viewportOffsetY);
+		Vector localPosition = new Vector(updater.position.getX()
+				+ PlayingState.viewportOffsetX, updater.position.getY()
+				+ PlayingState.viewportOffsetY);
 		
 		this.setPosition(localPosition);
 		
