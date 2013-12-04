@@ -60,8 +60,6 @@ public class GameStatus {
 		}
 	}
 	
-	private Map<Long, Worker> workersOnServer = new HashMap<Long, Worker>(); // Add an entity list on server that keeps global coordinates
-	
 	public void update(GameContainer container, int delta) {
 		int currentFrame = playing_state.getCurrentFrame();
 		AtlantisServer server = playing_state.getServer();
@@ -69,51 +67,6 @@ public class GameStatus {
 		if (null != server) {
 			List<AtlantisEntity.Updater> updaters = 
 					new ArrayList<AtlantisEntity.Updater>();
-			
-<<<<<<< HEAD
-//			synchronized (workers) {
-//				if (workers.isEmpty()) {
-//					worker_on_server_1.setTeam(AtlantisEntity.Team.RED);
-//					worker_on_server_2.setTeam(AtlantisEntity.Team.BLUE);
-//					worker_on_server_1.update(delta);
-//					worker_on_server_2.update(delta);
-//					updaters.add(worker_on_server_1.getUpdater());
-//					updaters.add(worker_on_server_2.getUpdater());
-//				} else {
-//					for (Worker worker : workers.values()) {
-//						if (worker.getDestination() != null){
-//							System.out.println("moving");
-//							worker.moveTo(worker.getDestination());
-//						}
-//						worker.update(delta);
-//						System.out.println(worker.getY());
-//						updaters.add(worker.getUpdater());
-//					}
-//				}
-//			}
-			
-//			synchronized (workersOnServer) {
-//				if (workersOnServer.isEmpty()) {
-//					worker_on_server_1.setTeam(AtlantisEntity.Team.RED);
-//					worker_on_server_2.setTeam(AtlantisEntity.Team.BLUE);
-//					worker_on_server_1.update(delta);
-//					worker_on_server_2.update(delta);
-//					updaters.add(worker_on_server_1.getUpdater());
-//					updaters.add(worker_on_server_2.getUpdater());
-//					workersOnServer.put(new Long(worker_on_server_1.getUpdater().getIdentity()),
-//							(Worker) worker_on_server_1);
-//					workersOnServer.put(new Long(worker_on_server_2.getUpdater().getIdentity()),
-//							(Worker) worker_on_server_2);
-//				} else {
-//					for (Worker worker : workersOnServer.values()) {
-//						if (worker.getDestination() != null){
-//							worker.moveTo(worker.getDestination());
-//						}
-//						worker.update(delta);
-//						updaters.add(worker.getUpdater());
-//						workersOnServer.put(new Long(worker.getUpdater().getIdentity()),
-//								(Worker) worker);
-//					}
 
 			synchronized(workers_server_model) {
 				for(Worker worker : workers_server_model.values()) {
@@ -199,16 +152,6 @@ public class GameStatus {
 		}
 		
 		return Collections.unmodifiableList(worker_list);
-	}
-	
-	public Map<Long, Worker> getIdWorkersMapOnServer() {
-		Map<Long, Worker> id_worker_map;
-		
-		synchronized(workersOnServer) {
-			id_worker_map = Collections.unmodifiableMap(workersOnServer);
-		}
-		
-		return id_worker_map;
 	}
 	
 	public Map<Long, Worker> getIdWorkersMapOnClient() {

@@ -134,14 +134,6 @@ public class Overlay {
 			
 			if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) ||
 					input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON)) {
-
-//				Worker selectedUnit = playingState.getStatus()
-//						.getIdWorkersMapOnServer().get(selectedUnitID);
-//				selectedUnit.setDestination(new Vector(x-PlayingState.viewportOffsetX, y-PlayingState.viewportOffsetY));
-
-				// Worker selectedUnit = playingState.getStatus()
-				//		.getIdWorkersMap().get(selectedUnitID);
-				// selectedUnit.setDestination(new Vector(x, y));
 				
 				Command move_command = new Command(Command.MOVEMENT,
 						playingState.getCurrentFrame(), new Vector(x-PlayingState.viewportOffsetX, y-PlayingState.viewportOffsetY),
