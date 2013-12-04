@@ -29,6 +29,9 @@ public class Overlay {
 	boolean isDefaultCursorSet = true;
 	boolean isArrowCursorSet = false;
 	
+	boolean selectWorkerUnit = false;
+	boolean selectMotherShipUnit = false;
+	
 	PlayingState playingState;
 	public long selectedUnitID = -1;
 	public short action = 0; // 1 = move, 2 = attack
@@ -60,8 +63,20 @@ public class Overlay {
 		
 		if (selectedUnitID != -1) { // highlight selected unit
 			g.setColor(Color.yellow);
+<<<<<<< Upstream, based on origin/develop
 			AtlantisEntity selectedUnit = playingState.getStatus()
 					.getIdSoldiersMapOnClient().get(selectedUnitID);
+=======
+			AtlantisEntity selectedUnit = null;
+			
+			if(selectWorkerUnit){
+				selectedUnit = playingState.getStatus()
+						.getIdWorkersMapOnClient().get(selectedUnitID);
+			} else if(selectMotherShipUnit){
+				selectedUnit = playingState.getStatus()
+						.getIdMotherShipsMapOnClient().get(selectedUnitID);
+			}
+>>>>>>> 4ae916d Add the mother ship. Need to change bounding box when moving.
 			g.drawRect(selectedUnit.getCoarseGrainedMinX(),
 					selectedUnit.getCoarseGrainedMinY(),
 					selectedUnit.getCoarseGrainedWidth(),
@@ -110,6 +125,7 @@ public class Overlay {
 			}
 			
 			if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+<<<<<<< Upstream, based on origin/develop
 				Map<Long, Soldier> soldiers = playingState.getStatus()
 						.getIdSoldiersMapOnClient();
 				for (Long id : soldiers.keySet()) {
@@ -119,8 +135,40 @@ public class Overlay {
 							y < soldier.getCoarseGrainedMaxY() &&
 							x > soldier.getCoarseGrainedMinX() &&
 							x < soldier.getCoarseGrainedMaxX()) {
+=======
+				selectWorkerUnit = false;
+				selectMotherShipUnit = false;
+				selectedUnitID = -1;
+				
+				Map<Long, Worker> workers = playingState.getStatus()
+						.getIdWorkersMapOnClient();
+				for (Long id : workers.keySet()) {
+					Worker worker = workers.get(id);
+					if (worker.getTeam() != playingState.team) continue;
+					if (y > worker.getCoarseGrainedMinY() &&
+							y < worker.getCoarseGrainedMaxY() &&
+							x > worker.getCoarseGrainedMinX() &&
+							x < worker.getCoarseGrainedMaxX()) {
+>>>>>>> 4ae916d Add the mother ship. Need to change bounding box when moving.
 						selectedUnitID = id.longValue();
+						selectWorkerUnit = true;
 						break;
+					}
+				}
+				if(selectWorkerUnit == false) {
+					Map<Long, MotherShip> motherships = playingState.getStatus()
+							.getIdMotherShipsMapOnClient();
+					for (Long id : motherships.keySet()) {
+						MotherShip mothership = motherships.get(id);
+						if (mothership.getTeam() != playingState.team) continue;
+						if (y > mothership.getCoarseGrainedMinY() &&
+								y < mothership.getCoarseGrainedMaxY() &&
+								x > mothership.getCoarseGrainedMinX() &&
+								x < mothership.getCoarseGrainedMaxX()) {
+							selectedUnitID = id.longValue();
+							selectMotherShipUnit = true;
+							break;
+						}
 					}
 				}
 			}
