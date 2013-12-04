@@ -444,13 +444,12 @@ public abstract class AtlantisEntity extends Entity implements
 
 		Vector velocity;
 		Vector position;
-
+		
 		Class entity_class;
 
 		Updater(AtlantisEntity e) {
 
 			position = e.getPosition();
-			//System.out.println("server x:"+position.getX()+" server y:"+position.getY());
 			velocity = e.velocity;
 			identity = e.identity;
 			team = e.team;
@@ -483,7 +482,9 @@ public abstract class AtlantisEntity extends Entity implements
 	abstract String getIconFilename();
 
 	public void update(AtlantisEntity.Updater updater) {
-		this.setPosition(updater.position);
+		Vector localPosition = new Vector(updater.position.getX()+PlayingState.viewportOffsetX,updater.position.getY()+PlayingState.viewportOffsetY);
+		
+		this.setPosition(localPosition);
 		
 		/* Set values */
 		velocity = updater.velocity;
@@ -501,7 +502,7 @@ public abstract class AtlantisEntity extends Entity implements
 
 	private Animation movement_animation = null;
 
-	@Override
+
 	public void render(final Graphics g) {
 
 		g.drawImage(ResourceManager.getImage(getIconFilename()),
@@ -547,5 +548,6 @@ public abstract class AtlantisEntity extends Entity implements
 		}
 
 		super.render(g);
+		
 	}
 }

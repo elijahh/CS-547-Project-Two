@@ -43,6 +43,8 @@ public class GameStatus {
 	//private Vector worker_on_server_2_dest = new Vector(700,500);
 	// TEMPORARY FOR DEVELOPMENT
 	
+	private Map<Long, Worker> workersOnServer = new HashMap<Long, Worker>(); // Add an entity list on server that keeps global coordinates
+	
 	public void update(GameContainer container, int delta) {
 		int currentFrame = playing_state.getCurrentFrame();
 		AtlantisServer server = playing_state.getServer();
@@ -73,20 +75,48 @@ public class GameStatus {
 			List<AtlantisEntity.Updater> updaters = 
 					new ArrayList<AtlantisEntity.Updater>();
 			
-			synchronized (workers) {
-				if (workers.isEmpty()) {
+//			synchronized (workers) {
+//				if (workers.isEmpty()) {
+//					worker_on_server_1.setTeam(AtlantisEntity.Team.RED);
+//					worker_on_server_2.setTeam(AtlantisEntity.Team.BLUE);
+//					worker_on_server_1.update(delta);
+//					worker_on_server_2.update(delta);
+//					updaters.add(worker_on_server_1.getUpdater());
+//					updaters.add(worker_on_server_2.getUpdater());
+//				} else {
+//					for (Worker worker : workers.values()) {
+//						if (worker.getDestination() != null){
+//							System.out.println("moving");
+//							worker.moveTo(worker.getDestination());
+//						}
+//						worker.update(delta);
+//						System.out.println(worker.getY());
+//						updaters.add(worker.getUpdater());
+//					}
+//				}
+//			}
+			
+			synchronized (workersOnServer) {
+				if (workersOnServer.isEmpty()) {
 					worker_on_server_1.setTeam(AtlantisEntity.Team.RED);
 					worker_on_server_2.setTeam(AtlantisEntity.Team.BLUE);
 					worker_on_server_1.update(delta);
 					worker_on_server_2.update(delta);
 					updaters.add(worker_on_server_1.getUpdater());
 					updaters.add(worker_on_server_2.getUpdater());
+					workersOnServer.put(new Long(worker_on_server_1.getUpdater().getIdentity()),
+							(Worker) worker_on_server_1);
+					workersOnServer.put(new Long(worker_on_server_2.getUpdater().getIdentity()),
+							(Worker) worker_on_server_2);
 				} else {
-					for (Worker worker : workers.values()) {
-						if (worker.getDestination() != null)
+					for (Worker worker : workersOnServer.values()) {
+						if (worker.getDestination() != null){
 							worker.moveTo(worker.getDestination());
+						}
 						worker.update(delta);
 						updaters.add(worker.getUpdater());
+						workersOnServer.put(new Long(worker.getUpdater().getIdentity()),
+								(Worker) worker);
 					}
 				}
 			}
@@ -128,13 +158,13 @@ public class GameStatus {
 
 	/* -------------------------------------------------------------------- */
 	
-	private Map<Long, Worker> workers = new HashMap<Long, Worker>();
+	private Map<Long, Worker> workersOnClient = new HashMap<Long, Worker>();
 	private List<Command> commands_to_server = new ArrayList<Command>();
 	
 	private void processUpdater(AtlantisEntity.Updater updater) {
 		if(updater.getEntityClass() == Worker.class) {			
-			synchronized (workers) {
-				Worker updated_entity = workers.get(updater.getIdentity());
+			synchronized (workersOnClient) {
+				Worker updated_entity = workersOnClient.get(updater.getIdentity());
 
 				if (null == updated_entity) {
 					updated_entity = new Worker();
@@ -142,7 +172,7 @@ public class GameStatus {
 
 				updated_entity.update(updater);
 
-				workers.put(new Long(updater.getIdentity()),
+				workersOnClient.put(new Long(updater.getIdentity()),
 						(Worker) updated_entity);
 			}
 		} else {		
@@ -153,18 +183,28 @@ public class GameStatus {
 	public List<Worker> getWorkers() {
 		List<Worker> worker_list = new ArrayList<Worker>();
 		
-		synchronized(workers) { 
-			 worker_list.addAll(workers.values());
+		synchronized(workersOnClient) { 
+			 worker_list.addAll(workersOnClient.values());
 		}
 		
 		return Collections.unmodifiableList(worker_list);
 	}
 	
-	public Map<Long, Worker> getIdWorkersMap() {
+	public Map<Long, Worker> getIdWorkersMapOnServer() {
 		Map<Long, Worker> id_worker_map;
 		
-		synchronized(workers) {
-			id_worker_map = Collections.unmodifiableMap(workers);
+		synchronized(workersOnServer) {
+			id_worker_map = Collections.unmodifiableMap(workersOnServer);
+		}
+		
+		return id_worker_map;
+	}
+	
+	public Map<Long, Worker> getIdWorkersMapOnClient() {
+		Map<Long, Worker> id_worker_map;
+		
+		synchronized(workersOnClient) {
+			id_worker_map = Collections.unmodifiableMap(workersOnClient);
 		}
 		
 		return id_worker_map;

@@ -54,13 +54,13 @@ public class Overlay {
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
 		Input input = container.getInput();
-		int x = input.getMouseX();
+		int x = input.getMouseX(); //Local coordinates of cursor
 		int y = input.getMouseY();
 		
 		if (selectedUnitID != -1) { // highlight selected unit
 			g.setColor(Color.yellow);
 			AtlantisEntity selectedUnit = playingState.getStatus()
-					.getIdWorkersMap().get(selectedUnitID);
+					.getIdWorkersMapOnClient().get(selectedUnitID);
 			g.drawRect(selectedUnit.getCoarseGrainedMinX(),
 					selectedUnit.getCoarseGrainedMinY(),
 					selectedUnit.getCoarseGrainedWidth(),
@@ -111,7 +111,7 @@ public class Overlay {
 			
 			if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
 				Map<Long, Worker> workers = playingState.getStatus()
-						.getIdWorkersMap();
+						.getIdWorkersMapOnClient();
 				for (Long id : workers.keySet()) {
 					Worker worker = workers.get(id);
 					if (y > worker.getCoarseGrainedMinY() &&
@@ -134,8 +134,8 @@ public class Overlay {
 			if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) ||
 					input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON)) {
 				Worker selectedUnit = playingState.getStatus()
-						.getIdWorkersMap().get(selectedUnitID);
-				selectedUnit.setDestination(new Vector(x, y));
+						.getIdWorkersMapOnServer().get(selectedUnitID);
+				selectedUnit.setDestination(new Vector(x-PlayingState.viewportOffsetX, y-PlayingState.viewportOffsetY));
 				action = 0;
 				selectedUnitID = -1;
 			}
