@@ -70,6 +70,9 @@ public class GameStatus {
 
 			synchronized(workers_server_model) {
 				for(Worker worker : workers_server_model.values()) {
+					Vector position = worker.getDestination();
+					if(position != null)
+						worker.moveTo(position);
 					worker.update(delta);
 					updaters.add(worker.getUpdater());
 				}
@@ -171,7 +174,7 @@ public class GameStatus {
 		case Command.MOVEMENT:
 			synchronized (workers_server_model) {
 				Worker worker = workers_server_model.get(command.entityId);
-				worker.moveTo(command.target);
+				worker.setDestination(command.target);
 			}
 			break;
 		}
