@@ -14,9 +14,9 @@ import org.newdawn.slick.Animation;
 import jig.ResourceManager;
 import jig.Vector;
 
-public class Worker extends GroundEntity {
+public class Soldier extends GroundEntity {
 	
-	private static final float MIN_WORKER_WORKER_DISTANCE = 36;
+	private static final float MIN_SOLDIER_SOLDIER_DISTANCE = 36;
 	
 	private static final String FACE_U_GRAPHIC_FILE = "atlantis/resource/diver-up1.png";
 	private static final String FACE_D_GRAPHIC_FILE = "atlantis/resource/diver-down1.png";
@@ -39,15 +39,15 @@ public class Worker extends GroundEntity {
 	private static final int ANIMATION_FRAME_WIDTH = 54; /* pixels */
 	private static final int ANIMATION_FRAME_HEIGHT = 85; /* pixels */
 	
-	public Worker() {
+	public Soldier() {
 		this(0, 0);
 	}
 
-	public Worker(float x, float y) {
+	public Soldier(float x, float y) {
 		this(x, y, STOPPED_VECTOR);
 	}
 
-	public Worker(float x, float y, Vector move_direction) {
+	public Soldier(float x, float y, Vector move_direction) {
 		super(x, y, move_direction);
 	}
 	
@@ -69,52 +69,52 @@ public class Worker extends GroundEntity {
 	private static Random random_generator = 
 			new Random(System.currentTimeMillis());
 	
-	private List<Worker> handling_collisions_with_these_workers = 
-			new LinkedList<Worker>();
-	private Map<Worker, Integer> collision_avoidance_countdown =
-			new HashMap<Worker, Integer>();
+	private List<Soldier> handling_collisions_with_these_soldiers = 
+			new LinkedList<Soldier>();
+	private Map<Soldier, Integer> collision_avoidance_countdown =
+			new HashMap<Soldier, Integer>();
 	
 	public boolean isHandlingCollision() {
-		if(0 < handling_collisions_with_these_workers.size())
+		if(0 < handling_collisions_with_these_soldiers.size())
 			return true;
 		
 		return false;
 	}
 	
-	public boolean isHandlingCollisionWith(Worker other) {
-		return handling_collisions_with_these_workers.contains(other);
+	public boolean isHandlingCollisionWith(Soldier other) {
+		return handling_collisions_with_these_soldiers.contains(other);
 	}
 	
 	public void beginMovement(final Vector direction) {
 		velocity = new Vector(direction.scale(MAX_VELOCITY));
 	}
 	
-	private void enforceWorkerWorkerDistance(Worker other,
+	private void enforceSoldierSoldierDistance(Soldier other,
 			final Vector their_position, final Vector my_position) {
 		//final double angle_to_other = my_position.angleTo(their_position);
 		
 		if (other.isHandlingCollisionWith(this))
 			return;
 
-		if (false == handling_collisions_with_these_workers.contains(other)) {
-			handling_collisions_with_these_workers.add(other);
+		if (false == handling_collisions_with_these_soldiers.contains(other)) {
+			handling_collisions_with_these_soldiers.add(other);
 			velocity = velocity.negate();
 
 			Integer countdown = new Integer(100 + random_generator.nextInt(150));
 			collision_avoidance_countdown.put(other, countdown);
 
-			System.out.println(this + " HANDLING WORKER-WORKER COLLISION "
+			System.out.println(this + " HANDLING SOLDIER-SOLDIER COLLISION "
 					+ countdown);
 		}
 	}
 	
-	private void manageCountdownForCollision(Worker other, int delta) {
+	private void manageCountdownForCollision(Soldier other, int delta) {
 		Integer countdown = collision_avoidance_countdown.get(other);
 		
 		if(null != countdown) {
 			countdown -= delta;
 			if (0 > countdown)
-				handling_collisions_with_these_workers.remove(other);
+				handling_collisions_with_these_soldiers.remove(other);
 			collision_avoidance_countdown.put(other, countdown);
 		}
 	}
@@ -125,7 +125,7 @@ public class Worker extends GroundEntity {
 		
 		Set<GroundEntity> potential_collisions = 
 				new HashSet<GroundEntity>(getPotentialCollisions());
-		potential_collisions.addAll(handling_collisions_with_these_workers);
+		potential_collisions.addAll(handling_collisions_with_these_soldiers);
 				
 		for (GroundEntity e : potential_collisions) {
 			Vector my_position = getPosition();
@@ -134,11 +134,11 @@ public class Worker extends GroundEntity {
 			final float distance_to_other = their_position
 					.distance(my_position);
 
-			if (e instanceof Worker
-					&& distance_to_other < MIN_WORKER_WORKER_DISTANCE)
-				enforceWorkerWorkerDistance((Worker)e, their_position, my_position);
+			if (e instanceof Soldier
+					&& distance_to_other < MIN_SOLDIER_SOLDIER_DISTANCE)
+				enforceSoldierSoldierDistance((Soldier)e, their_position, my_position);
 			else 
-				manageCountdownForCollision((Worker)e, delta);
+				manageCountdownForCollision((Soldier)e, delta);
 		}
 	}
 	

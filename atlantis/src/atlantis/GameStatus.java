@@ -32,23 +32,23 @@ public class GameStatus {
 	}
 	
 	// TEMPORARY FOR DEVELOPMENT
-	public Worker worker_on_server_1;
-	public Worker worker_on_server_2;
+	public Soldier soldier_on_server_1;
+	public Soldier soldier_on_server_2;
 	// TEMPORARY FOR DEVELOPMENT
 	
 	public GameStatus(PlayingState playing_state) {
 		this.playing_state = playing_state;
 		
 		// TEMPORARY FOR DEVELOPMENT
-		worker_on_server_1 = 
-				new Worker(350, 300, new Vector(0, 0));
-		workers_server_model.put(worker_on_server_1.getIdentity(),
-				worker_on_server_1);
-		worker_on_server_2 = 
-				new Worker(450, 300, new Vector(0, 0));
-		worker_on_server_2.setTeam(Team.BLUE);
-		workers_server_model.put(worker_on_server_2.getIdentity(),
-				worker_on_server_2);
+		soldier_on_server_1 = 
+				new Soldier(350, 300, new Vector(0, 0));
+		soldiers_server_model.put(soldier_on_server_1.getIdentity(),
+				soldier_on_server_1);
+		soldier_on_server_2 = 
+				new Soldier(450, 300, new Vector(0, 0));
+		soldier_on_server_2.setTeam(Team.BLUE);
+		soldiers_server_model.put(soldier_on_server_2.getIdentity(),
+				soldier_on_server_2);
 		// TEMPORARY FOR DEVELOPMENT
 	}
 
@@ -68,13 +68,13 @@ public class GameStatus {
 			List<AtlantisEntity.Updater> updaters = 
 					new ArrayList<AtlantisEntity.Updater>();
 
-			synchronized(workers_server_model) {
-				for(Worker worker : workers_server_model.values()) {
-					Vector position = worker.getDestination();
-					if(position != null && false == worker.isHandlingCollision())
-						worker.moveTo(position);
-					worker.update(delta);
-					updaters.add(worker.getUpdater());
+			synchronized(soldiers_server_model) {
+				for(Soldier soldier : soldiers_server_model.values()) {
+					Vector position = soldier.getDestination();
+					if(position != null && false == soldier.isHandlingCollision())
+						soldier.moveTo(position);
+					soldier.update(delta);
+					updaters.add(soldier.getUpdater());
 				}
 			}
 				
@@ -120,57 +120,57 @@ public class GameStatus {
 
 	/* -------------------------------------------------------------------- */
 	
-	private Map<Long, Worker> workersOnClient = new HashMap<Long, Worker>();
+	private Map<Long, Soldier> soldiersOnClient = new HashMap<Long, Soldier>();
 	
 	private void processUpdater(AtlantisEntity.Updater updater) {
-		if(updater.getEntityClass() == Worker.class) {			
-			synchronized (workersOnClient) {
-				Worker updated_entity = workersOnClient.get(updater.getIdentity());
+		if(updater.getEntityClass() == Soldier.class) {			
+			synchronized (soldiersOnClient) {
+				Soldier updated_entity = soldiersOnClient.get(updater.getIdentity());
 
 				if (null == updated_entity) {
-					updated_entity = new Worker();
+					updated_entity = new Soldier();
 				}
 
 				updated_entity.update(updater);
 
-				workersOnClient.put(new Long(updater.getIdentity()),
-						(Worker) updated_entity);
+				soldiersOnClient.put(new Long(updater.getIdentity()),
+						(Soldier) updated_entity);
 			}
 		} else {		
 			// TODO: update of other entity types
 		}
 	}
 	
-	public List<Worker> getWorkers() {
-		List<Worker> worker_list = new ArrayList<Worker>();
+	public List<Soldier> getSoldiers() {
+		List<Soldier> soldier_list = new ArrayList<Soldier>();
 		
-		synchronized(workersOnClient) { 
-			 worker_list.addAll(workersOnClient.values());
+		synchronized(soldiersOnClient) { 
+			 soldier_list.addAll(soldiersOnClient.values());
 		}
 		
-		return Collections.unmodifiableList(worker_list);
+		return Collections.unmodifiableList(soldier_list);
 	}
 	
-	public Map<Long, Worker> getIdWorkersMapOnClient() {
-		Map<Long, Worker> id_worker_map;
+	public Map<Long, Soldier> getIdSoldiersMapOnClient() {
+		Map<Long, Soldier> id_soldier_map;
 		
-		synchronized(workersOnClient) {
-			id_worker_map = Collections.unmodifiableMap(workersOnClient);
+		synchronized(soldiersOnClient) {
+			id_soldier_map = Collections.unmodifiableMap(soldiersOnClient);
 		}
 		
-		return id_worker_map;
+		return id_soldier_map;
 	}
 	
 	/* -------------------------------------------------------------------- */
 	
-	private Map<Long, Worker> workers_server_model = new HashMap<Long, Worker>();
+	private Map<Long, Soldier> soldiers_server_model = new HashMap<Long, Soldier>();
 	
 	private void processCommand(Command command) {
 		switch (command.type) {
 		case Command.MOVEMENT:
-			synchronized (workers_server_model) {
-				Worker worker = workers_server_model.get(command.entityId);
-				worker.setDestination(command.target);
+			synchronized (soldiers_server_model) {
+				Soldier soldier = soldiers_server_model.get(command.entityId);
+				soldier.setDestination(command.target);
 			}
 			break;
 		}

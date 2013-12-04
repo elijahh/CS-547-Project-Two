@@ -74,11 +74,11 @@ public class PlayingState extends BasicGameState{
 		
 		map.render(viewportOffsetX, viewportOffsetY);
 		
-		//System.out.println("RENDERING WORKERS");
+		//System.out.println("RENDERING SOLDIERS");
 
-		Queue<Worker> workers = 
-				new PriorityQueue<Worker>(status.getWorkers());
-		for (Worker w : workers) {
+		Queue<Soldier> soldiers = 
+				new PriorityQueue<Soldier>(status.getSoldiers());
+		for (Soldier w : soldiers) {
 			w.render(g); 
 		}
 

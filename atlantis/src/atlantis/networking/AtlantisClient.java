@@ -27,7 +27,7 @@ import org.newdawn.slick.Input;
 
 import atlantis.AtlantisEntity;
 import atlantis.PlayingState;
-import atlantis.Worker;
+import atlantis.Soldier;
 import atlantis.StartMenuState;
 import atlantis.networking.AtlantisServer.ClientListener;
 

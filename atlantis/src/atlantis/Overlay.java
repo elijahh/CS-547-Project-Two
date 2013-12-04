@@ -61,7 +61,7 @@ public class Overlay {
 		if (selectedUnitID != -1) { // highlight selected unit
 			g.setColor(Color.yellow);
 			AtlantisEntity selectedUnit = playingState.getStatus()
-					.getIdWorkersMapOnClient().get(selectedUnitID);
+					.getIdSoldiersMapOnClient().get(selectedUnitID);
 			g.drawRect(selectedUnit.getCoarseGrainedMinX(),
 					selectedUnit.getCoarseGrainedMinY(),
 					selectedUnit.getCoarseGrainedWidth(),
@@ -110,15 +110,15 @@ public class Overlay {
 			}
 			
 			if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
-				Map<Long, Worker> workers = playingState.getStatus()
-						.getIdWorkersMapOnClient();
-				for (Long id : workers.keySet()) {
-					Worker worker = workers.get(id);
-					if (worker.getTeam() != playingState.team) continue;
-					if (y > worker.getCoarseGrainedMinY() &&
-							y < worker.getCoarseGrainedMaxY() &&
-							x > worker.getCoarseGrainedMinX() &&
-							x < worker.getCoarseGrainedMaxX()) {
+				Map<Long, Soldier> soldiers = playingState.getStatus()
+						.getIdSoldiersMapOnClient();
+				for (Long id : soldiers.keySet()) {
+					Soldier soldier = soldiers.get(id);
+					if (soldier.getTeam() != playingState.team) continue;
+					if (y > soldier.getCoarseGrainedMinY() &&
+							y < soldier.getCoarseGrainedMaxY() &&
+							x > soldier.getCoarseGrainedMinX() &&
+							x < soldier.getCoarseGrainedMaxX()) {
 						selectedUnitID = id.longValue();
 						break;
 					}
