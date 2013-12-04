@@ -9,7 +9,6 @@ Open Issues
            bottom right corners of the virtual world, scattered in such a way to avoid terrain obstacles
            and other workers.
 
-- **[33]** Refactor Workers as Soldier units.
 - **[34]** Create first "floating" unit, MotherShip submarine, one per side. Game enters "game over" state when
            MotherShip health on one side reaches zero.
 - **[35]** "Arm" soldier units with weapons and enable "attack" command. Soldier units may attack each other or
@@ -81,7 +80,8 @@ Resolved Issues
 - **[29]** Expand "world" beyond 800x600. Viewport should move when user moves mouse to edges of
            overlay. Consider arrow buttons on each edge of the overlay.
 - **[32]** Translate world coordinates to local coordinates according to viewport offset. 
-		
+- **[33]** Refactor Workers as Soldier units.
+
 May Need to Revisit
 -------------------
 - **[5]** Make Parallel Dijkstra function for split adjacencies. Investigate possible optimizations.
