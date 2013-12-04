@@ -7,8 +7,7 @@ Open Issues
 
 Milestone - End of day on 11/27. Anything above this point should be completed by then.
 
-- **[25]** Address collision handling between two workers. Inelegant as currently written. Requires [24] to
-           be complete.		
+	
 - **[30]** Modify worker addition so that new workers show up in empty spaces in top left (red) and
            bottom right corners of the virtual world, scattered in such a way to avoid terrain obstacles
            and other workers.
@@ -31,11 +30,7 @@ Removed As Part of Low Bar Re-evaluation on 12/2
 - **[31]** Add "base" GroundEntity to each side. Game enters "game over" state when base health on one side 
 		   reaches zero.
 
-Milestone - End of day on 12/2. 
 
-   
-           
->>>>>>> refs/remotes/origin/develop
 Resolved Issues 
 ---------------
 - **[2]** Create a login screen so player can choose either "create new game" or "join a game" as a game state
@@ -86,6 +81,8 @@ Resolved Issues
            overlay. Consider arrow buttons on each edge of the overlay.
 - **[32]** Translate world coordinates to local coordinates according to viewport offset. 
 		
-Need to Revisit
----------------
+May Need to Revisit
+-------------------
 - **[5]** Make Parallel Dijkstra function for split adjacencies. Investigate possible optimizations.
+- **[25]** Address collision handling between two workers. Inelegant as currently written. Requires [24] to
+           be complete.	
