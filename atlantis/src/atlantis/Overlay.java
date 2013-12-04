@@ -10,6 +10,7 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
+import atlantis.networking.Command;
 import jig.ResourceManager;
 import jig.Vector;
 
@@ -67,7 +68,6 @@ public class Overlay {
 					selectedUnit.getCoarseGrainedHeight());
 		}
 		
-		
 		if (isCursorAtLeftEdge(x,y)) {// cursor becomes arrow at edge
 			if (!isArrowCursorSet) {
 				container.setMouseCursor(leftArrow, 0, 0);
@@ -114,6 +114,7 @@ public class Overlay {
 						.getIdWorkersMapOnClient();
 				for (Long id : workers.keySet()) {
 					Worker worker = workers.get(id);
+					if (worker.getTeam() != playingState.team) continue;
 					if (y > worker.getCoarseGrainedMinY() &&
 							y < worker.getCoarseGrainedMaxY() &&
 							x > worker.getCoarseGrainedMinX() &&
@@ -133,9 +134,22 @@ public class Overlay {
 			
 			if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) ||
 					input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON)) {
-				Worker selectedUnit = playingState.getStatus()
-						.getIdWorkersMapOnServer().get(selectedUnitID);
-				selectedUnit.setDestination(new Vector(x-PlayingState.viewportOffsetX, y-PlayingState.viewportOffsetY));
+
+//				Worker selectedUnit = playingState.getStatus()
+//						.getIdWorkersMapOnServer().get(selectedUnitID);
+//				selectedUnit.setDestination(new Vector(x-PlayingState.viewportOffsetX, y-PlayingState.viewportOffsetY));
+
+				// Worker selectedUnit = playingState.getStatus()
+				//		.getIdWorkersMap().get(selectedUnitID);
+				// selectedUnit.setDestination(new Vector(x, y));
+				
+				Command move_command = new Command(Command.MOVEMENT,
+						playingState.getCurrentFrame(), new Vector(x-PlayingState.viewportOffsetX, y-PlayingState.viewportOffsetY),
+						selectedUnitID);
+				GameStatus status = playingState.getStatus();
+				status.sendCommand(move_command);
+				
+
 				action = 0;
 				selectedUnitID = -1;
 			}

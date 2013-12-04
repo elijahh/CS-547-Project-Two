@@ -63,6 +63,9 @@ public class PlayingState extends BasicGameState{
 		
 		map = GamePrepareState.getMap();
 		GroundEntity.populateTerrainMap(map);
+		
+		if (StartMenuState.GAME_TYPE.equals("server"))
+			team = AtlantisEntity.Team.RED;
 	}
 	
 	@Override
