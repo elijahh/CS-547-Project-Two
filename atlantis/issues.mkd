@@ -21,7 +21,6 @@ Milestone - End of day on 11/27. Anything above this point should be completed b
            bottom right corners of the virtual world.
 - **[31]** Add "base" GroundEntity to each side. Game enters "game over" state when base health on one side 
 		   reaches zero.
-- **[32]** Translate world coordinates to local coordinates according to viewport offset. 
 
 Milestone - End of day on 12/2. 
 
@@ -68,6 +67,7 @@ Resolved Issues
 		   and start game at both sides. This might solve the frame desynchronize problem in a better way.
 - **[29]** Expand "world" beyond 800x600. Viewport should move when user moves mouse to edges of
            overlay. Consider arrow buttons on each edge of the overlay.
+- **[32]** Translate world coordinates to local coordinates according to viewport offset. 
 		
 Need to Revisit
 ---------------
