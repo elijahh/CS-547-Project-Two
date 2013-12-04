@@ -1,8 +1,13 @@
 package atlantis;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 import org.newdawn.slick.Animation;
 
@@ -61,14 +66,23 @@ public class Worker extends GroundEntity {
 		ResourceManager.loadImage(BLUE_ICON);
 	}
 	
+	private static Random random_generator = 
+			new Random(System.currentTimeMillis());
+	
 	private List<Worker> handling_collisions_with_these_workers = 
 			new LinkedList<Worker>();
+	private Map<Worker, Integer> collision_avoidance_countdown =
+			new HashMap<Worker, Integer>();
 	
 	public boolean isHandlingCollision() {
 		if(0 < handling_collisions_with_these_workers.size())
 			return true;
 		
 		return false;
+	}
+	
+	public boolean isHandlingCollisionWith(Worker other) {
+		return handling_collisions_with_these_workers.contains(other);
 	}
 	
 	public void beginMovement(final Vector direction) {
@@ -78,22 +92,42 @@ public class Worker extends GroundEntity {
 	private void enforceWorkerWorkerDistance(Worker other,
 			final Vector their_position, final Vector my_position) {
 		//final double angle_to_other = my_position.angleTo(their_position);
+		
+		if (other.isHandlingCollisionWith(this))
+			return;
 
-		if(false == handling_collisions_with_these_workers.contains(other)) {
+		if (false == handling_collisions_with_these_workers.contains(other)) {
 			handling_collisions_with_these_workers.add(other);
 			velocity = velocity.negate();
+
+			Integer countdown = new Integer(100 + random_generator.nextInt(150));
+			collision_avoidance_countdown.put(other, countdown);
+
+			System.out.println(this + " HANDLING WORKER-WORKER COLLISION "
+					+ countdown);
+		}
+	}
+	
+	private void manageCountdownForCollision(Worker other, int delta) {
+		Integer countdown = collision_avoidance_countdown.get(other);
 		
-			// TODO - make sure that the course change takes the terrain map into consideration
-			
-			System.out.println("HANDLING WORKER-WORKER COLLISION");
+		if(null != countdown) {
+			countdown -= delta;
+			if (0 > countdown)
+				handling_collisions_with_these_workers.remove(other);
+			collision_avoidance_countdown.put(other, countdown);
 		}
 	}
 	
 	@Override
 	public void update(final int delta) {
 		super.update(delta);
-
-		for (GroundEntity e : getPotentialCollisions()) {
+		
+		Set<GroundEntity> potential_collisions = 
+				new HashSet<GroundEntity>(getPotentialCollisions());
+		potential_collisions.addAll(handling_collisions_with_these_workers);
+				
+		for (GroundEntity e : potential_collisions) {
 			Vector my_position = getPosition();
 			Vector their_position = e.getPosition();
 
@@ -103,8 +137,8 @@ public class Worker extends GroundEntity {
 			if (e instanceof Worker
 					&& distance_to_other < MIN_WORKER_WORKER_DISTANCE)
 				enforceWorkerWorkerDistance((Worker)e, their_position, my_position);
-			else
-				handling_collisions_with_these_workers.remove(e);
+			else 
+				manageCountdownForCollision((Worker)e, delta);
 		}
 	}
 	
