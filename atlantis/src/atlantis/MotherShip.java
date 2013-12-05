@@ -66,7 +66,7 @@ public class MotherShip extends FloatingEntity {
 		
 		synchronized (mother_ships) {
 			for (MotherShip ship : mother_ships)
-				if (ship.health < 0) {
+				if (ship.health <= 0) {
 
 					both_alive = false;
 				}

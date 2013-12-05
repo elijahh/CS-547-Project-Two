@@ -15,7 +15,8 @@ Open Issues
            the MotherShip submarine.
 - **[37]** Implement "Store" interface, where players use gold to buy new units.
 - **[38]** Add health counter to base AtlantisEntity class. Send to clients as part of Updater serialization. Units
-           should be removed from server and clients when health counter goes below zero.
+           should be removed from server and clients when health counter goes below zero. Game is over when one of
+           the MotherShip units is destroyed -- create static method to track health of each MotherShip created.
 - **[39]** Add flag to base AtlantisEntity class indicating whether unit is visible. Send to clients as part of
            Updater serialization.
 - **[40]** Add method to AtlantisMap to identify whether a location x,y coordinates are inside a terrain
