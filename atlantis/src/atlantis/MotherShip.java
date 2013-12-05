@@ -39,6 +39,10 @@ public class MotherShip extends FloatingEntity {
 	private static int ANIMATION_FRAME_WIDTH = 50; /* pixels */
 	private static int ANIMATION_FRAME_HEIGHT = 200; /* pixels */
 	
+	private static int MAX_HEALTH_VALUE = 5000;
+	
+	private static List<MotherShip> mother_ships = new LinkedList<MotherShip>();
+	
 	public MotherShip() {
 		this(0,0);
 	}
@@ -49,6 +53,29 @@ public class MotherShip extends FloatingEntity {
 
 	public MotherShip(float x, float y, Vector movement_direction) {
 		super(x, y, movement_direction);
+		
+		health = MAX_HEALTH_VALUE;
+		
+		mother_ships.add(this);
+	}
+	
+	/* GAME IS OVER WHEN ONE MOTHER SHIP IS DESTROYED */
+	
+	public static boolean areBothAlive() {
+		boolean both_alive = true;
+		
+		synchronized (mother_ships) {
+			for (MotherShip ship : mother_ships)
+				if (ship.health <= 0) {
+
+					both_alive = false;
+				}
+
+			if (false == both_alive)
+				mother_ships.clear();
+		}
+		
+		return both_alive;
 	}
 	
 	static {
