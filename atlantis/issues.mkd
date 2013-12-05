@@ -3,7 +3,8 @@
 
 Open Issues
 -----------
-- **[25]** Address collision handling between two workers. Inelegant as currently written. 
+- **[25]** Address collision handling between two workers. Inelegant as currently written. Also address the possibility
+           of truncating the path when attacking to prevent collision with the target.
 	
 - **[30]** Modify worker addition so that new workers show up in empty spaces in top left (red) and
            bottom right corners of the virtual world, scattered in such a way to avoid terrain obstacles
