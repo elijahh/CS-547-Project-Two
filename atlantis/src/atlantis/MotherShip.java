@@ -13,6 +13,7 @@ import org.newdawn.slick.Animation;
 
 import atlantis.AtlantisEntity.Team;
 import jig.ResourceManager;
+import jig.Shape;
 import jig.Vector;
 
 public class MotherShip extends FloatingEntity {
@@ -94,18 +95,40 @@ public class MotherShip extends FloatingEntity {
 			animation_filename = MOVE_L_ANIMATION_FILE;		
 			ANIMATION_FRAME_WIDTH = 200;
 			ANIMATION_FRAME_HEIGHT = 50;
+			//remove old image, add new image
+			removeImage(ResourceManager.getImage(getStillImageFilename(face_direction)));
+			List<Shape> shapes;
+			shapes = getShapes();
+			for (Shape shape: shapes)
+				removeShape(shape);
+			this.addImageWithBoundingBox(ResourceManager.getImage(FACE_L_GRAPHIC_FILE));
 		} else if (direction.equals(UP_UNIT_VECTOR)) {
 			animation_filename = MOVE_U_ANIMATION_FILE;
 			ANIMATION_FRAME_WIDTH = 50;
 			ANIMATION_FRAME_HEIGHT = 200;
+			removeImage(ResourceManager.getImage(getStillImageFilename(face_direction)));
+			List<Shape> shapes = getShapes();
+			for (Shape shape: shapes)
+				removeShape(shape);
+			this.addImageWithBoundingBox(ResourceManager.getImage(FACE_U_GRAPHIC_FILE));
 		} else if (direction.equals(RIGHT_UNIT_VECTOR)) {
 			animation_filename = MOVE_R_ANIMATION_FILE;
 			ANIMATION_FRAME_WIDTH = 200;
 			ANIMATION_FRAME_HEIGHT = 50;
+			removeImage(ResourceManager.getImage(getStillImageFilename(face_direction)));
+			List<Shape> shapes = getShapes();
+			for (Shape shape: shapes)
+				removeShape(shape);
+			this.addImageWithBoundingBox(ResourceManager.getImage(FACE_R_GRAPHIC_FILE));
 		} else {
 			animation_filename = MOVE_D_ANIMATION_FILE;
 			ANIMATION_FRAME_WIDTH = 50;
 			ANIMATION_FRAME_HEIGHT = 200;
+			removeImage(ResourceManager.getImage(getStillImageFilename(face_direction)));
+			List<Shape> shapes = getShapes();
+			for (Shape shape: shapes)
+				removeShape(shape);
+			this.addImageWithBoundingBox(ResourceManager.getImage(FACE_D_GRAPHIC_FILE));
 		}
 
 		return animation_filename;
