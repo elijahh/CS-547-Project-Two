@@ -67,9 +67,7 @@ public abstract class AtlantisEntity extends Entity implements
 		super(x, y);
 		beginMovement(movement_direction);
 		identity = random_generator.nextLong();
-		
-		if(null != graph)
-			dijkstra = new DijkstraAlgorithm(graph);
+
 		
 		/*
 		 * We need to get one shape of the entity so that the server knows the
@@ -407,6 +405,9 @@ public abstract class AtlantisEntity extends Entity implements
 
 		int destination_node = calculateMapNode(destination_position.getX(),
 				destination_position.getY());
+		
+		if(null == dijkstra && null != graph)
+			dijkstra = new DijkstraAlgorithm(graph);
 
 		if ((dijkstra != null) && (destination_node != target_node)) {
 			dijkstra.execute(destination_node);
@@ -414,9 +415,15 @@ public abstract class AtlantisEntity extends Entity implements
 		}
 
 		if (dijkstra != null) {
-			List<Vertex> path = dijkstra.getPath(this.getCurrentMapNode());			
+			List<Vertex> path = dijkstra.getPath(this.getCurrentMapNode());
+					
+			// TODO Remove once we're sure that entities aren't wandering into terrain
+			for(int node_id : AtlantisMap.getBlockedNodes())
+				if(node_id == getCurrentMapNode())
+					System.out.println("HUH?!? ENTITY IN TERRAIN TILE " + node_id);
+						
 			Vector move_direction = this.getNextMovementFromPath(path);
-
+			
 			if (move_direction != STOPPED_VECTOR) 
 				moving = true;
 			
