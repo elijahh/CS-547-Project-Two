@@ -219,9 +219,16 @@ public class GameStatus {
 
 	private Map<Long, Soldier> soldiers_server_model = new HashMap<Long, Soldier>();
 	private Map<Long, MotherShip> motherships_server_model = new HashMap<Long, MotherShip>();
+	private Map<Long, Torpedo> torpedoes_server_model = new HashMap<Long, Torpedo>();
 	
 	private void processCommand(Command command) {
 		switch (command.type) {
+		case Command.ATTACK:
+			synchronized (soldiers_server_model) {
+				Soldier soldier = soldiers_server_model.get(command.entityId);
+				Soldier targetSoldier = soldiers_server_model.get(command.targetEntityId);
+				soldier.setTarget(targetSoldier);
+			}
 		case Command.MOVEMENT:
 			synchronized (soldiers_server_model) {
 				Soldier soldier = soldiers_server_model.get(command.entityId);

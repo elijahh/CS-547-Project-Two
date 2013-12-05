@@ -79,7 +79,7 @@ public class PlayingState extends BasicGameState{
 		Queue<Soldier> soldiers = 
 				new PriorityQueue<Soldier>(status.getSoldiers());
 		for (Soldier w : soldiers) {
-			w.render(g); 
+			w.render(g);
 		}
 		
 		// Render mothership

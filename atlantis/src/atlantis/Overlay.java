@@ -168,7 +168,7 @@ public class Overlay {
 				
 				Command move_command = new Command(Command.MOVEMENT,
 						playingState.getCurrentFrame(), new Vector(x-PlayingState.viewportOffsetX, y-PlayingState.viewportOffsetY),
-						selectedUnitID);
+						selectedUnitID, 0);
 				GameStatus status = playingState.getStatus();
 				status.sendCommand(move_command);
 				
@@ -183,6 +183,37 @@ public class Overlay {
 				isArrowCursorSet = false;
 			}
 			g.drawImage(targetAttack, x, y);
+			
+			if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) ||
+					input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON)) {
+				GameStatus status = playingState.getStatus();
+				Map<Long, Soldier> soldiers = status
+						.getIdSoldiersMapOnClient();
+				long targetUnitID = -1;
+				for (Long id : soldiers.keySet()) {
+					Soldier soldier = soldiers.get(id);
+					if (soldier.getTeam() == playingState.team) continue;
+					y += targetAttack.getHeight() / 2f;
+					x += targetAttack.getWidth() / 2f;
+					if (y > soldier.getCoarseGrainedMinY() &&
+							y < soldier.getCoarseGrainedMaxY() &&
+							x > soldier.getCoarseGrainedMinX() &&
+							x < soldier.getCoarseGrainedMaxX()) {
+						targetUnitID = id.longValue();
+						break;
+					}
+				}
+				
+				if (targetUnitID == -1) return;
+
+				Command attack_command = new Command(Command.ATTACK,
+						playingState.getCurrentFrame(), new Vector(x-PlayingState.viewportOffsetX, y-PlayingState.viewportOffsetY),
+						selectedUnitID, targetUnitID);
+				status.sendCommand(attack_command);
+
+				action = 0;
+				selectedUnitID = -1;
+			}
 		}
 		
 		g.drawImage(overlay, 0, 470);

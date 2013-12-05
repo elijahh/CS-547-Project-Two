@@ -118,7 +118,7 @@ public class Soldier extends GroundEntity {
 			collision_avoidance_countdown.put(other, countdown);
 		}
 	}
-	
+
 	@Override
 	public void update(final int delta) {
 		super.update(delta);
