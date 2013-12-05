@@ -18,6 +18,8 @@ Open Issues
            should be removed from server and clients when health counter goes below zero.
 - **[39]** Add flag to base AtlantisEntity class indicating whether unit is visible. Send to clients as part of
            Updater serialization.
+- **[40]** Add method to AtlantisMap to identify whether a location x,y coordinates are inside a terrain
+           "obstacle" tile.
 ...
  
 
