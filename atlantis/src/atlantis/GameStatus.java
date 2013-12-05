@@ -34,6 +34,8 @@ public class GameStatus {
 	// TEMPORARY FOR DEVELOPMENT
 	public Soldier soldier_on_server_1;
 	public Soldier soldier_on_server_2;
+	public MotherShip mothership_on_server_1;
+	public MotherShip mothership_on_server_2;
 	// TEMPORARY FOR DEVELOPMENT
 	
 	public GameStatus(PlayingState playing_state) {
@@ -49,6 +51,13 @@ public class GameStatus {
 		soldier_on_server_2.setTeam(Team.BLUE);
 		soldiers_server_model.put(soldier_on_server_2.getIdentity(),
 				soldier_on_server_2);
+		
+		mothership_on_server_1 = new MotherShip(200, 200, new Vector(0,0));
+		motherships_server_model.put(mothership_on_server_1.getIdentity(), mothership_on_server_1);
+		
+		mothership_on_server_2 = new MotherShip(400, 200, new Vector(0,0));
+		mothership_on_server_2.setTeam(Team.BLUE);
+		motherships_server_model.put(mothership_on_server_2.getIdentity(), mothership_on_server_2);
 		// TEMPORARY FOR DEVELOPMENT
 	}
 
@@ -75,6 +84,16 @@ public class GameStatus {
 						soldier.moveTo(position);
 					soldier.update(delta);
 					updaters.add(soldier.getUpdater());
+				}
+			}
+			
+			synchronized(motherships_server_model) {
+				for(MotherShip mothership : motherships_server_model.values()) {
+					Vector position = mothership.getDestination();
+					if(position != null && false == mothership.isHandlingCollision())
+						mothership.moveTo(position);
+					mothership.update(delta);
+					updaters.add(mothership.getUpdater());
 				}
 			}
 				
@@ -121,6 +140,7 @@ public class GameStatus {
 	/* -------------------------------------------------------------------- */
 	
 	private Map<Long, Soldier> soldiersOnClient = new HashMap<Long, Soldier>();
+	private Map<Long, MotherShip> motherShipsOnClient = new HashMap<Long, MotherShip>();
 	
 	private void processUpdater(AtlantisEntity.Updater updater) {
 		if(updater.getEntityClass() == Soldier.class) {			
@@ -136,7 +156,20 @@ public class GameStatus {
 				soldiersOnClient.put(new Long(updater.getIdentity()),
 						(Soldier) updated_entity);
 			}
-		} else {		
+		} else if (updater.getEntityClass() == MotherShip.class){		
+			synchronized (motherShipsOnClient) {
+				MotherShip updated_entity = motherShipsOnClient.get(updater.getIdentity());
+
+				if (null == updated_entity) {
+					updated_entity = new MotherShip();
+				}
+
+				updated_entity.update(updater);
+
+				motherShipsOnClient.put(new Long(updater.getIdentity()),
+						(MotherShip) updated_entity);
+			}
+		} else {
 			// TODO: update of other entity types
 		}
 	}
@@ -161,16 +194,46 @@ public class GameStatus {
 		return id_soldier_map;
 	}
 	
+	public List<MotherShip> getMotherShips() {
+		List<MotherShip> motherShip_list = new ArrayList<MotherShip>();
+		
+		synchronized(motherShipsOnClient) { 
+			 motherShip_list.addAll(motherShipsOnClient.values());
+		}
+		
+		return Collections.unmodifiableList(motherShip_list);
+	}
+	
+	public Map<Long, MotherShip> getIdMotherShipsMapOnClient() {
+		Map<Long, MotherShip> id_motherShip_map;
+		
+		synchronized(motherShipsOnClient) {
+			id_motherShip_map = Collections.unmodifiableMap(motherShipsOnClient);
+		}
+		
+		return id_motherShip_map;
+	}
+	
 	/* -------------------------------------------------------------------- */
 	
+
 	private Map<Long, Soldier> soldiers_server_model = new HashMap<Long, Soldier>();
+	private Map<Long, MotherShip> motherships_server_model = new HashMap<Long, MotherShip>();
 	
 	private void processCommand(Command command) {
 		switch (command.type) {
 		case Command.MOVEMENT:
 			synchronized (soldiers_server_model) {
 				Soldier soldier = soldiers_server_model.get(command.entityId);
-				soldier.setDestination(command.target);
+				if(soldier != null) {
+					soldier.setDestination(command.target);
+				}
+			}
+			synchronized (motherships_server_model) {
+				MotherShip mothership = motherships_server_model.get(command.entityId);
+				if(mothership != null) {
+					mothership.setDestination(command.target);
+				}
 			}
 			break;
 		}

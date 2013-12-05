@@ -402,7 +402,6 @@ public abstract class AtlantisEntity extends Entity implements
 	
 	boolean moveTo(final Vector destination_position) {
 		boolean moving = false;
-
 		int destination_node = calculateMapNode(destination_position.getX(),
 				destination_position.getY());
 		

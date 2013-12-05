@@ -12,16 +12,17 @@ public class Command implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
-	public static final int MOVEMENT = 0;
-	public static final int ATTACK = 1;
+	public static final short MOVEMENT = 0;
+	public static final short ATTACK = 1;
 	
-	public int type;
+	public short type;
 	public int frameNum;
 	public Vector target;
 	
 	public long entityId;
+	public long attackTargetId;
 	
-	public Command(int type, int frameNum, Vector target, long entityId) {
+	public Command(short type, int frameNum, Vector target, long entityId) {
 		this.type = type;
 		this.frameNum = frameNum;
 		

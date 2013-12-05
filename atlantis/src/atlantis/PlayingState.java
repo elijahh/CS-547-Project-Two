@@ -81,6 +81,13 @@ public class PlayingState extends BasicGameState{
 		for (Soldier w : soldiers) {
 			w.render(g); 
 		}
+		
+		// Render mothership
+		Queue<MotherShip> motherShips = 
+				new PriorityQueue<MotherShip>(status.getMotherShips());
+		for (MotherShip mothership : motherShips) {
+			mothership.render(g); 
+		}
 
 		overlay.render(container, game, g);
 
