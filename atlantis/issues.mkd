@@ -9,10 +9,8 @@ Open Issues
            bottom right corners of the virtual world, scattered in such a way to avoid terrain obstacles
            and other workers.
 
-- **[34]** Create first "floating" unit, MotherShip submarine, one per side. Game enters "game over" state when
-           MotherShip health on one side reaches zero.
 - **[35]** "Arm" soldier units with weapons and enable "attack" command. Soldier units may attack each other or
-           the MotherShip submarine.
+           the MotherShip submarine. Combat resolution using random numbers.
            
 - **[37]** Implement "Store" interface, where players use gold to buy new units.
 - **[38]** Add health counter to base AtlantisEntity class. Send to clients as part of Updater serialization. Units
@@ -86,7 +84,10 @@ Resolved Issues
            overlay. Consider arrow buttons on each edge of the overlay.
 - **[32]** Translate world coordinates to local coordinates according to viewport offset. 
 - **[33]** Refactor Workers as Soldier units.
+- **[34]** Create first "floating" unit, MotherShip submarine, one per side. Game enters "game over" state when
+           MotherShip health on one side reaches zero.
 - **[36]** Fix map to correctly parse location of terrain obstacles. Ground units should avoid the obstacles.
+
 
 May Need to Revisit
 -------------------
