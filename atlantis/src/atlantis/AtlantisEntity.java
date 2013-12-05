@@ -56,6 +56,8 @@ public abstract class AtlantisEntity extends Entity implements
 	protected Vector face_direction = STOPPED_VECTOR;
 	protected Vector movement_direction = STOPPED_VECTOR;
 	protected Vector movement_last_direction = STOPPED_VECTOR;
+	
+	protected int health;
 
 	@Override
 	public int compareTo(final AtlantisEntity other) {
@@ -452,6 +454,8 @@ public abstract class AtlantisEntity extends Entity implements
 		Vector position;
 		
 		Class entity_class;
+		
+		int health;
 
 		Updater(AtlantisEntity e) {
 
@@ -459,6 +463,7 @@ public abstract class AtlantisEntity extends Entity implements
 			velocity = e.velocity;
 			identity = e.identity;
 			team = e.team;
+			health = e.health;
 			
 			entity_class = e.getClass();
 		}
