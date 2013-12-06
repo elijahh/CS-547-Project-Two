@@ -17,6 +17,7 @@ import org.newdawn.slick.Image;
 import jig.Entity;
 import jig.ResourceManager;
 import jig.Vector;
+
 import dijkstra.engine.DijkstraAlgorithm;
 import dijkstra.model.Graph;
 import dijkstra.model.Vertex;
@@ -48,6 +49,7 @@ public abstract class AtlantisEntity extends Entity implements
 				new Random(System.currentTimeMillis());
 	
 	protected static Graph graph;
+	protected static DijkstraAlgorithm group_dijkstra;
 
 	protected Vector velocity;
 	protected DijkstraAlgorithm dijkstra;
@@ -409,12 +411,17 @@ public abstract class AtlantisEntity extends Entity implements
 	abstract void beginMovement(Vector direction);
 	abstract boolean isHandlingCollision();
 	
-	private int target_node = -1;
-	
+	protected int target_node;
+		
 	boolean moveTo(final Vector destination_position) {
 		boolean moving = false;
 		int destination_node = calculateMapNode(destination_position.getX(),
 				destination_position.getY());
+		
+		if(null == dijkstra) target_node = -1;
+		
+		if(null == dijkstra && null != group_dijkstra)
+			dijkstra = new DijkstraAlgorithm(group_dijkstra);
 		
 		if(null == dijkstra && null != graph)
 			dijkstra = new DijkstraAlgorithm(graph);
@@ -427,6 +434,8 @@ public abstract class AtlantisEntity extends Entity implements
 		if (dijkstra != null) {
 			List<Vertex> path = dijkstra.getPath(this.getCurrentMapNode());
 					
+			System.out.println(path);
+			
 			// TODO Remove once we're sure that entities aren't wandering into terrain
 			for(int node_id : AtlantisMap.getBlockedNodes())
 				if(node_id == getCurrentMapNode())
