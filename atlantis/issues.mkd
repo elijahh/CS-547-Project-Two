@@ -22,6 +22,9 @@ Open Issues
 - **[40]** Add method to AtlantisMap to identify whether a location x,y coordinates are inside a terrain
            "obstacle" tile.
 - **[41]** Create TacticalSub class and associated Torpedo class for the entity's "attack" method.
+- **[42]** Adjust map rendering offset in such a way that Soldier's "feet" appear near center of tile corresponding to
+           current location.
+- **[43]** FloatingEntity collision handling. 
 ...
  
 
