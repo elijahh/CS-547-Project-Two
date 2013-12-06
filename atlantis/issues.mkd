@@ -25,6 +25,7 @@ Open Issues
 - **[42]** Adjust map rendering offset in such a way that Soldier's "feet" appear near center of tile corresponding to
            current location.
 - **[43]** FloatingEntity collision handling. 
+
 ...
  
 
