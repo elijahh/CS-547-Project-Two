@@ -344,6 +344,15 @@ public abstract class AtlantisEntity extends Entity implements
 		return Collections.unmodifiableSet(nearby_entities);
 	}
 
+	private int getNextMapNodeNumFromPath(final List<Vertex> path) {
+		int next_node = -1;
+		
+		if(null != path)
+			next_node = path.get(1).getIdInteger();
+		
+		return next_node;
+	}
+	
 	public Vector getNextMovementFromPath(final List<Vertex> path) {
 		Vector movement_direction = STOPPED_VECTOR;
 
@@ -352,7 +361,7 @@ public abstract class AtlantisEntity extends Entity implements
 
 		if (null != path)
 			move_to_node = path.get(1).toString();
-
+		
 		if (move_to_node.equals("Node_" + (current_map_node + MAP_GRID_X))) {
 			movement_direction = movement_direction.add(DOWN_UNIT_VECTOR);
 		} else if (move_to_node.equals("Node_"
@@ -422,6 +431,7 @@ public abstract class AtlantisEntity extends Entity implements
 			for(int node_id : AtlantisMap.getBlockedNodes())
 				if(node_id == getCurrentMapNode())
 					System.out.println("HUH?!? ENTITY IN TERRAIN TILE " + node_id);
+			// End remove - That operation could get pricey!
 						
 			Vector move_direction = this.getNextMovementFromPath(path);
 			
