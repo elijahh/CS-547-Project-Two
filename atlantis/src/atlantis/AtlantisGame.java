@@ -32,6 +32,10 @@ public class AtlantisGame extends StateBasedGame {
 	public static final String OVERLAY = "atlantis/resource/overlay.png";
 	public static final String ACTION_MOVE = "atlantis/resource/actionMove.png";
 	public static final String ACTION_ATTACK = "atlantis/resource/actionAttack.png";
+	public static final String ACTION_PURCHASE = "atlantis/resource/actionPurchase.png";
+	public static final String ACTION_PURCHASE_SOLDIER = "atlantis/resource/actionPurchase-soldier.png";
+	public static final String ACTION_PURCHASE_TACTICAL = "atlantis/resource/actionPurchase-tactical.png";
+	public static final String ACTION_BACK = "atlantis/resource/actionBack.png";
 	public static final String TARGET_MOVE = "atlantis/resource/targetMove.png";
 	public static final String TARGET_ATTACK = "atlantis/resource/targetAttack.png";
 	public static final String ARROW_UP = "atlantis/resource/Arrow-Up.png";
@@ -72,6 +76,10 @@ public class AtlantisGame extends StateBasedGame {
 		ResourceManager.loadImage(OVERLAY);
 		ResourceManager.loadImage(ACTION_MOVE);
 		ResourceManager.loadImage(ACTION_ATTACK);
+		ResourceManager.loadImage(ACTION_PURCHASE);
+		ResourceManager.loadImage(ACTION_PURCHASE_SOLDIER);
+		ResourceManager.loadImage(ACTION_PURCHASE_TACTICAL);
+		ResourceManager.loadImage(ACTION_BACK);
 		ResourceManager.loadImage(TARGET_MOVE);
 		ResourceManager.loadImage(TARGET_ATTACK);
 		ResourceManager.loadImage(ARROW_UP);

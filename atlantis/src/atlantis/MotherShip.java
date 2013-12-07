@@ -187,5 +187,4 @@ public class MotherShip extends FloatingEntity {
 			return RED_ICON;
 		}
 	}
-	
 }
