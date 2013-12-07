@@ -8,6 +8,7 @@ import java.util.Queue;
 
 import jig.ResourceManager;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -93,11 +94,15 @@ public class PlayingState extends BasicGameState{
 
 		/* Client receive results from server */
 
+		g.setColor(Color.yellow);
+		
 		if(StartMenuState.GAME_TYPE.equals("server"))
 			g.drawString("Server ", 25, 200);
 		
 		if(StartMenuState.GAME_TYPE.equals("client"))
 			g.drawString("Client ", 25, 200);
+		
+		g.drawString("Gold: " + (int) gold, 10, 30);
 	}
 	
 	private final void doHousekeeping() {
@@ -106,10 +111,13 @@ public class PlayingState extends BasicGameState{
 		// TODO
 	}
 	
+	float gold = 0;
+	
 	@Override
 	public void update(GameContainer container, StateBasedGame game,
 			int delta) throws SlickException {
 		currentFrame += 1;
+		gold += delta / 180f;
 		status.update(container, delta);
 		overlay.update(delta);
 	}

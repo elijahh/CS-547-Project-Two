@@ -252,6 +252,16 @@ public class GameStatus {
 				}
 			}
 			break;
+		case Command.PURCHASE:
+			synchronized (soldiers_server_model) {
+				if (command.entityId == 0) { // purchase soldier
+					Soldier newSoldier = new Soldier(command.target.getX(),
+							command.target.getY());
+					newSoldier.setTeam(Team.values()[(int) command.attackTargetId]);
+					soldiers_server_model.put(newSoldier.getIdentity(), newSoldier);
+				}
+			}
+			// TODO: if (command.entityId == 1) { // purchase tactical sub
 		}
 	}
 }

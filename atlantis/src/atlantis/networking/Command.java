@@ -14,6 +14,7 @@ public class Command implements Serializable {
 
 	public static final short MOVEMENT = 0;
 	public static final short ATTACK = 1;
+	public static final short PURCHASE = 2;
 	
 	public short type;
 	public int frameNum;
@@ -22,7 +23,8 @@ public class Command implements Serializable {
 	public long entityId;
 	public long attackTargetId;
 	
-	public Command(short type, int frameNum, Vector target, long entityId, long attackTargetId) {
+	public Command(short type, int frameNum, Vector target, long entityId,
+			long attackTargetId) {
 		this.type = type;
 		this.frameNum = frameNum;
 		

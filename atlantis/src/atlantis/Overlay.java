@@ -317,18 +317,42 @@ public class Overlay {
 				} else if (x > 290 && x < 340) { // purchase soldier
 					x += 20;
 					g.setColor(Color.yellow);
-					g.fillRect(x, y, 150, 20);
+					g.fillRect(x, y, 200, 20);
 					g.setColor(Color.black);
-					g.drawString("Purchase Soldier", x, y);
+					g.drawString("Purchase Soldier (500)", x, y);
+					
+					if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) &&
+							clickTimer <= 0 && playingState.gold >= 500) {
+						playingState.gold -= 500;
+						clickTimer = 1000;
+						playingState.getStatus().sendCommand(new Command(
+								Command.PURCHASE, playingState.getCurrentFrame(),
+								new Vector(PlayingState.viewportOffsetX + 400,
+										PlayingState.viewportOffsetY + 200),
+								0, playingState.team.ordinal()));
+					}
 				} else if (x > 350 && x < 400) {
 					x += 20;
 					g.setColor(Color.yellow);
-					g.fillRect(x, y, 250, 20);
+					g.fillRect(x, y, 310, 20);
 					g.setColor(Color.black);
-					g.drawString("Purchase Tactical Submarine", x, y);
+					g.drawString("Purchase Tactical Submarine (2000)", x, y);
+					
+					if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) &&
+							clickTimer <= 0 && playingState.gold >= 2000) {
+						playingState.gold -= 2000;
+						clickTimer = 1000;
+						playingState.getStatus().sendCommand(new Command(
+								Command.PURCHASE, playingState.getCurrentFrame(),
+								new Vector(PlayingState.viewportOffsetX + 400,
+										PlayingState.viewportOffsetY + 200),
+								1, playingState.team.ordinal()));
+					}
 				}
 			}
 		}
+		
+		g.setColor(Color.yellow);
 	}
 	
 	public void update(int delta) {
