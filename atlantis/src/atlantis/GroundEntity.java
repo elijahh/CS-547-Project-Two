@@ -1,6 +1,7 @@
 package atlantis;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.newdawn.slick.tiled.TiledMap;
@@ -71,18 +72,20 @@ abstract class GroundEntity extends AtlantisEntity {
 			new ArrayList<GroundEntity>();
 	
 	public List<GroundEntity> getPotentialCollisions() {
-		return potential_collisions;
+		return Collections.unmodifiableList(potential_collisions);
 	}
 	
 	@Override
 	public void update(final int delta) {
 		super.update(delta);
 		
-		potential_collisions.clear();
-		
-		for(AtlantisEntity e : listNearbyEntities()) {
-			if(e instanceof GroundEntity) 
-				potential_collisions.add((GroundEntity)e);
+		if (velocity.length() > 0.0) {
+			potential_collisions.clear();
+
+			for (AtlantisEntity e : listNearbyEntities()) {
+				if (e instanceof GroundEntity)
+					potential_collisions.add((GroundEntity) e);
+			}
 		}
 	}
 }

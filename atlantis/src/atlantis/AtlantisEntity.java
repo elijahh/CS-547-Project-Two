@@ -247,15 +247,12 @@ public abstract class AtlantisEntity extends Entity implements
 		return node_number_set;
 	}
 
-	static Map<AtlantisEntity, Set<Integer>> entity_node_map;
-	static Map<Integer, Set<AtlantisEntity>> node_entity_map;
+	static Map<AtlantisEntity, Set<Integer>> entity_node_map = 
+			new HashMap<AtlantisEntity, Set<Integer>>();
+	static Map<Integer, Set<AtlantisEntity>> node_entity_map = 
+			new HashMap<Integer, Set<AtlantisEntity>>();
 
-	static {
-		entity_node_map = new HashMap<AtlantisEntity, Set<Integer>>();
-		node_entity_map = new HashMap<Integer, Set<AtlantisEntity>>();
-	}
-
-	private void updateEntityNodeMaps() {
+	private void updateEntityNodeMaps(boolean kill) {
 		Set<Integer> node_list = getCurrentMapNodesSpanned();
 		Set<Integer> previous_node_list;
 
@@ -263,7 +260,11 @@ public abstract class AtlantisEntity extends Entity implements
 
 		synchronized (entity_node_map) {
 			previous_node_list = entity_node_map.get(this);
-			entity_node_map.put(this, node_list);
+			
+			if(kill)
+				entity_node_map.remove(this);
+			else
+				entity_node_map.put(this, node_list);
 		}
 
 		/* node/entity - remove old position */
@@ -282,26 +283,30 @@ public abstract class AtlantisEntity extends Entity implements
 			}
 		}
 
-		/* node/entity - add new position */
+		/* node/entity - add new position if we arent performing a "kill" */
 
-		synchronized (node_entity_map) {
-			for (Integer n : node_list) {
-				Set<AtlantisEntity> entity_list = node_entity_map.get(n);
+		if (false == kill) {
+			synchronized (node_entity_map) {
+				for (Integer n : node_list) {
+					Set<AtlantisEntity> entity_list = node_entity_map.get(n);
 
-				boolean need_put = false;
+					boolean need_put = false;
 
-				if (null == entity_list) {
-					entity_list = new HashSet<AtlantisEntity>();
-					need_put = true;
+					if (null == entity_list) {
+						entity_list = new HashSet<AtlantisEntity>();
+						need_put = true;
+					}
+
+					entity_list.add(this);
+
+					if (need_put)
+						node_entity_map.put(n, entity_list);
 				}
-
-				entity_list.add(this);
-
-				if (need_put)
-					node_entity_map.put(n, entity_list);
 			}
 		}
 	}
+	
+	public void kill() { updateEntityNodeMaps(true); }
 
 	public final boolean isNearbyEntity(final AtlantisEntity other) {
 		boolean returned_value = false;
@@ -310,6 +315,7 @@ public abstract class AtlantisEntity extends Entity implements
 			final Set<Integer> map_nodes = entity_node_map.get(this);
 			Set<Integer> their_nodes = entity_node_map.get(other);
 
+			/* Do we overlap anywhere */
 			their_nodes.retainAll(map_nodes);
 
 			if (0 < their_nodes.size())
@@ -405,7 +411,7 @@ public abstract class AtlantisEntity extends Entity implements
 	public void update(final int delta) {
 		translate(velocity.scale(delta));
 
-		updateEntityNodeMaps();
+		updateEntityNodeMaps(false);
 		
 		reward = 0;
 		
