@@ -49,6 +49,7 @@ public class Soldier extends GroundEntity {
 
 	public Soldier(float x, float y, Vector move_direction) {
 		super(x, y, move_direction);
+		health = 100;
 	}
 	
 	static {
@@ -118,7 +119,7 @@ public class Soldier extends GroundEntity {
 			collision_avoidance_countdown.put(other, countdown);
 		}
 	}
-	
+
 	@Override
 	public void update(final int delta) {
 		super.update(delta);

@@ -22,12 +22,13 @@ public class Command implements Serializable {
 	public long entityId;
 	public long attackTargetId;
 	
-	public Command(short type, int frameNum, Vector target, long entityId) {
+	public Command(short type, int frameNum, Vector target, long entityId, long attackTargetId) {
 		this.type = type;
 		this.frameNum = frameNum;
 		
 		this.target = target;
 		
 		this.entityId = entityId;
+		this.attackTargetId = attackTargetId;
 	}
 }
