@@ -3,8 +3,6 @@
 
 Open Issues
 -----------
-- **[25]** Address collision handling between two workers. Inelegant as currently written. Also address the possibility
-           of truncating the path when attacking to prevent collision with the target.
 	
 - **[30]** Modify worker addition so that new workers show up in empty spaces in top left (red) and
            bottom right corners of the virtual world, scattered in such a way to avoid terrain obstacles
@@ -22,7 +20,7 @@ Open Issues
 - **[42]** Adjust map rendering offset in such a way that Soldier's "feet" appear near center of tile corresponding to
            current location.
 - **[43]** FloatingEntity collision handling. 
-
+- **[44]** Explore truncating the path when attacking to prevent collision with the target.
 ...
  
 
@@ -95,5 +93,7 @@ Resolved Issues
 
 May Need to Revisit
 -------------------
-- **[5]** Make Parallel Dijkstra function for split adjacencies. Investigate possible optimizations.
+- **[5]**  Make Parallel Dijkstra function for split adjacencies. Investigate possible optimizations.
+- **[25]** Address collision handling between two workers. Inelegant as currently written.
+
 
