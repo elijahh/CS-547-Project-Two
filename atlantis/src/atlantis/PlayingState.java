@@ -111,6 +111,7 @@ public class PlayingState extends BasicGameState{
 			int delta) throws SlickException {
 		currentFrame += 1;
 		status.update(container, delta);
+		overlay.update(delta);
 	}
 
 	@Override
