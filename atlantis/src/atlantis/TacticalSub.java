@@ -1,14 +1,5 @@
 package atlantis;
 
-import org.newdawn.slick.Image;
-
-import atlantis.AtlantisEntity.Team;
-
-import jig.Entity;
-import jig.ResourceManager;
-import jig.Vector;
-import jig.Shape;
-	
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,22 +11,27 @@ import java.util.Set;
 
 import org.newdawn.slick.Animation;
 
-public class Torpedo extends FloatingEntity {
+import atlantis.AtlantisEntity.Team;
+import jig.ResourceManager;
+import jig.Shape;
+import jig.Vector;
+
+public class TacticalSub extends FloatingEntity {
 	
-	private static final String FACE_U_GRAPHIC_FILE = "atlantis/resource/Torpedo-Up.png";
-	private static final String FACE_D_GRAPHIC_FILE = "atlantis/resource/Torpedo-down.png";
-	private static final String FACE_L_GRAPHIC_FILE = "atlantis/resource/Torpedo-left.png";
-	private static final String FACE_R_GRAPHIC_FILE = "atlantis/resource/Torpedo-right.png";
+	private static final String FACE_U_GRAPHIC_FILE = "atlantis/resource/submarine-up.png";
+	private static final String FACE_D_GRAPHIC_FILE = "atlantis/resource/submarine-down.png";
+	private static final String FACE_L_GRAPHIC_FILE = "atlantis/resource/submarine-left.png";
+	private static final String FACE_R_GRAPHIC_FILE = "atlantis/resource/submarine-right.png";
 	
-	private static final String MOVE_L_ANIMATION_FILE = "atlantis/resource/Torpedo-Left.png";
-	private static final String MOVE_R_ANIMATION_FILE = "atlantis/resource/Torpedo-Right.png";
-	private static final String MOVE_U_ANIMATION_FILE = "atlantis/resource/Torpedo-Up.png";
-	private static final String MOVE_D_ANIMATION_FILE = "atlantis/resource/Torpedo-Down.png";
+	private static final String MOVE_L_ANIMATION_FILE = "atlantis/resource/submarine-left.png";
+	private static final String MOVE_R_ANIMATION_FILE = "atlantis/resource/submarine-right.png";
+	private static final String MOVE_U_ANIMATION_FILE = "atlantis/resource/submarine-up.png";
+	private static final String MOVE_D_ANIMATION_FILE = "atlantis/resource/submarine-down.png";
 	
-//	private static final String RED_ICON = "atlantis/resource/red-worker.png";
-//	private static final String BLUE_ICON = "atlantis/resource/blue-worker.png";
+	private static final String RED_ICON = "atlantis/resource/red-worker.png";
+	private static final String BLUE_ICON = "atlantis/resource/blue-worker.png";
 	
-	private static final float MAX_VELOCITY = 0.12f;       /* pixels/mS */
+	private static final float MAX_VELOCITY = 0.09f;       /* pixels/mS */
 	
 	private static final int ANIMATION_FRAMES = 1;
 	private static final int ANIMATION_FRAME_DURATION = 200; /* mS */
@@ -43,16 +39,24 @@ public class Torpedo extends FloatingEntity {
 	private static int ANIMATION_FRAME_WIDTH = 50; /* pixels */
 	private static int ANIMATION_FRAME_HEIGHT = 200; /* pixels */
 	
-	public Torpedo() {
+	private static int MAX_HEALTH_VALUE = 5000;
+	
+	private static List<TacticalSub> tactical_subs = new LinkedList<TacticalSub>();
+	
+	public TacticalSub() {
 		this(0,0);
 	}
 	
-	public Torpedo(float x, float y) {
+	public TacticalSub(float x, float y) {
 		this(x, y, STOPPED_VECTOR);
 	}
 
-	public Torpedo(float x, float y, Vector movement_direction) {
+	public TacticalSub(float x, float y, Vector movement_direction) {
 		super(x, y, movement_direction);
+		
+		health = MAX_HEALTH_VALUE;
+		
+		tactical_subs.add(this);
 	}
 	
 	static {
@@ -66,44 +70,14 @@ public class Torpedo extends FloatingEntity {
 		ResourceManager.loadImage(MOVE_L_ANIMATION_FILE);
 		ResourceManager.loadImage(MOVE_R_ANIMATION_FILE);
 		
-//		ResourceManager.loadImage(RED_ICON);
-//		ResourceManager.loadImage(BLUE_ICON);
+		ResourceManager.loadImage(RED_ICON);
+		ResourceManager.loadImage(BLUE_ICON);
 	}
 	
-	Image torpedo;
-	private static final String BLUETORPEDOIMG_RSC = "atlantis/resource/soldier-torpedo-blue.png";
-	private static final String REDTORPEDOIMG_RSC = "atlantis/resource/soldier-torpedo-red.png";
-	
-	static {
-		ResourceManager.loadImage(BLUETORPEDOIMG_RSC);
-		ResourceManager.loadImage(REDTORPEDOIMG_RSC);
-	}
-	
-	public Torpedo(final float x, final float y, double theta, Team team) {
-		super(x, y);
+	public void attack(Vector target) {
+		// Create a new torpedo instance, moving to target, if not reachable, move until reachable
 		
-		if (team == Team.BLUE) { 
-			torpedo = ResourceManager.getImage(BLUETORPEDOIMG_RSC).copy();
-		} else {
-			torpedo = ResourceManager.getImage(REDTORPEDOIMG_RSC).copy();
-		}
-		torpedo.setRotation((float) theta);
 		
-		addImage(torpedo);
-	}
-	
-	public void update(int delta) {
-		translate(Vector.getUnit(getRotation()).scale(delta / 16f));
-	}
-	
-	@Override
-	public double getRotation() {
-		return torpedo.getRotation();
-	}
-	
-	@Override
-	public void setRotation(double theta) {
-		torpedo.setRotation((float) theta);
 	}
 	
 	@Override
@@ -115,14 +89,6 @@ public class Torpedo extends FloatingEntity {
 	boolean isHandlingCollision() {
 		// TODO Auto-generated method stub
 		return false;
-	}
-	
-	@Override
-	boolean moveTo(final Vector destination_position) {
-		boolean moving = false;
-		Vector move_direction = new Vector(destination_position.getX()-this.getX(), destination_position.getY()-this.getY());
-		beginMovement(move_direction);
-		return moving;	
 	}
 
 	@Override
@@ -202,12 +168,12 @@ public class Torpedo extends FloatingEntity {
 
 	@Override
 	String getIconFilename() {
-//		if (this.getTeam() == null) return RED_ICON;
-//		if (this.getTeam() == Team.BLUE) {
-//			return BLUE_ICON;
-//		} else {
-//			return RED_ICON;
-//		}
-		return null;
+		if (this.getTeam() == null) return RED_ICON;
+		if (this.getTeam() == Team.BLUE) {
+			return BLUE_ICON;
+		} else {
+			return RED_ICON;
+		}
 	}
+	
 }

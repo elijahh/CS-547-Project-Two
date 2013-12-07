@@ -188,4 +188,11 @@ public class MotherShip extends FloatingEntity {
 		}
 	}
 	
+//	public Vector getTargetPosition() {
+//		
+//	}
+	
+//	public Torpedo attack(Vector targetPosition) {
+//		
+//	}
 }

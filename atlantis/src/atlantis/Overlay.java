@@ -233,9 +233,19 @@ public class Overlay {
 					status.sendCommand(attack_command);
 				}
 
-				action = 0;
-				selectedUnitID = -1;
-			}
+
+//			if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) ||
+//					input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON)) {
+//				
+//				Command move_command = new Command(Command.MOVEMENT,
+//						playingState.getCurrentFrame(), new Vector(x-PlayingState.viewportOffsetX, y-PlayingState.viewportOffsetY),
+//						selectedUnitID);
+//				GameStatus status = playingState.getStatus();
+//				status.sendCommand(move_command);
+//				System.out.println("attack!");
+//				action = 0;
+//				selectedUnitID = -1;
+//			}
 		}
 		
 		g.drawImage(overlay, 0, 470);
