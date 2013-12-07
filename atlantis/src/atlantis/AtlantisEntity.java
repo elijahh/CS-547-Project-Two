@@ -412,9 +412,9 @@ public abstract class AtlantisEntity extends Entity implements
 		} else {
 			torpedo = null;
 			if (isAttacking) {
-				Vector targetPosition = targetSoldier.getPosition();
+				Vector targetPosition = target.getPosition();
 				if (getPosition().distance(targetPosition) < 200) {
-					fire(targetSoldier);
+					fire(target);
 				}
 			}
 		}
@@ -471,16 +471,15 @@ public abstract class AtlantisEntity extends Entity implements
 	// TODO: set isAttacking to false when another command is given
 	// or conflict is resolved
 	boolean isAttacking = false;
-	Soldier targetSoldier;
-	public void setTarget(Soldier target) {
+	AtlantisEntity target;
+	public void setTarget(AtlantisEntity t) {
 		isAttacking = true;
-		targetSoldier = target;
+		target = t;
 	}
 	
-	// TODO: damage
 	Torpedo torpedo;
 	int torpedoTimer = 0;
-	public void fire(Soldier target) {
+	public void fire(AtlantisEntity target) {
 		double theta = this.getPosition().angleTo(target.getPosition());
 		if (torpedo == null) {
 			torpedo = new Torpedo(getX(), getY(), theta, team);
@@ -489,6 +488,13 @@ public abstract class AtlantisEntity extends Entity implements
 			torpedo.setRotation(theta);
 		}
 		torpedoTimer = 700;
+		
+		target.health -= Math.random() * 5 % 5;
+		this.health -= Math.random() * 5 % 5;
+		
+		if (target.health <= 0) isAttacking = false;
+		System.out.println("target health: " + target.health);
+		System.out.println("this health: " + health);
 	}
 	
 

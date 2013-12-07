@@ -31,6 +31,8 @@ public class Overlay {
 	
 	boolean selectWorkerUnit = false;
 	boolean selectMotherShipUnit = false;
+	boolean targetWorkerUnit = false;
+	boolean targetMotherShipUnit = false;
 	
 	PlayingState playingState;
 	public long selectedUnitID = -1;
@@ -189,6 +191,8 @@ public class Overlay {
 				GameStatus status = playingState.getStatus();
 				Map<Long, Soldier> soldiers = status
 						.getIdSoldiersMapOnClient();
+				targetWorkerUnit = false;
+				targetMotherShipUnit = false;
 				long targetUnitID = -1;
 				for (Long id : soldiers.keySet()) {
 					Soldier soldier = soldiers.get(id);
@@ -200,16 +204,34 @@ public class Overlay {
 							x > soldier.getCoarseGrainedMinX() &&
 							x < soldier.getCoarseGrainedMaxX()) {
 						targetUnitID = id.longValue();
+						targetWorkerUnit = true;
 						break;
 					}
 				}
 				
-				if (targetUnitID == -1) return;
-
-				Command attack_command = new Command(Command.ATTACK,
-						playingState.getCurrentFrame(), new Vector(x-PlayingState.viewportOffsetX, y-PlayingState.viewportOffsetY),
-						selectedUnitID, targetUnitID);
-				status.sendCommand(attack_command);
+				if(targetWorkerUnit == false) {
+					Map<Long, MotherShip> motherships = playingState.getStatus()
+							.getIdMotherShipsMapOnClient();
+					for (Long id : motherships.keySet()) {
+						MotherShip mothership = motherships.get(id);
+						if (mothership.getTeam() == playingState.team) continue;
+						if (y > mothership.getCoarseGrainedMinY() &&
+								y < mothership.getCoarseGrainedMaxY() &&
+								x > mothership.getCoarseGrainedMinX() &&
+								x < mothership.getCoarseGrainedMaxX()) {
+							targetUnitID = id.longValue();
+							targetMotherShipUnit = true;
+							break;
+						}
+					}
+				}
+				
+				if (targetWorkerUnit || targetMotherShipUnit) {
+					Command attack_command = new Command(Command.ATTACK,
+							playingState.getCurrentFrame(), new Vector(x-PlayingState.viewportOffsetX, y-PlayingState.viewportOffsetY),
+							selectedUnitID, targetUnitID);
+					status.sendCommand(attack_command);
+				}
 
 				action = 0;
 				selectedUnitID = -1;
@@ -219,7 +241,7 @@ public class Overlay {
 		g.drawImage(overlay, 0, 470);
 		if (selectedUnitID != -1) {
 			g.drawImage(actionMove, 290, 520);
-			g.drawImage(actionAttack, 350, 520);
+			if (!selectMotherShipUnit) g.drawImage(actionAttack, 350, 520);
 		}
 		
 		if (y > 520 && y < 570 && selectedUnitID != -1) {
@@ -232,7 +254,7 @@ public class Overlay {
 				g.drawString("Move", x, y);
 				
 				if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) action = 1;
-			} else if (x > 350 && x < 400) { // attack button
+			} else if (x > 350 && x < 400 && !selectMotherShipUnit) { // attack button
 				// tooltip
 				x += 20;
 				g.setColor(Color.yellow);
