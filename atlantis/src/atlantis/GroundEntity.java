@@ -59,6 +59,7 @@ abstract class GroundEntity extends AtlantisEntity {
 		}
 
 		graph = new Graph(map_nodes, map_edges);
+		group_dijkstra = new DijkstraAlgorithm(graph);
 	}
 	
 	/* -------------------------------------------------------------------- */
