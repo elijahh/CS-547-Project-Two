@@ -135,6 +135,9 @@ public class Soldier extends GroundEntity {
 	@Override
 	public void update(final int delta) {
 		super.update(delta);
+		
+		int managing_collisisons_count = 
+				handling_collisions_with_these_soldiers.size();
 				
 		Set<GroundEntity> potential_collisions = 
 				new HashSet<GroundEntity>(getPotentialCollisions());
@@ -154,7 +157,9 @@ public class Soldier extends GroundEntity {
 				manageCountdownForCollision((Soldier)e, delta);
 		}
 
-		swapOutDijkstraIfNecessary();
+		if(managing_collisisons_count != 
+				handling_collisions_with_these_soldiers.size())
+			swapOutDijkstraIfNecessary();
 	}
 	
 	private final String getMovementAnimationFilename(final Vector direction) {
