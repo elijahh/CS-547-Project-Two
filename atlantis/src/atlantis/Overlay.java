@@ -327,8 +327,8 @@ public class Overlay {
 						clickTimer = 1000;
 						playingState.getStatus().sendCommand(new Command(
 								Command.PURCHASE, playingState.getCurrentFrame(),
-								new Vector(PlayingState.viewportOffsetX + 400,
-										PlayingState.viewportOffsetY + 200),
+								new Vector(400 - PlayingState.viewportOffsetX,
+										200 - PlayingState.viewportOffsetY),
 								0, playingState.team.ordinal()));
 					}
 				} else if (x > 350 && x < 400) {
@@ -344,8 +344,8 @@ public class Overlay {
 						clickTimer = 1000;
 						playingState.getStatus().sendCommand(new Command(
 								Command.PURCHASE, playingState.getCurrentFrame(),
-								new Vector(PlayingState.viewportOffsetX + 400,
-										PlayingState.viewportOffsetY + 200),
+								new Vector(400 - PlayingState.viewportOffsetX,
+										200 - PlayingState.viewportOffsetY),
 								1, playingState.team.ordinal()));
 					}
 				}
