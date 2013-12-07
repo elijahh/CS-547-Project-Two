@@ -80,7 +80,7 @@ public class GameStatus {
 			synchronized(soldiers_server_model) {
 				for(Soldier soldier : soldiers_server_model.values()) {
 					Vector position = soldier.getDestination();
-					if(position != null && false == soldier.isHandlingCollision())
+					if(position != null /*&& false == soldier.isHandlingCollision()*/)
 						soldier.moveTo(position);
 					soldier.update(delta);
 					updaters.add(soldier.getUpdater());

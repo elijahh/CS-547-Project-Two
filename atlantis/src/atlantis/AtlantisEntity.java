@@ -434,7 +434,7 @@ public abstract class AtlantisEntity extends Entity implements
 		if (dijkstra != null) {
 			List<Vertex> path = dijkstra.getPath(this.getCurrentMapNode());
 					
-			System.out.println(path);
+			// System.out.println(path);
 			
 			// TODO Remove once we're sure that entities aren't wandering into terrain
 			for(int node_id : AtlantisMap.getBlockedNodes())

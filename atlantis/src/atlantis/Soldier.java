@@ -95,9 +95,8 @@ public class Soldier extends GroundEntity {
 
 		if (false == handling_collisions_with_these_soldiers.contains(other)) {
 			handling_collisions_with_these_soldiers.add(other);
-			velocity = velocity.negate();
 
-			Integer countdown = new Integer(100 + random_generator.nextInt(150));
+			Integer countdown = new Integer(1500);
 			collision_avoidance_countdown.put(other, countdown);
 
 			System.out.println(this + " HANDLING SOLDIER-SOLDIER COLLISION "
@@ -119,14 +118,17 @@ public class Soldier extends GroundEntity {
 	
 	private void swapOutDijkstraIfNecessary() {
 		if (0 == handling_collisions_with_these_soldiers.size()) {
-			System.out.println("NULLING DIJKSTRA");
+			// System.out.println("NULLING DIJKSTRA");
 			dijkstra = null;
 		} else {
 			dijkstra = new DijkstraAlgorithm(group_dijkstra);
 			
+			// System.out.println("AT " + this.getCurrentMapNode());
+			
 			for(Soldier soldier : handling_collisions_with_these_soldiers)
 				for(Integer node_id : soldier.getCurrentMapNodesSpanned())
-					dijkstra.avoidNode(node_id);
+					if(node_id != getCurrentMapNode())
+						dijkstra.removeNode(node_id);
 			
 			dijkstra.execute(target_node);
 		}
