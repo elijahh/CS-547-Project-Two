@@ -405,6 +405,8 @@ public abstract class AtlantisEntity extends Entity implements
 
 		updateEntityNodeMaps();
 		
+		reward = 0;
+		
 		if (torpedo != null) torpedo.update(delta);
 		
 		if (torpedoTimer > 0) {
@@ -479,6 +481,7 @@ public abstract class AtlantisEntity extends Entity implements
 	
 	Torpedo torpedo;
 	int torpedoTimer = 0;
+	int reward = 0;
 	public void fire(AtlantisEntity target) {
 		double theta = this.getPosition().angleTo(target.getPosition());
 		if (torpedo == null) {
@@ -489,7 +492,9 @@ public abstract class AtlantisEntity extends Entity implements
 		}
 		torpedoTimer = 700;
 		
-		target.health -= Math.random() * 5 % 5;
+		double damage = Math.random() * 5 % 5;
+		target.health -= damage;
+		reward += damage * 5;
 		this.health -= Math.random() * 5 % 5;
 		
 		if (target.health <= 0) isAttacking = false;
@@ -512,6 +517,7 @@ public abstract class AtlantisEntity extends Entity implements
 		Class entity_class;
 		
 		int health;
+		int reward;
 		
 		Vector torpedoPosition;
 		double torpedoRotation;
@@ -523,6 +529,7 @@ public abstract class AtlantisEntity extends Entity implements
 			identity = e.identity;
 			team = e.team;
 			health = e.health;
+			reward = e.reward;
 			
 			entity_class = e.getClass();
 			
@@ -592,6 +599,8 @@ public abstract class AtlantisEntity extends Entity implements
 		} else {
 			torpedo = null;
 		}
+		
+		reward = updater.reward;
 	}
 
 	private Animation movement_animation = null;

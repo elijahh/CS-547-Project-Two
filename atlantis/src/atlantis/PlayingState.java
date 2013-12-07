@@ -120,6 +120,13 @@ public class PlayingState extends BasicGameState{
 		gold += delta / 180f;
 		status.update(container, delta);
 		overlay.update(delta);
+		
+		// collect battle winnings
+		Queue<Soldier> soldiers = 
+				new PriorityQueue<Soldier>(status.getSoldiers());
+		for (Soldier w : soldiers) {
+			gold += w.reward;
+		}
 	}
 
 	@Override
