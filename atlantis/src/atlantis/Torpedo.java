@@ -43,21 +43,6 @@ public class Torpedo extends Entity {
 	private static int ANIMATION_FRAME_WIDTH = 50; /* pixels */
 	private static int ANIMATION_FRAME_HEIGHT = 200; /* pixels */
 	
-	static {
-		ResourceManager.loadImage(FACE_D_GRAPHIC_FILE);
-		ResourceManager.loadImage(FACE_U_GRAPHIC_FILE);
-		ResourceManager.loadImage(FACE_L_GRAPHIC_FILE);
-		ResourceManager.loadImage(FACE_R_GRAPHIC_FILE);	
-		
-		ResourceManager.loadImage(MOVE_D_ANIMATION_FILE);
-		ResourceManager.loadImage(MOVE_U_ANIMATION_FILE);
-		ResourceManager.loadImage(MOVE_L_ANIMATION_FILE);
-		ResourceManager.loadImage(MOVE_R_ANIMATION_FILE);
-		
-//		ResourceManager.loadImage(RED_ICON);
-//		ResourceManager.loadImage(BLUE_ICON);
-	}
-	
 	Image torpedo;
 	private static final String BLUETORPEDOIMG_RSC = "atlantis/resource/soldier-torpedo-blue.png";
 	private static final String REDTORPEDOIMG_RSC = "atlantis/resource/soldier-torpedo-red.png";

@@ -301,6 +301,7 @@ public class GameStatus {
 			synchronized (soldiers_server_model) {
 				if(soldier != null) {
 					soldier.setDestination(command.target);
+					soldier.isAttacking = false;
 				}
 			}
 			synchronized (motherships_server_model) {
@@ -311,6 +312,7 @@ public class GameStatus {
 			synchronized (tacticals_server_model) {
 				if(tactical != null) {
 					tactical.setDestination(command.target);
+					tactical.isAttacking = false;
 				}
 			}
 			break;

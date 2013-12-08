@@ -137,16 +137,20 @@ public class Soldier extends GroundEntity {
 	@Override
 	public void update(final int delta) {
 		super.update(delta);
+		
+		reward = 0;
 			
-		if (torpedo != null) 
+		if (torpedo != null) {
 			torpedo.update(delta);
+			if(torpedo.collides(target)!=null) System.out.println("hits target"); // The if condition never turns true
+		}
 		
 		if (torpedoTimer > 0) {
 			torpedoTimer -= delta;
 		} else {
 			torpedo = null;
 			if (isAttacking) {
-					fire(target);
+				fire(target);
 			}
 		}
 				
@@ -244,7 +248,7 @@ public class Soldier extends GroundEntity {
 				torpedo.setPosition(new Vector(getX(), getY()));
 				torpedo.setRotation(theta);
 			}
-			torpedoTimer = 700;
+			torpedoTimer = 2000;
 
 			double damage = Math.random() * 5 % 5;
 			target.health -= damage;
