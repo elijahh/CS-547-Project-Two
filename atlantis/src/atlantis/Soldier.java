@@ -13,7 +13,6 @@ import org.newdawn.slick.Animation;
 
 import jig.ResourceManager;
 import jig.Vector;
-
 import dijkstra.engine.DijkstraAlgorithm;
 import dijkstra.model.Graph;
 import dijkstra.model.Vertex;
@@ -138,6 +137,19 @@ public class Soldier extends GroundEntity {
 	@Override
 	public void update(final int delta) {
 		super.update(delta);
+			
+		if (torpedo != null) 
+			torpedo.update(delta);
+		
+		if (torpedoTimer > 0) {
+			torpedoTimer -= delta;
+		} else {
+			torpedo = null;
+			if (isAttacking) {
+					fire(target);
+			}
+		}
+				
 		
 		int managing_collisisons_count = 
 				handling_collisions_with_these_soldiers.size();
@@ -217,4 +229,30 @@ public class Soldier extends GroundEntity {
 			return RED_ICON;
 		}
 	}
+	
+	/* ------------------------------------------------------------------------ */
+		
+	public void fire(AtlantisEntity target) {
+		double theta = this.getPosition().angleTo(target.getPosition());
+		
+		//moveTo(target.getPosition());
+		
+		if (getPosition().distance(target.getPosition()) < 600) {
+			if (torpedo == null) {
+				torpedo = new Torpedo(getX(), getY(), theta, team);
+			} else {
+				torpedo.setPosition(new Vector(getX(), getY()));
+				torpedo.setRotation(theta);
+			}
+			torpedoTimer = 700;
+
+			target.health -= Math.random() * 5 % 5;
+			this.health -= Math.random() * 5 % 5;
+
+			if (target.health <= 0) isAttacking = false;
+			System.out.println("target health: " + target.health);
+			System.out.println("this health: " + health);
+		}
+	}
+	
 }

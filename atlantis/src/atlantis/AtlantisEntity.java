@@ -97,7 +97,7 @@ public abstract class AtlantisEntity extends Entity implements
 		RED, BLUE
 	};
 
-	private Team team = Team.RED;
+	protected Team team = Team.RED;
 
 	public void setTeam(Team team) {
 		this.team = team;
@@ -406,20 +406,7 @@ public abstract class AtlantisEntity extends Entity implements
 		translate(velocity.scale(delta));
 
 		updateEntityNodeMaps();
-		
-		if (torpedo != null) torpedo.update(delta);
-		
-		if (torpedoTimer > 0) {
-			torpedoTimer -= delta;
-		} else {
-			torpedo = null;
-			if (isAttacking) {
-				Vector targetPosition = target.getPosition();
-				if (getPosition().distance(targetPosition) < 200) {
-					fire(target);
-				}
-			}
-		}
+
 	}
 
 	abstract void beginMovement(Vector direction);
@@ -486,26 +473,10 @@ public abstract class AtlantisEntity extends Entity implements
 		target = t;
 	}
 	
-	Torpedo torpedo;
-	int torpedoTimer = 0;
-	public void fire(AtlantisEntity target) {
-		double theta = this.getPosition().angleTo(target.getPosition());
-		if (torpedo == null) {
-			torpedo = new Torpedo(getX(), getY(), theta, team);
-		} else {
-			torpedo.setPosition(new Vector(getX(), getY()));
-			torpedo.setRotation(theta);
-		}
-		torpedoTimer = 700;
-		
-		target.health -= Math.random() * 5 % 5;
-		this.health -= Math.random() * 5 % 5;
-		
-		if (target.health <= 0) isAttacking = false;
-		System.out.println("target health: " + target.health);
-		System.out.println("this health: " + health);
-	}
-	
+	protected Torpedo torpedo;
+	protected TacticalTorpedo tacticalTorpedo;
+	protected int torpedoTimer = 0;
+	public abstract void fire(AtlantisEntity target);	
 
 	/* -------------------------------------------------------------------- */
 
@@ -524,6 +495,9 @@ public abstract class AtlantisEntity extends Entity implements
 		
 		Vector torpedoPosition;
 		double torpedoRotation;
+		
+		Vector tacticalTorpedoPosition;
+		double tacticalTorpedoRotation;
 
 		Updater(AtlantisEntity e) {
 
@@ -538,6 +512,11 @@ public abstract class AtlantisEntity extends Entity implements
 			if (e.torpedo != null) {
 				torpedoPosition = e.torpedo.getPosition();
 				torpedoRotation = e.torpedo.getRotation();
+			}
+			
+			if (e.tacticalTorpedo != null) {
+				tacticalTorpedoPosition = e.tacticalTorpedo.getPosition();
+				tacticalTorpedoRotation = e.tacticalTorpedo.getRotation();
 			}
 		}
 
@@ -601,6 +580,23 @@ public abstract class AtlantisEntity extends Entity implements
 		} else {
 			torpedo = null;
 		}
+		
+		if (updater.tacticalTorpedoPosition != null) {
+			float torpedoX = updater.tacticalTorpedoPosition.getX()
+					+ PlayingState.viewportOffsetX;
+			float torpedoY = updater.tacticalTorpedoPosition.getY()
+					+ PlayingState.viewportOffsetY; 
+			
+			if (tacticalTorpedo == null) {
+				tacticalTorpedo = new TacticalTorpedo(torpedoX, torpedoY,
+						updater.tacticalTorpedoRotation, team);
+			} else {
+				tacticalTorpedo.setPosition(torpedoX, torpedoY);
+				tacticalTorpedo.setRotation(updater.tacticalTorpedoRotation);
+			}
+		} else {
+			tacticalTorpedo = null;
+		}
 	}
 
 	private Animation movement_animation = null;
@@ -652,6 +648,6 @@ public abstract class AtlantisEntity extends Entity implements
 
 		super.render(g);
 		if (torpedo != null) torpedo.render(g);
-		
+		if (tacticalTorpedo != null) tacticalTorpedo.render(g);
 	}
 }

@@ -31,6 +31,7 @@ public class Overlay {
 	
 	boolean selectWorkerUnit = false;
 	boolean selectMotherShipUnit = false;
+	boolean selectTacticalUnit = false;
 	boolean targetWorkerUnit = false;
 	boolean targetMotherShipUnit = false;
 	
@@ -73,6 +74,9 @@ public class Overlay {
 			} else if(selectMotherShipUnit){
 				selectedUnit = playingState.getStatus()
 						.getIdMotherShipsMapOnClient().get(selectedUnitID);
+			} else if(selectTacticalUnit){
+				selectedUnit = playingState.getStatus()
+						.getIdTacticalsMapOnClient().get(selectedUnitID);
 			}
 			g.drawRect(selectedUnit.getCoarseGrainedMinX(),
 					selectedUnit.getCoarseGrainedMinY(),
@@ -156,6 +160,22 @@ public class Overlay {
 						}
 					}
 				}
+				if(selectWorkerUnit == false && selectMotherShipUnit == false) {
+					Map<Long, TacticalSub> tacticals = playingState.getStatus()
+							.getIdTacticalsMapOnClient();
+					for (Long id : tacticals.keySet()) {
+						TacticalSub tactical = tacticals.get(id);
+						if (tactical.getTeam() != playingState.team) continue;
+						if (y > tactical.getCoarseGrainedMinY() &&
+								y < tactical.getCoarseGrainedMaxY() &&
+								x > tactical.getCoarseGrainedMinX() &&
+								x < tactical.getCoarseGrainedMaxX()) {
+							selectedUnitID = id.longValue();
+							selectTacticalUnit = true;
+							break;
+						}
+					}
+				}
 			}
 		} else if (action == 1) { // move
 			if (isDefaultCursorSet || isArrowCursorSet) {
@@ -164,7 +184,7 @@ public class Overlay {
 				isArrowCursorSet = false;
 			}
 			g.drawImage(targetMove, x, y);
-			
+
 			if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) ||
 					input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON)) {
 				
@@ -185,7 +205,7 @@ public class Overlay {
 				isArrowCursorSet = false;
 			}
 			g.drawImage(targetAttack, x, y);
-			
+
 			if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) ||
 					input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON)) {
 				GameStatus status = playingState.getStatus();
@@ -233,19 +253,9 @@ public class Overlay {
 					status.sendCommand(attack_command);
 				}
 
-
-//			if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) ||
-//					input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON)) {
-//				
-//				Command move_command = new Command(Command.MOVEMENT,
-//						playingState.getCurrentFrame(), new Vector(x-PlayingState.viewportOffsetX, y-PlayingState.viewportOffsetY),
-//						selectedUnitID);
-//				GameStatus status = playingState.getStatus();
-//				status.sendCommand(move_command);
-//				System.out.println("attack!");
-//				action = 0;
-//				selectedUnitID = -1;
-//			}
+				action = 0;
+				selectedUnitID = -1;
+			}
 		}
 		
 		g.drawImage(overlay, 0, 470);

@@ -187,12 +187,11 @@ public class MotherShip extends FloatingEntity {
 			return RED_ICON;
 		}
 	}
+
+	@Override
+	public void fire(AtlantisEntity target) {
+		// TODO Auto-generated method stub
+		
+	}
 	
-//	public Vector getTargetPosition() {
-//		
-//	}
-	
-//	public Torpedo attack(Vector targetPosition) {
-//		
-//	}
 }
