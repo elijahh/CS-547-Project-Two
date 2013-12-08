@@ -246,7 +246,9 @@ public class Soldier extends GroundEntity {
 			}
 			torpedoTimer = 700;
 
-			target.health -= Math.random() * 5 % 5;
+			double damage = Math.random() * 5 % 5;
+			target.health -= damage;
+			reward += damage * 5;
 			this.health -= Math.random() * 5 % 5;
 
 			if (target.health <= 0) isAttacking = false;

@@ -406,7 +406,6 @@ public abstract class AtlantisEntity extends Entity implements
 		translate(velocity.scale(delta));
 
 		updateEntityNodeMaps();
-
 	}
 
 	abstract void beginMovement(Vector direction);
@@ -476,6 +475,7 @@ public abstract class AtlantisEntity extends Entity implements
 	protected Torpedo torpedo;
 	protected TacticalTorpedo tacticalTorpedo;
 	protected int torpedoTimer = 0;
+	int reward = 0;
 	public abstract void fire(AtlantisEntity target);	
 
 	/* -------------------------------------------------------------------- */
@@ -492,6 +492,7 @@ public abstract class AtlantisEntity extends Entity implements
 		Class entity_class;
 		
 		int health;
+		int reward;
 		
 		Vector torpedoPosition;
 		double torpedoRotation;
@@ -506,6 +507,7 @@ public abstract class AtlantisEntity extends Entity implements
 			identity = e.identity;
 			team = e.team;
 			health = e.health;
+			reward = e.reward;
 			
 			entity_class = e.getClass();
 			
@@ -597,6 +599,8 @@ public abstract class AtlantisEntity extends Entity implements
 		} else {
 			tacticalTorpedo = null;
 		}
+		
+		reward = updater.reward;
 	}
 
 	private Animation movement_animation = null;

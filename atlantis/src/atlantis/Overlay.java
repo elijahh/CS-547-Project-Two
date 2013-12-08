@@ -15,9 +15,15 @@ import jig.ResourceManager;
 import jig.Vector;
 
 public class Overlay {
+	int clickTimer = 0;
+	
 	Image overlay;
 	Image actionMove;
 	Image actionAttack;
+	Image actionPurchase;
+	Image actionPurchaseSoldier;
+	Image actionPurchaseTactical;
+	Image actionBack;
 	Image targetMove;
 	Image targetAttack;
 	Image pixel;
@@ -35,6 +41,8 @@ public class Overlay {
 	boolean targetWorkerUnit = false;
 	boolean targetMotherShipUnit = false;
 	
+	boolean purchaseMenuOpen = false;
+	
 	PlayingState playingState;
 	public long selectedUnitID = -1;
 	public short action = 0; // 1 = move, 2 = attack
@@ -46,6 +54,10 @@ public class Overlay {
 		overlay = ResourceManager.getImage(AtlantisGame.OVERLAY);
 		actionMove = ResourceManager.getImage(AtlantisGame.ACTION_MOVE);
 		actionAttack = ResourceManager.getImage(AtlantisGame.ACTION_ATTACK);
+		actionPurchase = ResourceManager.getImage(AtlantisGame.ACTION_PURCHASE);
+		actionPurchaseSoldier = ResourceManager.getImage(AtlantisGame.ACTION_PURCHASE_SOLDIER);
+		actionPurchaseTactical = ResourceManager.getImage(AtlantisGame.ACTION_PURCHASE_TACTICAL);
+		actionBack = ResourceManager.getImage(AtlantisGame.ACTION_BACK);
 		targetMove = ResourceManager.getImage(AtlantisGame.TARGET_MOVE);
 		targetAttack = ResourceManager.getImage(AtlantisGame.TARGET_ATTACK);
 		pixel = ResourceManager.getImage(AtlantisGame.PIXEL);
@@ -259,34 +271,112 @@ public class Overlay {
 		}
 		
 		g.drawImage(overlay, 0, 470);
-		if (selectedUnitID != -1) {
-			g.drawImage(actionMove, 290, 520);
-			if (!selectMotherShipUnit) g.drawImage(actionAttack, 350, 520);
+		
+		if (!purchaseMenuOpen) {
+			g.drawImage(actionPurchase, 230, 520);
+			if (selectedUnitID != -1) {
+				g.drawImage(actionMove, 290, 520);
+				if (!selectMotherShipUnit) g.drawImage(actionAttack, 350, 520);
+			}
+		} else {
+			g.drawImage(actionBack, 230, 520);
+			g.drawImage(actionPurchaseSoldier, 290, 520);
+			g.drawImage(actionPurchaseTactical, 350, 520);
 		}
 		
-		if (y > 520 && y < 570 && selectedUnitID != -1) {
-			if (x > 290 && x < 340) { // move button
-				// tooltip
-				x += 20;
-				g.setColor(Color.yellow);
-				g.fillRect(x, y, 40, 20);
-				g.setColor(Color.black);
-				g.drawString("Move", x, y);
+		if (y > 520 && y < 570) {
+			if (!purchaseMenuOpen) {
+				if (selectedUnitID != -1) {
+					if (x > 290 && x < 340) { // move button
+						// tooltip
+						x += 20;
+						g.setColor(Color.yellow);
+						g.fillRect(x, y, 40, 20);
+						g.setColor(Color.black);
+						g.drawString("Move", x, y);
+						
+						if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) action = 1;
+					} else if (x > 350 && x < 400 && !selectMotherShipUnit) { // attack button
+						// tooltip
+						x += 20;
+						g.setColor(Color.yellow);
+						g.fillRect(x, y, 60, 20);
+						g.setColor(Color.black);
+						g.drawString("Attack", x, y);
+						
+						if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) action = 2;
+					}
+				}
 				
-				if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) action = 1;
-			} else if (x > 350 && x < 400 && !selectMotherShipUnit) { // attack button
-				// tooltip
-				x += 20;
-				g.setColor(Color.yellow);
-				g.fillRect(x, y, 60, 20);
-				g.setColor(Color.black);
-				g.drawString("Attack", x, y);
-				
-				if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) action = 2;
+				if (x > 230 && x < 280) { // purchase button
+					x += 20;
+					g.setColor(Color.yellow);
+					g.fillRect(x, y, 80, 20);
+					g.setColor(Color.black);
+					g.drawString("Purchase", x, y);
+					
+					if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) &&
+							clickTimer <= 0) {
+						clickTimer = 1000;
+						purchaseMenuOpen = true;
+					}
+				}
+			} else { // purchasing
+				if (x > 230 && x < 280) { // back
+					x += 20;
+					g.setColor(Color.yellow);
+					g.fillRect(x, y, 40, 20);
+					g.setColor(Color.black);
+					g.drawString("Back", x, y);
+					
+					if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) &&
+							clickTimer <= 0) {
+						clickTimer = 1000;
+						purchaseMenuOpen = false;
+					}
+				} else if (x > 290 && x < 340) { // purchase soldier
+					x += 20;
+					g.setColor(Color.yellow);
+					g.fillRect(x, y, 200, 20);
+					g.setColor(Color.black);
+					g.drawString("Purchase Soldier (500)", x, y);
+					
+					if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) &&
+							clickTimer <= 0 && playingState.gold >= 500) {
+						playingState.gold -= 500;
+						clickTimer = 1000;
+						playingState.getStatus().sendCommand(new Command(
+								Command.PURCHASE, playingState.getCurrentFrame(),
+								new Vector(400 - PlayingState.viewportOffsetX,
+										200 - PlayingState.viewportOffsetY),
+								0, playingState.team.ordinal()));
+					}
+				} else if (x > 350 && x < 400) {
+					x += 20;
+					g.setColor(Color.yellow);
+					g.fillRect(x, y, 310, 20);
+					g.setColor(Color.black);
+					g.drawString("Purchase Tactical Submarine (2000)", x, y);
+					
+					if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) &&
+							clickTimer <= 0 && playingState.gold >= 2000) {
+						playingState.gold -= 2000;
+						clickTimer = 1000;
+						playingState.getStatus().sendCommand(new Command(
+								Command.PURCHASE, playingState.getCurrentFrame(),
+								new Vector(400 - PlayingState.viewportOffsetX,
+										200 - PlayingState.viewportOffsetY),
+								1, playingState.team.ordinal()));
+					}
+				}
 			}
 		}
 		
-
+		g.setColor(Color.yellow);
+	}
+	
+	public void update(int delta) {
+		if (clickTimer > 0) clickTimer -= delta;
 	}
 	
 	private boolean isCursorAtLeftEdge(int x, int y) {
