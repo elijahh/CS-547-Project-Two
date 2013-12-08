@@ -38,8 +38,7 @@ public class Overlay {
 	boolean selectWorkerUnit = false;
 	boolean selectMotherShipUnit = false;
 	boolean selectTacticalUnit = false;
-	boolean targetWorkerUnit = false;
-	boolean targetMotherShipUnit = false;
+	boolean targetUnit = false;
 	
 	boolean purchaseMenuOpen = false;
 	
@@ -69,7 +68,6 @@ public class Overlay {
 	}
 	
 	
-	// TODO: should also bind actions to hotkeys in another class
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
 		Input input = container.getInput();
@@ -221,27 +219,28 @@ public class Overlay {
 			if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON) ||
 					input.isMousePressed(Input.MOUSE_RIGHT_BUTTON)) {
 				GameStatus status = playingState.getStatus();
+			
+				targetUnit = false;
+				long targetUnitID = -1;
+				y += targetAttack.getHeight() / 2f;
+				x += targetAttack.getWidth() / 2f;
+				
 				Map<Long, Soldier> soldiers = status
 						.getIdSoldiersMapOnClient();
-				targetWorkerUnit = false;
-				targetMotherShipUnit = false;
-				long targetUnitID = -1;
 				for (Long id : soldiers.keySet()) {
 					Soldier soldier = soldiers.get(id);
 					if (soldier.getTeam() == playingState.team) continue;
-					y += targetAttack.getHeight() / 2f;
-					x += targetAttack.getWidth() / 2f;
 					if (y > soldier.getCoarseGrainedMinY() &&
 							y < soldier.getCoarseGrainedMaxY() &&
 							x > soldier.getCoarseGrainedMinX() &&
 							x < soldier.getCoarseGrainedMaxX()) {
 						targetUnitID = id.longValue();
-						targetWorkerUnit = true;
+						targetUnit = true;
 						break;
 					}
 				}
 				
-				if(targetWorkerUnit == false) {
+				if(!targetUnit) {
 					Map<Long, MotherShip> motherships = playingState.getStatus()
 							.getIdMotherShipsMapOnClient();
 					for (Long id : motherships.keySet()) {
@@ -252,13 +251,30 @@ public class Overlay {
 								x > mothership.getCoarseGrainedMinX() &&
 								x < mothership.getCoarseGrainedMaxX()) {
 							targetUnitID = id.longValue();
-							targetMotherShipUnit = true;
+							targetUnit = true;
 							break;
 						}
 					}
 				}
 				
-				if (targetWorkerUnit || targetMotherShipUnit) {
+				if (!targetUnit) {
+					Map<Long, TacticalSub> tacticalSubs = playingState.getStatus()
+							.getIdTacticalsMapOnClient();
+					for (Long id : tacticalSubs.keySet()) {
+						TacticalSub tactical = tacticalSubs.get(id);
+						if (tactical.getTeam() == playingState.team) continue;
+						if (y > tactical.getCoarseGrainedMinY() &&
+								y < tactical.getCoarseGrainedMaxY() &&
+								x > tactical.getCoarseGrainedMinX() &&
+								x < tactical.getCoarseGrainedMaxX()) {
+							targetUnitID = id.longValue();
+							targetUnit = true;
+							break;
+						}
+					}
+				}
+				
+				if (targetUnit) {
 					Command attack_command = new Command(Command.ATTACK,
 							playingState.getCurrentFrame(), new Vector(x-PlayingState.viewportOffsetX, y-PlayingState.viewportOffsetY),
 							selectedUnitID, targetUnitID);

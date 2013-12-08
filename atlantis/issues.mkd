@@ -24,8 +24,7 @@ Open Issues
 		   
 - **[46]** Fix torpedo collision detection. Maybe add explosion effect.
 - **[47]** Floating units should be able to move in 8 directions.
-- **[48]** Each soldier/tactical should have a list of torpedos instead of one.
-- **[50]** Implement purchasing tactical subs and allow soldiers to attack them.	   
+- **[48]** Each soldier/tactical should have a list of torpedos instead of one.	   
 ...
  
 
@@ -97,6 +96,7 @@ Resolved Issues
 - **[37]** Implement "Store" interface, where players use gold to buy new units.
 - **[41]** Create TacticalSub class and associated Torpedo class for the entity's "attack" method.
 - **[49]** Add visual health indicators	
+- **[50]** Implement purchasing tactical subs and allow soldiers to attack them.
 
 
 May Need to Revisit
