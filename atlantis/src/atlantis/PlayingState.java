@@ -132,7 +132,7 @@ public class PlayingState extends BasicGameState{
 		Queue<Soldier> soldiers = 
 				new PriorityQueue<Soldier>(status.getSoldiers());
 		for (Soldier w : soldiers) {
-			gold += w.reward;
+			if (w.getTeam() == this.team) gold += w.reward;
 		}
 	}
 
