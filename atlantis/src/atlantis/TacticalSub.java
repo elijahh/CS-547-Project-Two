@@ -214,5 +214,7 @@ public class TacticalSub extends FloatingEntity {
 		}
 	}
 	
-	
+	public void nudgeNudge(Vector direction) {
+		System.out.println("NUDGE " + direction);
+	}
 }
