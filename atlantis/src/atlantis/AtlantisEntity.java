@@ -11,8 +11,10 @@ import java.util.Random;
 import java.util.Set;
 
 import org.newdawn.slick.Animation;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.geom.Rectangle;
 
 import jig.Entity;
 import jig.ResourceManager;
@@ -60,6 +62,7 @@ public abstract class AtlantisEntity extends Entity implements
 	protected Vector movement_last_direction = STOPPED_VECTOR;
 	
 	protected int health;
+	int MAX_HEALTH_VALUE = 100;
 
 	@Override
 	public int compareTo(final AtlantisEntity other) {
@@ -647,6 +650,7 @@ public abstract class AtlantisEntity extends Entity implements
 			tacticalTorpedo = null;
 		}
 		
+		health = updater.health;
 		reward = updater.reward;
 	}
 
@@ -700,5 +704,12 @@ public abstract class AtlantisEntity extends Entity implements
 		super.render(g);
 		if (torpedo != null) torpedo.render(g);
 		if (tacticalTorpedo != null) tacticalTorpedo.render(g);
+		
+		g.setColor(Color.red);
+		float x = getCoarseGrainedMinX();
+		float y = getCoarseGrainedMinY();
+		g.fill(new Rectangle(x, y, ((float) health / MAX_HEALTH_VALUE) * 40, 4));
+		g.setColor(Color.white);
+		g.draw(new Rectangle(x, y, 40, 4));
 	}
 }
