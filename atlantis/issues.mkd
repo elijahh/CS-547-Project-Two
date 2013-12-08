@@ -21,6 +21,10 @@ Open Issues
 - **[44]** Explore truncating the path when attacking to prevent collision with the target.
 - **[45]** Add "visible" flag to AtlantisEntity.Updater. When clients receive an updater with this flag, the corresponding
            entity should be removed from the list of rendered objects.
+		   
+- **[46]** Fix torpedo collision detection. Maybe add explosion effect.
+- **[47]** Floating units should be able to move in 8 directions.
+- **[48]** Each soldier/tactical should have a list of torpedos instead of one.		   
 ...
  
 
