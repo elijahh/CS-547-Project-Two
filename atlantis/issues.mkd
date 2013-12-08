@@ -20,6 +20,8 @@ Open Issues
            current location.
 - **[43]** FloatingEntity collision handling. 
 - **[44]** Explore truncating the path when attacking to prevent collision with the target.
+- **[45]** Add "visible" flag to AtlantisEntity.Updater. When clients receive an updater with this flag, the corresponding
+           entity should be removed from the list of rendered objects.
 ...
  
 
