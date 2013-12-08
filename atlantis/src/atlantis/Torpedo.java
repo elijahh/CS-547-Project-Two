@@ -62,7 +62,7 @@ public class Torpedo extends Entity {
 		}
 		torpedo.setRotation((float) theta);
 		
-		addImage(torpedo);
+		addImageWithBoundingBox(torpedo);
 	}
 	
 	public void update(int delta) {
