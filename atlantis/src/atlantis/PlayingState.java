@@ -8,6 +8,7 @@ import java.util.Queue;
 
 import jig.ResourceManager;
 
+import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -54,6 +55,8 @@ public class PlayingState extends BasicGameState{
 	public int getCurrentFrame() { return currentFrame; }
 	public GameStatus getStatus() { return status; }
 	
+	Animation shimmer;
+	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) throws SlickException {
 		overlay = new Overlay(this);
@@ -64,6 +67,10 @@ public class PlayingState extends BasicGameState{
 		
 		map = GamePrepareState.getMap();
 		GroundEntity.populateTerrainMap(map);
+		shimmer = new Animation(
+				ResourceManager.getSpriteSheet(AtlantisGame.SHIMMER,
+						800, 600), 0, 0, 2, 0, true, 500, true);
+		shimmer.setPingPong(true);
 		
 		if (StartMenuState.GAME_TYPE.equals("server"))
 			team = AtlantisEntity.Team.RED;
@@ -96,6 +103,8 @@ public class PlayingState extends BasicGameState{
 		for (TacticalSub tactical : tacticals) {
 			tactical.render(g); 
 		}
+		
+		shimmer.draw();
 
 		overlay.render(container, game, g);
 
