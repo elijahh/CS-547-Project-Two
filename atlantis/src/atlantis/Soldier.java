@@ -241,7 +241,9 @@ public class Soldier extends GroundEntity {
 		
 		//moveTo(target.getPosition());
 		
-		if (getPosition().distance(target.getPosition()) < 600) {
+		if (getPosition().distance(target.getPosition()) < 200) {
+			stopMoving();
+			
 			if (torpedo == null) {
 				torpedo = new Torpedo(getX(), getY(), theta, team);
 			} else {
@@ -258,6 +260,8 @@ public class Soldier extends GroundEntity {
 			if (target.health <= 0) isAttacking = false;
 			System.out.println("target health: " + target.health);
 			System.out.println("this health: " + health);
+		} else {
+			setDestination(target.getPosition());
 		}
 	}
 	

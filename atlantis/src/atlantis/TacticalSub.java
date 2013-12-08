@@ -77,20 +77,29 @@ public class TacticalSub extends FloatingEntity {
 	
 	public void fire(AtlantisEntity target) {
 		double theta = this.getPosition().angleTo(target.getPosition());
-		if (tacticalTorpedo == null) {
-			tacticalTorpedo = new TacticalTorpedo(getX(), getY(), theta, team);
+		
+		if (getPosition().distance(target.getPosition()) < 400) {
+			stopMoving();
+			
+			if (tacticalTorpedo == null) {
+				tacticalTorpedo = new TacticalTorpedo(getX(), getY(), theta, team);
+			} else {
+				tacticalTorpedo.setPosition(new Vector(getX(), getY()));
+				tacticalTorpedo.setRotation(theta);
+			}
+			torpedoTimer = 6000;
+
+			double damage = Math.random() * 5 % 5;
+			target.health -= damage;
+			reward += damage * 5;
+			this.health -= Math.random() * 5 % 5;
+
+			if (target.health <= 0) isAttacking = false;
+			System.out.println("target health: " + target.health);
+			System.out.println("this health: " + health);
 		} else {
-			tacticalTorpedo.setPosition(new Vector(getX(), getY()));
-			tacticalTorpedo.setRotation(theta);
+			setDestination(target.getPosition());
 		}
-		torpedoTimer = 7000;
-		
-		target.health -= Math.random() * 5 % 5;
-		this.health -= Math.random() * 5 % 5;
-		
-		if (target.health <= 0) isAttacking = false;
-		System.out.println("target health: " + target.health);
-		System.out.println("this health: " + health);
 	}
 	
 	@Override
@@ -201,11 +210,10 @@ public class TacticalSub extends FloatingEntity {
 		} else {
 			tacticalTorpedo = null;
 			if (isAttacking) {
-				Vector targetPosition = target.getPosition();
-				if (getPosition().distance(targetPosition) < 600) {
 					fire(target);
-				} 
 			}
 		}
 	}
+	
+	
 }

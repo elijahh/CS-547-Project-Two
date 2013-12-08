@@ -284,16 +284,20 @@ public class GameStatus {
 				Soldier targetSoldier = soldiers_server_model.get(command.attackTargetId);
 				if (soldier != null && targetSoldier != null) {
 					soldier.setTarget(targetSoldier);
+					soldier.stopMoving();
 				} else if (tactical != null && targetSoldier != null) {
 					tactical.setTarget(targetSoldier);
+					tactical.stopMoving();
 				}
 			}
 			synchronized (motherships_server_model) {
 				MotherShip targetShip = motherships_server_model.get(command.attackTargetId);
 				if (soldier != null && targetShip != null) {
 					soldier.setTarget(targetShip);
+					soldier.stopMoving();
 				} else if (tactical != null && targetShip != null) {
 					tactical.setTarget(targetShip);
+					tactical.stopMoving();
 				}
 			}
 			break;

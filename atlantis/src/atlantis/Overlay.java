@@ -76,6 +76,8 @@ public class Overlay {
 		int x = input.getMouseX(); //Local coordinates of cursor
 		int y = input.getMouseY();
 		
+		checkHotKey(input);
+		
 		if (selectedUnitID != -1) { // highlight selected unit
 			g.setColor(Color.yellow);
 			AtlantisEntity selectedUnit = null;
@@ -137,7 +139,7 @@ public class Overlay {
 				isArrowCursorSet = false;
 			}
 			
-			if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+			if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
 				selectWorkerUnit = false;
 				selectMotherShipUnit = false;
 				selectedUnitID = -1;
@@ -197,8 +199,8 @@ public class Overlay {
 			}
 			g.drawImage(targetMove, x, y);
 
-			if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) ||
-					input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON)) {
+			if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON) ||
+					input.isMousePressed(Input.MOUSE_RIGHT_BUTTON)) {
 				
 				Command move_command = new Command(Command.MOVEMENT,
 						playingState.getCurrentFrame(), new Vector(x-PlayingState.viewportOffsetX, y-PlayingState.viewportOffsetY),
@@ -206,9 +208,7 @@ public class Overlay {
 				GameStatus status = playingState.getStatus();
 				status.sendCommand(move_command);
 				
-
 				action = 0;
-				selectedUnitID = -1;
 			}
 		} else if (action == 2) { // attack
 			if (isDefaultCursorSet || isArrowCursorSet) {
@@ -218,8 +218,8 @@ public class Overlay {
 			}
 			g.drawImage(targetAttack, x, y);
 
-			if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) ||
-					input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON)) {
+			if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON) ||
+					input.isMousePressed(Input.MOUSE_RIGHT_BUTTON)) {
 				GameStatus status = playingState.getStatus();
 				Map<Long, Soldier> soldiers = status
 						.getIdSoldiersMapOnClient();
@@ -266,7 +266,6 @@ public class Overlay {
 				}
 
 				action = 0;
-				selectedUnitID = -1;
 			}
 		}
 		
@@ -291,18 +290,18 @@ public class Overlay {
 						// tooltip
 						x += 20;
 						g.setColor(Color.yellow);
-						g.fillRect(x, y, 40, 20);
+						g.fillRect(x, y, 60, 20);
 						g.setColor(Color.black);
-						g.drawString("Move", x, y);
+						g.drawString("Move(M)", x, y);
 						
 						if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) action = 1;
 					} else if (x > 350 && x < 400 && !selectMotherShipUnit) { // attack button
 						// tooltip
 						x += 20;
 						g.setColor(Color.yellow);
-						g.fillRect(x, y, 60, 20);
+						g.fillRect(x, y, 80, 20);
 						g.setColor(Color.black);
-						g.drawString("Attack", x, y);
+						g.drawString("Attack(A)", x, y);
 						
 						if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) action = 2;
 					}
@@ -311,9 +310,9 @@ public class Overlay {
 				if (x > 230 && x < 280) { // purchase button
 					x += 20;
 					g.setColor(Color.yellow);
-					g.fillRect(x, y, 80, 20);
+					g.fillRect(x, y, 100, 20);
 					g.setColor(Color.black);
-					g.drawString("Purchase", x, y);
+					g.drawString("Purchase(P)", x, y);
 					
 					if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) &&
 							clickTimer <= 0) {
@@ -393,5 +392,15 @@ public class Overlay {
 	
 	private boolean isCursorAtBottomEdge(int x, int y) {
 		return ( y > 570 && y < 600 && x > 30 && x < 770); 
+	}
+	
+	private void checkHotKey(Input input) {
+		if (input.isKeyPressed(Input.KEY_M)) {
+			action = 1;
+		} else if(input.isKeyPressed(Input.KEY_A)) {
+			action = 2;
+		} else if(input.isKeyPressed(Input.KEY_P)) {
+			purchaseMenuOpen = true;
+		}
 	}
 }
