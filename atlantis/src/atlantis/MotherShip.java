@@ -102,7 +102,9 @@ public class MotherShip extends FloatingEntity {
 
 	@Override
 	boolean isHandlingCollision() {
-		// TODO Auto-generated method stub
+		if(this.handling_mother_ship_collision)
+			return true;
+		
 		return false;
 	}
 
@@ -197,18 +199,32 @@ public class MotherShip extends FloatingEntity {
 		
 	}
 	
-	private void enforceMotherShipMotherShipDistance(final FloatingEntity e) {
+	boolean handling_mother_ship_collision = false;
+	int mother_ship_collision_countdown;
+	
+	private void enforceMotherShipMotherShipDistance(final MotherShip e,
+			final int delta) {
 		Collision collision = this.collides(e);
-				
-		if (null != collision) {
+
+		if(0 < mother_ship_collision_countdown)
+			mother_ship_collision_countdown -= delta;
+		else if (handling_mother_ship_collision){
+			handling_mother_ship_collision = false;
+			this.destination_position = this.getPosition();
+		}
+		
+		if ((null != collision) && (handling_mother_ship_collision == false)) {
 			Vector their_position = e.getPosition();
 			double angle_to_other_ship = getPosition().angleTo(their_position);
 			Vector direction_to_other_ship = this
 					.getVectorForAngle(angle_to_other_ship);
-						
-			if(this.getMovementDirection().equals(direction_to_other_ship)) {
-				// System.out.println("HERE");
-			}			
+
+			if (this.getMovementDirection().equals(direction_to_other_ship)) {
+				handling_mother_ship_collision = true;
+				mother_ship_collision_countdown = 500;
+				
+				velocity = velocity.negate();
+			}
 		}
 	}
 	
@@ -221,7 +237,7 @@ public class MotherShip extends FloatingEntity {
 			/* MotherShip to MotherShip collision */
 
 			if(e instanceof MotherShip)
-				enforceMotherShipMotherShipDistance(e);
+				enforceMotherShipMotherShipDistance((MotherShip)e, delta);
 			else
 				// TODO MotherShip TacticalSub collision
 				;
