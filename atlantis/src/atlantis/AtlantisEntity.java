@@ -448,6 +448,8 @@ public abstract class AtlantisEntity extends Entity implements
 			if (move_direction != STOPPED_VECTOR) 
 				moving = true;
 			
+			if(!isMoving) move_direction = STOPPED_VECTOR;
+			
 			beginMovement(move_direction);
 		}
 
@@ -456,12 +458,17 @@ public abstract class AtlantisEntity extends Entity implements
 	
 	public void setDestination(final Vector dest) {
 		this.destination_position = dest.copy();
+		isMoving = true;
 	}
 	
 	public Vector getDestination() {
 		return this.destination_position;
 	}
 	
+	boolean isMoving = false;
+	public void stopMoving(){
+		isMoving = false;
+	}
 	
 	// TODO: set isAttacking to false when another command is given
 	// or conflict is resolved
