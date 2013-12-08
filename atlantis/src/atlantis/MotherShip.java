@@ -12,11 +12,14 @@ import java.util.Set;
 import org.newdawn.slick.Animation;
 
 import atlantis.AtlantisEntity.Team;
+import jig.Collision;
 import jig.ResourceManager;
 import jig.Shape;
 import jig.Vector;
 
 public class MotherShip extends FloatingEntity {
+	
+	private static final float MIN_MOTHERSHIP_MOTHERSHIP_DISTANCE = 36;
 	
 	private static final String FACE_U_GRAPHIC_FILE = "atlantis/resource/submarine-up.png";
 	private static final String FACE_D_GRAPHIC_FILE = "atlantis/resource/submarine-down.png";
@@ -194,4 +197,28 @@ public class MotherShip extends FloatingEntity {
 		
 	}
 	
+	private void enforceMotherShipMotherShipDistance(FloatingEntity e) {
+		Collision collision = this.collides(e);
+		
+		if(null != collision) {
+			// System.out.println(collision);
+		}
+	}
+	
+	@Override
+	public void update(final int delta) {
+		super.update(delta);		
+
+		
+		for(FloatingEntity e : this.getPotentialCollisions()) {
+			
+			/* MotherShip to MotherShip collision */
+
+			if(e instanceof MotherShip)
+				enforceMotherShipMotherShipDistance(e);
+			else
+				// TODO MotherShip TacticalSub collision
+				;
+		}
+	}
 }

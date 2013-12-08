@@ -1,6 +1,8 @@
 package atlantis;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import jig.Vector;
@@ -11,9 +13,14 @@ import dijkstra.model.Vertex;
 
 abstract class FloatingEntity extends AtlantisEntity {
 
+	private static LinkedList<FloatingEntity> floating_entities = 
+			new LinkedList<FloatingEntity>();
+	
 	public FloatingEntity(final float x, final float y,
 			Vector movement_direction) {
 		super(x, y, movement_direction);
+		
+		floating_entities.add(this);
 	}
 	
 	@Override
@@ -56,5 +63,27 @@ abstract class FloatingEntity extends AtlantisEntity {
 	}
 	
 	/* -------------------------------------------------------------------- */
+	
+	private List<FloatingEntity> potential_collisions =
+			new ArrayList<FloatingEntity>();
+	
+	public List<FloatingEntity> getPotentialCollisions() {
+		return Collections.unmodifiableList(potential_collisions);
+	}
+	
+	@Override
+	public void update(final int delta) {
+		super.update(delta);
+		
+		/* Handle collisions between FloatingEntities if moving */
+		
+		if (velocity.length() > 0.0) {
+			potential_collisions.clear();
 
+			for (AtlantisEntity e : listNearbyEntities()) {
+				if (e instanceof FloatingEntity)
+					potential_collisions.add((FloatingEntity) e);
+			}
+		}
+	}
 }
