@@ -481,9 +481,11 @@ public abstract class AtlantisEntity extends Entity implements
 			// System.out.println(path);
 			
 			// TODO Remove once we're sure that entities aren't wandering into terrain
-			for(int node_id : AtlantisMap.getBlockedNodes())
-				if(node_id == getCurrentMapNode())
-					System.out.println("HUH?!? ENTITY IN TERRAIN TILE " + node_id);
+			for (int node_id : AtlantisMap.getBlockedNodes())
+				if (node_id == getCurrentMapNode()
+						&& (false == this instanceof FloatingEntity))
+					System.out.println("HUH?!? GROUND ENTITY IN TERRAIN TILE "
+							+ node_id);
 			// End remove - That operation could get pricey!
 						
 			Vector move_direction = this.getNextMovementFromPath(path);
