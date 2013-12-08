@@ -9,12 +9,9 @@
    <terrain name="pinkstuff" tile="10"/>
   </terraintypes>
  </tileset>
- <imagelayer name="Image Layer 1" width="40" height="40">
-  <image source="densemap-background.png"/>
- </imagelayer>
  <layer name="Tile Layer 1" width="40" height="40">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+2YSQrDMAxF03luev/TVlkYhIl+HUse6wdaGBPQ8GWJTFMb7Mj2wt2N7J7RlzVOZGfh7kX2ZmcUC6dUXCgWjh+XA/n9IHtG+mWF5PfCTPYR7g5kR3YOqY//TUouZFd2RnFK35QmtDccqAYW/ePrNbQ3HKgGIfX5BdJrKZDmS/U/1xXSPM+nRj9b40S6kvKp0Y+lbjRvSA2zG2HRo2v8a9wtUsPOgig1A4aGBxpy7sYxbJlr2lhSvzHaPb/GPTOUnt7vWJ3lykGszlrW10JPGqudmFznnDUxua7hP4xFjlL2gUWOeuqDgZ4v8PKu8wAZAAA=
+   H4sIAAAAAAAAA9VYRw7EMAjc3tv/X7vkYAkhwNiMU0biYEWxKcOYZLfbBvZkB+PZnewxoy8azmQX49mb7MPWXiwcS8XlxcIh4yrw/H6SvTr9QsHye8KX7Gc8O5Kd2DpSH/nOSFzJbmztxWm9szSivVHg1QDRP5Kv0d4o8GoQqU8NHl9bgepNj/OZM2qxentzXnmc52dk+KP54vnv8crKZ4Y/SN5kNGQNd3eBlmdEj2qoxa3p4JxaXYu7VQclWnV+NGTteXwIXcxqYlSzetGz/1K9G63HqN6tAamtawWi9ojZ2PIDUXutJyzdyt7RqNnL0uXs3bFlTmu5HfFt0AsttxZvaj3D4+L7Wr5qfM7czTWeWXFZ/NL4nJ091gb0PwL0bIWeO636RXsy0ndyLy/H0fxHtTyilXIvL8dzzf0IHo78v1fLQ4Q/mX8IrWdJaPxp0fMJ0XsYNfvKnEt/l5qxLbT2yh+VWk9yABkAAA==
   </data>
  </layer>
 </map>
