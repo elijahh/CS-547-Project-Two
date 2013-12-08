@@ -36,6 +36,8 @@ public class GameStatus {
 	public Soldier soldier_on_server_2;
 	public MotherShip mothership_on_server_1;
 	public MotherShip mothership_on_server_2;
+	public Torpedo torpedo_on_server;
+	public TacticalSub tactical_on_server;
 	// TEMPORARY FOR DEVELOPMENT
 	
 	public GameStatus(PlayingState playing_state) {
@@ -58,7 +60,11 @@ public class GameStatus {
 		mothership_on_server_2 = new MotherShip(400, 200, new Vector(0,0));
 		mothership_on_server_2.setTeam(Team.BLUE);
 		motherships_server_model.put(mothership_on_server_2.getIdentity(), mothership_on_server_2);
+		
+		tactical_on_server = new TacticalSub(600, 200, new Vector(0,0));
+		tacticals_server_model.put(tactical_on_server.getIdentity(), tactical_on_server);
 		// TEMPORARY FOR DEVELOPMENT
+		
 	}
 
 	private List<Command> commands_to_server = new ArrayList<Command>();
@@ -80,7 +86,7 @@ public class GameStatus {
 			synchronized(soldiers_server_model) {
 				for(Soldier soldier : soldiers_server_model.values()) {
 					Vector position = soldier.getDestination();
-					if(position != null && false == soldier.isHandlingCollision())
+					if(position != null /*&& false == soldier.isHandlingCollision()*/)
 						soldier.moveTo(position);
 					soldier.update(delta);
 					updaters.add(soldier.getUpdater());
@@ -96,6 +102,18 @@ public class GameStatus {
 					updaters.add(mothership.getUpdater());
 				}
 			}
+			
+			synchronized(tacticals_server_model) {
+				for(TacticalSub tactical : tacticals_server_model.values()) {
+					Vector position = tactical.getDestination();
+					if(position != null && false == tactical.isHandlingCollision())
+						tactical.moveTo(position);
+					tactical.update(delta);
+					updaters.add(tactical.getUpdater());
+				}
+			}
+		
+			
 				
 			server.sendUpdates(updaters, playing_state.getCurrentFrame());
 			
@@ -141,6 +159,7 @@ public class GameStatus {
 	
 	private Map<Long, Soldier> soldiersOnClient = new HashMap<Long, Soldier>();
 	private Map<Long, MotherShip> motherShipsOnClient = new HashMap<Long, MotherShip>();
+	private Map<Long, TacticalSub> tacticalsOnClient = new HashMap<Long, TacticalSub>();
 	
 	private void processUpdater(AtlantisEntity.Updater updater) {
 		if(updater.getEntityClass() == Soldier.class) {			
@@ -168,6 +187,19 @@ public class GameStatus {
 
 				motherShipsOnClient.put(new Long(updater.getIdentity()),
 						(MotherShip) updated_entity);
+			}
+		} else if (updater.getEntityClass() == TacticalSub.class){
+			synchronized (tacticalsOnClient) {
+				TacticalSub updated_entity = tacticalsOnClient.get(updater.getIdentity());
+
+				if (null == updated_entity) {
+					updated_entity = new TacticalSub();
+				}
+
+				updated_entity.update(updater);
+
+				tacticalsOnClient.put(new Long(updater.getIdentity()),
+						(TacticalSub) updated_entity);
 			}
 		} else {
 			// TODO: update of other entity types
@@ -214,25 +246,71 @@ public class GameStatus {
 		return id_motherShip_map;
 	}
 	
+	public List<TacticalSub> getTacticals() {
+		List<TacticalSub> tactical_list = new ArrayList<TacticalSub>();
+		
+		synchronized(tacticalsOnClient) { 
+			 tactical_list.addAll(tacticalsOnClient.values());
+		}
+		
+		return Collections.unmodifiableList(tactical_list);
+	}
+	
+	public Map<Long, TacticalSub> getIdTacticalsMapOnClient() {
+		Map<Long, TacticalSub> id_tactical_map;
+		
+		synchronized(tacticalsOnClient) {
+			id_tactical_map = Collections.unmodifiableMap(tacticalsOnClient);
+		}
+		
+		return id_tactical_map;
+	}
+	
 	/* -------------------------------------------------------------------- */
 	
 
 	private Map<Long, Soldier> soldiers_server_model = new HashMap<Long, Soldier>();
 	private Map<Long, MotherShip> motherships_server_model = new HashMap<Long, MotherShip>();
+	private Map<Long, TacticalSub> tacticals_server_model = new HashMap<Long, TacticalSub>();
 	
 	private void processCommand(Command command) {
+		Soldier soldier = soldiers_server_model.get(command.entityId);
+		TacticalSub tactical = tacticals_server_model.get(command.entityId);
+		MotherShip mothership = motherships_server_model.get(command.entityId);
+		
 		switch (command.type) {
+		case Command.ATTACK:
+			synchronized (soldiers_server_model) {
+				Soldier targetSoldier = soldiers_server_model.get(command.attackTargetId);
+				if (soldier != null && targetSoldier != null) {
+					soldier.setTarget(targetSoldier);
+				} else if (tactical != null && targetSoldier != null) {
+					tactical.setTarget(targetSoldier);
+				}
+			}
+			synchronized (motherships_server_model) {
+				MotherShip targetShip = motherships_server_model.get(command.attackTargetId);
+				if (soldier != null && targetShip != null) {
+					soldier.setTarget(targetShip);
+				} else if (tactical != null && targetShip != null) {
+					tactical.setTarget(targetShip);
+				}
+			}
+			break;
 		case Command.MOVEMENT:
 			synchronized (soldiers_server_model) {
-				Soldier soldier = soldiers_server_model.get(command.entityId);
 				if(soldier != null) {
 					soldier.setDestination(command.target);
 				}
 			}
 			synchronized (motherships_server_model) {
-				MotherShip mothership = motherships_server_model.get(command.entityId);
 				if(mothership != null) {
 					mothership.setDestination(command.target);
+				}
+			}
+			synchronized (tacticals_server_model) {
+				if(tactical != null) {
+					tactical.setDestination(command.target);
 				}
 			}
 			break;

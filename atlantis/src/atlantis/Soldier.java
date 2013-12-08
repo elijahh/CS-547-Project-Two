@@ -13,6 +13,9 @@ import org.newdawn.slick.Animation;
 
 import jig.ResourceManager;
 import jig.Vector;
+import dijkstra.engine.DijkstraAlgorithm;
+import dijkstra.model.Graph;
+import dijkstra.model.Vertex;
 
 public class Soldier extends GroundEntity {
 	
@@ -49,6 +52,7 @@ public class Soldier extends GroundEntity {
 
 	public Soldier(float x, float y, Vector move_direction) {
 		super(x, y, move_direction);
+		health = 100;
 	}
 	
 	static {
@@ -73,16 +77,12 @@ public class Soldier extends GroundEntity {
 			new LinkedList<Soldier>();
 	private Map<Soldier, Integer> collision_avoidance_countdown =
 			new HashMap<Soldier, Integer>();
-	
+		
 	public boolean isHandlingCollision() {
 		if(0 < handling_collisions_with_these_soldiers.size())
 			return true;
 		
 		return false;
-	}
-	
-	public boolean isHandlingCollisionWith(Soldier other) {
-		return handling_collisions_with_these_soldiers.contains(other);
 	}
 	
 	public void beginMovement(final Vector direction) {
@@ -92,15 +92,11 @@ public class Soldier extends GroundEntity {
 	private void enforceSoldierSoldierDistance(Soldier other,
 			final Vector their_position, final Vector my_position) {
 		//final double angle_to_other = my_position.angleTo(their_position);
-		
-		if (other.isHandlingCollisionWith(this))
-			return;
 
 		if (false == handling_collisions_with_these_soldiers.contains(other)) {
 			handling_collisions_with_these_soldiers.add(other);
-			velocity = velocity.negate();
 
-			Integer countdown = new Integer(100 + random_generator.nextInt(150));
+			Integer countdown = new Integer(1500);
 			collision_avoidance_countdown.put(other, countdown);
 
 			System.out.println(this + " HANDLING SOLDIER-SOLDIER COLLISION "
@@ -108,25 +104,60 @@ public class Soldier extends GroundEntity {
 		}
 	}
 	
-	private void manageCountdownForCollision(Soldier other, int delta) {
+	private void manageCountdownForCollision(final Soldier other, final int delta) {
 		Integer countdown = collision_avoidance_countdown.get(other);
 		
 		if(null != countdown) {
 			countdown -= delta;
-			if (0 > countdown)
+			if (0 > countdown) {
 				handling_collisions_with_these_soldiers.remove(other);
+			}
 			collision_avoidance_countdown.put(other, countdown);
 		}
 	}
 	
+	private void swapOutDijkstraIfNecessary() {
+		if (0 == handling_collisions_with_these_soldiers.size()) {
+			// System.out.println("NULLING DIJKSTRA");
+			dijkstra = null;
+		} else {
+			dijkstra = new DijkstraAlgorithm(group_dijkstra);
+			
+			// System.out.println("AT " + this.getCurrentMapNode());
+			
+			for(Soldier soldier : handling_collisions_with_these_soldiers)
+				for(Integer node_id : soldier.getCurrentMapNodesSpanned())
+					if(node_id != getCurrentMapNode())
+						dijkstra.removeNode(node_id);
+			
+			dijkstra.execute(target_node);
+		}
+	}
+
 	@Override
 	public void update(final int delta) {
 		super.update(delta);
+			
+		if (torpedo != null) 
+			torpedo.update(delta);
 		
+		if (torpedoTimer > 0) {
+			torpedoTimer -= delta;
+		} else {
+			torpedo = null;
+			if (isAttacking) {
+					fire(target);
+			}
+		}
+				
+		
+		int managing_collisisons_count = 
+				handling_collisions_with_these_soldiers.size();
+				
 		Set<GroundEntity> potential_collisions = 
 				new HashSet<GroundEntity>(getPotentialCollisions());
 		potential_collisions.addAll(handling_collisions_with_these_soldiers);
-				
+		
 		for (GroundEntity e : potential_collisions) {
 			Vector my_position = getPosition();
 			Vector their_position = e.getPosition();
@@ -137,9 +168,13 @@ public class Soldier extends GroundEntity {
 			if (e instanceof Soldier
 					&& distance_to_other < MIN_SOLDIER_SOLDIER_DISTANCE)
 				enforceSoldierSoldierDistance((Soldier)e, their_position, my_position);
-			else 
+			else
 				manageCountdownForCollision((Soldier)e, delta);
 		}
+
+		if(managing_collisisons_count != 
+				handling_collisions_with_these_soldiers.size())
+			swapOutDijkstraIfNecessary();
 	}
 	
 	private final String getMovementAnimationFilename(final Vector direction) {
@@ -194,4 +229,30 @@ public class Soldier extends GroundEntity {
 			return RED_ICON;
 		}
 	}
+	
+	/* ------------------------------------------------------------------------ */
+		
+	public void fire(AtlantisEntity target) {
+		double theta = this.getPosition().angleTo(target.getPosition());
+		
+		//moveTo(target.getPosition());
+		
+		if (getPosition().distance(target.getPosition()) < 600) {
+			if (torpedo == null) {
+				torpedo = new Torpedo(getX(), getY(), theta, team);
+			} else {
+				torpedo.setPosition(new Vector(getX(), getY()));
+				torpedo.setRotation(theta);
+			}
+			torpedoTimer = 700;
+
+			target.health -= Math.random() * 5 % 5;
+			this.health -= Math.random() * 5 % 5;
+
+			if (target.health <= 0) isAttacking = false;
+			System.out.println("target health: " + target.health);
+			System.out.println("this health: " + health);
+		}
+	}
+	
 }

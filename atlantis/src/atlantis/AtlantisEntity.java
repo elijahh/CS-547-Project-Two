@@ -17,6 +17,7 @@ import org.newdawn.slick.Image;
 import jig.Entity;
 import jig.ResourceManager;
 import jig.Vector;
+
 import dijkstra.engine.DijkstraAlgorithm;
 import dijkstra.model.Graph;
 import dijkstra.model.Vertex;
@@ -48,6 +49,7 @@ public abstract class AtlantisEntity extends Entity implements
 				new Random(System.currentTimeMillis());
 	
 	protected static Graph graph;
+	protected static DijkstraAlgorithm group_dijkstra;
 
 	protected Vector velocity;
 	protected DijkstraAlgorithm dijkstra;
@@ -95,7 +97,7 @@ public abstract class AtlantisEntity extends Entity implements
 		RED, BLUE
 	};
 
-	private Team team = Team.RED;
+	protected Team team = Team.RED;
 
 	public void setTeam(Team team) {
 		this.team = team;
@@ -404,17 +406,24 @@ public abstract class AtlantisEntity extends Entity implements
 		translate(velocity.scale(delta));
 
 		updateEntityNodeMaps();
+
 	}
 
 	abstract void beginMovement(Vector direction);
 	abstract boolean isHandlingCollision();
 	
-	private int target_node = -1;
-	
+	protected int target_node;
+		
 	boolean moveTo(final Vector destination_position) {
 		boolean moving = false;
+
 		int destination_node = calculateMapNode(destination_position.getX(),
 				destination_position.getY());
+		
+		if(null == dijkstra) target_node = -1;
+		
+		if(null == dijkstra && null != group_dijkstra)
+			dijkstra = new DijkstraAlgorithm(group_dijkstra);
 		
 		if(null == dijkstra && null != graph)
 			dijkstra = new DijkstraAlgorithm(graph);
@@ -427,6 +436,8 @@ public abstract class AtlantisEntity extends Entity implements
 		if (dijkstra != null) {
 			List<Vertex> path = dijkstra.getPath(this.getCurrentMapNode());
 					
+			// System.out.println(path);
+			
 			// TODO Remove once we're sure that entities aren't wandering into terrain
 			for(int node_id : AtlantisMap.getBlockedNodes())
 				if(node_id == getCurrentMapNode())
@@ -451,6 +462,21 @@ public abstract class AtlantisEntity extends Entity implements
 	public Vector getDestination() {
 		return this.destination_position;
 	}
+	
+	
+	// TODO: set isAttacking to false when another command is given
+	// or conflict is resolved
+	boolean isAttacking = false;
+	AtlantisEntity target;
+	public void setTarget(AtlantisEntity t) {
+		isAttacking = true;
+		target = t;
+	}
+	
+	protected Torpedo torpedo;
+	protected TacticalTorpedo tacticalTorpedo;
+	protected int torpedoTimer = 0;
+	public abstract void fire(AtlantisEntity target);	
 
 	/* -------------------------------------------------------------------- */
 
@@ -466,6 +492,12 @@ public abstract class AtlantisEntity extends Entity implements
 		Class entity_class;
 		
 		int health;
+		
+		Vector torpedoPosition;
+		double torpedoRotation;
+		
+		Vector tacticalTorpedoPosition;
+		double tacticalTorpedoRotation;
 
 		Updater(AtlantisEntity e) {
 
@@ -476,6 +508,16 @@ public abstract class AtlantisEntity extends Entity implements
 			health = e.health;
 			
 			entity_class = e.getClass();
+			
+			if (e.torpedo != null) {
+				torpedoPosition = e.torpedo.getPosition();
+				torpedoRotation = e.torpedo.getRotation();
+			}
+			
+			if (e.tacticalTorpedo != null) {
+				tacticalTorpedoPosition = e.tacticalTorpedo.getPosition();
+				tacticalTorpedoRotation = e.tacticalTorpedo.getRotation();
+			}
 		}
 
 		private static final long serialVersionUID = 234098222823485285L;
@@ -521,6 +563,40 @@ public abstract class AtlantisEntity extends Entity implements
 		
 		/* Identity - very important to keep consistent */
 		identity = updater.identity;
+		
+		if (updater.torpedoPosition != null) {
+			float torpedoX = updater.torpedoPosition.getX()
+					+ PlayingState.viewportOffsetX;
+			float torpedoY = updater.torpedoPosition.getY()
+					+ PlayingState.viewportOffsetY; 
+			
+			if (torpedo == null) {
+				torpedo = new Torpedo(torpedoX, torpedoY,
+						updater.torpedoRotation, team);
+			} else {
+				torpedo.setPosition(torpedoX, torpedoY);
+				torpedo.setRotation(updater.torpedoRotation);
+			}
+		} else {
+			torpedo = null;
+		}
+		
+		if (updater.tacticalTorpedoPosition != null) {
+			float torpedoX = updater.tacticalTorpedoPosition.getX()
+					+ PlayingState.viewportOffsetX;
+			float torpedoY = updater.tacticalTorpedoPosition.getY()
+					+ PlayingState.viewportOffsetY; 
+			
+			if (tacticalTorpedo == null) {
+				tacticalTorpedo = new TacticalTorpedo(torpedoX, torpedoY,
+						updater.tacticalTorpedoRotation, team);
+			} else {
+				tacticalTorpedo.setPosition(torpedoX, torpedoY);
+				tacticalTorpedo.setRotation(updater.tacticalTorpedoRotation);
+			}
+		} else {
+			tacticalTorpedo = null;
+		}
 	}
 
 	private Animation movement_animation = null;
@@ -571,6 +647,7 @@ public abstract class AtlantisEntity extends Entity implements
 		}
 
 		super.render(g);
-		
+		if (torpedo != null) torpedo.render(g);
+		if (tacticalTorpedo != null) tacticalTorpedo.render(g);
 	}
 }
