@@ -213,11 +213,11 @@ public abstract class AtlantisEntity extends Entity implements
 			set.add(node_number);
 	}
 	
-	private final void calculateAndAddNodeToSetIfSane(final float x,
-			final float y, Set<Integer> set) {
-		final int node_number = calculateMapNode(x, y);
-		addNodeToSetIfSane(node_number, set);
-	}
+//	private final void calculateAndAddNodeToSetIfSane(final float x,
+//			final float y, Set<Integer> set) {
+//		final int node_number = calculateMapNode(x, y);
+//		addNodeToSetIfSane(node_number, set);
+//	}
 	
 	public Set<Integer> getCurrentMapNodesSpanned() {
 //		HashSet<Integer> node_number_set = new HashSet<Integer>();
@@ -260,7 +260,7 @@ public abstract class AtlantisEntity extends Entity implements
 		// System.out.println(min_x + ", " + min_y + " :" + max_x + ", " + max_y);
 		// System.out.println(this + ":" + node_number_set);
 		
-		return new_node_number_set;
+		return Collections.unmodifiableSet(new_node_number_set);
 	}
 
 	static Map<AtlantisEntity, Set<Integer>> entity_node_map = 
