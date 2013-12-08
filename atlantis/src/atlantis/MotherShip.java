@@ -195,7 +195,7 @@ public class MotherShip extends FloatingEntity {
 		Collision collision = this.collides(e);
 		
 		if(null != collision) {
-			System.out.println(collision);
+			// System.out.println(collision);
 		}
 	}
 	
