@@ -197,18 +197,24 @@ public class MotherShip extends FloatingEntity {
 		
 	}
 	
-	private void enforceMotherShipMotherShipDistance(FloatingEntity e) {
+	private void enforceMotherShipMotherShipDistance(final FloatingEntity e) {
 		Collision collision = this.collides(e);
-		
-		if(null != collision) {
-			// System.out.println(collision);
+				
+		if (null != collision) {
+			Vector their_position = e.getPosition();
+			double angle_to_other_ship = getPosition().angleTo(their_position);
+			Vector direction_to_other_ship = this
+					.getVectorForAngle(angle_to_other_ship);
+						
+			if(this.getMovementDirection().equals(direction_to_other_ship)) {
+				// System.out.println("HERE");
+			}			
 		}
 	}
 	
 	@Override
 	public void update(final int delta) {
 		super.update(delta);		
-
 		
 		for(FloatingEntity e : this.getPotentialCollisions()) {
 			

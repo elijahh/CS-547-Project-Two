@@ -208,43 +208,59 @@ public abstract class AtlantisEntity extends Entity implements
 		return calculateMapNode(getX(), getY());
 	}
 
-	private final void calculateAndAddNodeToSetIfSane(final float x,
-			final float y, Set<Integer> set) {
-		final int node_number = calculateMapNode(x, y);
+	private final void addNodeToSetIfSane(final int node_number, Set<Integer> set) {
 		if (node_number < (MAP_X_NODE_DIMENSION * MAP_Y_NODE_DIMENSION))
 			set.add(node_number);
 	}
-
+	
+	private final void calculateAndAddNodeToSetIfSane(final float x,
+			final float y, Set<Integer> set) {
+		final int node_number = calculateMapNode(x, y);
+		addNodeToSetIfSane(node_number, set);
+	}
+	
 	public Set<Integer> getCurrentMapNodesSpanned() {
-		HashSet<Integer> node_number_set = new HashSet<Integer>();
+//		HashSet<Integer> node_number_set = new HashSet<Integer>();
+		HashSet<Integer> new_node_number_set = new HashSet<Integer>();
 
-		node_number_set.add(getCurrentMapNode());
+//		node_number_set.add(getCurrentMapNode());
 
 		final float max_x = getCoarseGrainedMaxX();
 		final float max_y = getCoarseGrainedMaxY();
-
-		calculateAndAddNodeToSetIfSane(max_x, max_y, node_number_set);
+		
+//		int lower_right_node = calculateMapNode(max_x, max_y);
+//		addNodeToSetIfSane(lower_right_node, node_number_set);
 
 		final float min_x = getCoarseGrainedMinX();
-
-		calculateAndAddNodeToSetIfSane(min_x, max_y, node_number_set);
+		
+		int lower_left_node = calculateMapNode(min_x, max_y);
+//		addNodeToSetIfSane(lower_left_node, node_number_set);
 
 		final float min_y = getCoarseGrainedMinY();
-
-		calculateAndAddNodeToSetIfSane(min_x, min_y, node_number_set);
-		calculateAndAddNodeToSetIfSane(max_x, min_y, node_number_set);
 		
-		calculateAndAddNodeToSetIfSane(min_x, getY(), node_number_set);
-		calculateAndAddNodeToSetIfSane(max_x, getY(), node_number_set);
+		int upper_left_node = calculateMapNode(min_x, min_y);
+//		addNodeToSetIfSane(upper_left_node, node_number_set);
 		
-		calculateAndAddNodeToSetIfSane(getX(), min_y, node_number_set);
-		calculateAndAddNodeToSetIfSane(getX(), max_y, node_number_set);
-			
+		int upper_right_node = calculateMapNode(max_x, min_y);
+//		addNodeToSetIfSane(upper_right_node, node_number_set);
+		
+		int width = upper_right_node - upper_left_node;
+		
+		for(int j = upper_left_node; j <= lower_left_node; j += MAP_GRID_X)
+			for(int i = j; i <= (j + width); i += 1) {
+				addNodeToSetIfSane(i, new_node_number_set);
+			}
+		
+//		calculateAndAddNodeToSetIfSane(min_x, getY(), node_number_set);
+//		calculateAndAddNodeToSetIfSane(max_x, getY(), node_number_set);
+//		
+//		calculateAndAddNodeToSetIfSane(getX(), min_y, node_number_set);
+//		calculateAndAddNodeToSetIfSane(getX(), max_y, node_number_set);
+					
 		// System.out.println(min_x + ", " + min_y + " :" + max_x + ", " + max_y);
-		
 		// System.out.println(this + ":" + node_number_set);
 		
-		return node_number_set;
+		return new_node_number_set;
 	}
 
 	static Map<AtlantisEntity, Set<Integer>> entity_node_map = 
