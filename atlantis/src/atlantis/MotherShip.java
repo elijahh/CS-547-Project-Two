@@ -196,7 +196,6 @@ public class MotherShip extends FloatingEntity {
 	@Override
 	public void fire(AtlantisEntity target) {
 		// TODO Auto-generated method stub
-		
 	}
 	
 	boolean handling_mother_ship_collision = false;
@@ -204,7 +203,11 @@ public class MotherShip extends FloatingEntity {
 	
 	private void enforceMotherShipMotherShipDistance(final MotherShip e,
 			final int delta) {
-		Collision collision = this.collides(e);
+		
+		/*
+		 * If one MotherShip is in a potential collision with the other,
+		 * movement should briefly reverse and then stop.
+		 */
 
 		if(0 < mother_ship_collision_countdown)
 			mother_ship_collision_countdown -= delta;
@@ -212,6 +215,8 @@ public class MotherShip extends FloatingEntity {
 			handling_mother_ship_collision = false;
 			this.destination_position = this.getPosition();
 		}
+		
+		Collision collision = this.collides(e);
 		
 		if ((null != collision) && (handling_mother_ship_collision == false)) {
 			Vector their_position = e.getPosition();
@@ -228,6 +233,32 @@ public class MotherShip extends FloatingEntity {
 		}
 	}
 	
+	private void enforceMotherShipTacticalSubDistance(final TacticalSub e,
+			final int delta) {
+		
+		/* 
+		 * If the MotherShip is involved in a collision with a TacticalSub,
+		 * and the TacticalSub is not moving, the momentum of the MotherShip
+		 * should push the TacticalSub out of the way. Once the TacticalSub
+		 * is moving, its collision handling will cause it to move away from
+		 * the MotherShip.
+		 */
+				
+		Collision collision = this.collides(e);
+		
+		if (null != collision) {
+			System.out.println(e.getMovementDirection());
+			
+			if(e.getMovementDirection().equals(STOPPED_VECTOR)) {
+				Vector their_position = e.getPosition();
+				double angle_to_other_ship = getPosition().angleTo(their_position);
+				Vector direction_to_other_ship = this
+						.getVectorForAngle(angle_to_other_ship);
+				e.nudgeNudge(direction_to_other_ship);
+			}
+		}
+	}
+	
 	@Override
 	public void update(final int delta) {
 		super.update(delta);		
@@ -238,9 +269,8 @@ public class MotherShip extends FloatingEntity {
 
 			if(e instanceof MotherShip)
 				enforceMotherShipMotherShipDistance((MotherShip)e, delta);
-			else
-				// TODO MotherShip TacticalSub collision
-				;
+			else 
+				enforceMotherShipTacticalSubDistance((TacticalSub)e, delta);
 		}
 	}
 }
