@@ -193,6 +193,8 @@ public class TacticalSub extends FloatingEntity {
 	public void update(int delta) {
 		super.update(delta);
 		
+		reward = 0;
+		
 		if (tacticalTorpedo != null) tacticalTorpedo.update(delta);
 		if (torpedoTimer > 0) {
 			torpedoTimer -= delta;
