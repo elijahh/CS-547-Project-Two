@@ -16,8 +16,8 @@ import org.newdawn.slick.Image;
 
 import jig.Entity;
 import jig.ResourceManager;
+import jig.Shape;
 import jig.Vector;
-
 import dijkstra.engine.DijkstraAlgorithm;
 import dijkstra.model.Graph;
 import dijkstra.model.Vertex;
@@ -79,7 +79,7 @@ public abstract class AtlantisEntity extends Entity implements
 		 */
 
 		still_image = ResourceManager
-				.getImage(getStillImageFilename(STOPPED_VECTOR));
+				.getImage(getStillImageFilename(movement_direction));
 		if (null != still_image) {
 			addImageWithBoundingBox(still_image);
 		}
@@ -410,6 +410,22 @@ public abstract class AtlantisEntity extends Entity implements
 
 	public void update(final int delta) {
 		translate(velocity.scale(delta));
+		
+		movement_direction = getMovementDirection();
+		
+		if(movement_direction != movement_last_direction) {
+			removeImage(still_image);
+			
+			for (Shape shape: getShapes())
+				removeShape(shape);
+			
+			still_image = ResourceManager
+					.getImage(getStillImageFilename(movement_direction));
+			if (null != still_image)
+				addImageWithBoundingBox(still_image);
+		}
+		
+		movement_last_direction = movement_direction;
 
 		updateEntityNodeMaps(false);
 		
