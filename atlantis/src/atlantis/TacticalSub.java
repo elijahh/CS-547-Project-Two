@@ -241,15 +241,13 @@ public class TacticalSub extends FloatingEntity {
 		}
 		
 		reward = 0;
-		
-		if(explosion != null) {
-			explosion = null;
-		}
+		hitTarget = false;
 		
 		if (tacticalTorpedo != null) {
 			tacticalTorpedo.update(delta);
 			if(tacticalTorpedo.collides(target)!=null) {
-				explosion = new Explosion(tacticalTorpedo.getX(), tacticalTorpedo.getY(), this);
+				hitTarget = true;
+				attackPosition = new Vector(tacticalTorpedo.getX(), tacticalTorpedo.getY());
 				tacticalTorpedo = null;
 			}
 		}

@@ -139,16 +139,14 @@ public class Soldier extends GroundEntity {
 		super.update(delta);
 		
 		reward = 0;
-		if(explosion != null) {
-			explosion = null;
-		}
-			
+		hitTarget = false;
 		if (torpedo != null) {
 			torpedo.update(delta);
 			if(torpedo.collides(target)!=null) {		
-				explosion = new Explosion(torpedo.getX(), torpedo.getY(), this);
+				hitTarget = true;
+				attackPosition = new Vector(torpedo.getX(), torpedo.getY());
 				torpedo = null;
-			}
+			} 
 		}
 		
 		if (torpedoTimer > 0) {

@@ -530,7 +530,8 @@ public abstract class AtlantisEntity extends Entity implements
 	int reward = 0;
 	public abstract void fire(AtlantisEntity target);
 	
-
+	protected boolean hitTarget;
+	protected Vector attackPosition;
 	protected Explosion explosion;
 	protected ShipExplosion shipExplosion;
 	/* -------------------------------------------------------------------- */
@@ -555,7 +556,8 @@ public abstract class AtlantisEntity extends Entity implements
 		Vector tacticalTorpedoPosition;
 		double tacticalTorpedoRotation;
 		
-		Vector explosionPosition;
+		Vector attackPosition;
+		boolean hitTarget;
 
 		Updater(AtlantisEntity e) {
 
@@ -565,6 +567,7 @@ public abstract class AtlantisEntity extends Entity implements
 			team = e.team;
 			health = e.health;
 			reward = e.reward;
+			hitTarget = e.hitTarget;
 			
 			entity_class = e.getClass();
 			
@@ -578,8 +581,8 @@ public abstract class AtlantisEntity extends Entity implements
 				tacticalTorpedoRotation = e.tacticalTorpedo.getRotation();
 			}
 			
-			if (e.explosion != null) {
-				explosionPosition = e.explosion.getPosition();
+			if (e.attackPosition != null) {
+				attackPosition = e.attackPosition;
 			}
 
 		}
@@ -663,15 +666,13 @@ public abstract class AtlantisEntity extends Entity implements
 		}
 		
 
-		if (updater.explosionPosition != null) {
-			float explosionX = updater.explosionPosition.getX() + PlayingState.viewportOffsetX;
-			float explosionY = updater.explosionPosition.getY() + PlayingState.viewportOffsetY;
-			
-			
-			if (explosion == null){
+		if (updater.attackPosition != null) {
+			float explosionX = updater.attackPosition.getX() + PlayingState.viewportOffsetX;
+			float explosionY = updater.attackPosition.getY() + PlayingState.viewportOffsetY;	
+			if(updater.hitTarget) {
 				explosion = new Explosion(explosionX, explosionY, this);
-			} else {
-				//explosion.setPosition(explosionX, explosionY);
+			} else if(explosion != null){
+				explosion.setPosition(explosionX, explosionY);
 			}
 		} 
 		
