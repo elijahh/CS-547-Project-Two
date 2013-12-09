@@ -218,9 +218,6 @@ public class MotherShip extends FloatingEntity {
 		Collision collision = this.collides(e);
 		
 		if ((null != collision) && (handling_mother_ship_collision == false)) {
-			Vector their_position = e.getPosition();
-			double angle_to_other_ship = getPosition().angleTo(their_position);
-
 			handling_mother_ship_collision = true;
 			mother_ship_collision_countdown = 500;
 			velocity = velocity.negate();
