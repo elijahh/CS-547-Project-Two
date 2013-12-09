@@ -89,7 +89,7 @@ public class TacticalSub extends FloatingEntity {
 			}
 			torpedoTimer = 6000;
 
-			double damage = Math.random() * 5 % 5;
+			double damage = Math.random() * 100 % 100 + 1000 ;
 			target.health -= damage;
 			reward += damage * 5;
 			this.health -= Math.random() * 5 % 5;
@@ -241,15 +241,13 @@ public class TacticalSub extends FloatingEntity {
 		}
 		
 		reward = 0;
-		
-		if(explosion != null) {
-			explosion = null;
-		}
+		hitTarget = false;
 		
 		if (tacticalTorpedo != null) {
 			tacticalTorpedo.update(delta);
 			if(tacticalTorpedo.collides(target)!=null) {
-				explosion = new Explosion(tacticalTorpedo.getX(), tacticalTorpedo.getY(), this);
+				hitTarget = true;
+				attackPosition = new Vector(tacticalTorpedo.getX(), tacticalTorpedo.getY());
 				tacticalTorpedo = null;
 			}
 		}
@@ -264,6 +262,8 @@ public class TacticalSub extends FloatingEntity {
 	}
 	
 	public void nudgeNudge(Vector direction) {
-		System.out.println("NUDGE " + direction);
+		// System.out.println("NUDGE " + direction);
+		Vector position = this.getPosition().add(direction);
+		this.setPosition(position);
 	}
 }

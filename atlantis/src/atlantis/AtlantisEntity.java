@@ -37,10 +37,10 @@ public abstract class AtlantisEntity extends Entity implements
 	protected static final Vector RIGHT_UNIT_VECTOR = new Vector(1, 0);
 	protected static final Vector STOPPED_VECTOR = new Vector(0, 0);
 
-	protected static final int MAP_GRID_X = 40;
+	protected static final int MAP_GRID_X = 64;
 	protected static final int MAP_X_NODE_DIMENSION = 32; /* Pixels */
 
-	protected static final int MAP_GRID_Y = 40;
+	protected static final int MAP_GRID_Y = 64;
 	protected static final int MAP_Y_NODE_DIMENSION = 32; /* Pixels */
 	
 	protected static final int MAP_HORIZONTAL_MOVE_COST = 100; /* mS */
@@ -530,8 +530,10 @@ public abstract class AtlantisEntity extends Entity implements
 	int reward = 0;
 	public abstract void fire(AtlantisEntity target);
 	
-
+	protected boolean hitTarget;
+	protected Vector attackPosition;
 	protected Explosion explosion;
+	protected ShipExplosion shipExplosion;
 	/* -------------------------------------------------------------------- */
 
 	public static class Updater implements Serializable {
@@ -554,7 +556,8 @@ public abstract class AtlantisEntity extends Entity implements
 		Vector tacticalTorpedoPosition;
 		double tacticalTorpedoRotation;
 		
-		Vector explosionPosition;
+		Vector attackPosition;
+		boolean hitTarget;
 
 		Updater(AtlantisEntity e) {
 
@@ -564,6 +567,7 @@ public abstract class AtlantisEntity extends Entity implements
 			team = e.team;
 			health = e.health;
 			reward = e.reward;
+			hitTarget = e.hitTarget;
 			
 			entity_class = e.getClass();
 			
@@ -577,8 +581,8 @@ public abstract class AtlantisEntity extends Entity implements
 				tacticalTorpedoRotation = e.tacticalTorpedo.getRotation();
 			}
 			
-			if (e.explosion != null) {
-				explosionPosition = e.explosion.getPosition();
+			if (e.attackPosition != null) {
+				attackPosition = e.attackPosition;
 			}
 
 		}
@@ -662,19 +666,31 @@ public abstract class AtlantisEntity extends Entity implements
 		}
 		
 
-		if (updater.explosionPosition != null) {
-			float explosionX = updater.explosionPosition.getX() + PlayingState.viewportOffsetX;
-			float explosionY = updater.explosionPosition.getY() + PlayingState.viewportOffsetY;
-			
-			if (explosion == null){
+		if (updater.attackPosition != null) {
+			float explosionX = updater.attackPosition.getX() + PlayingState.viewportOffsetX;
+			float explosionY = updater.attackPosition.getY() + PlayingState.viewportOffsetY;	
+			if(updater.hitTarget) {
 				explosion = new Explosion(explosionX, explosionY, this);
-			} else {
+			} else if(explosion != null){
 				explosion.setPosition(explosionX, explosionY);
 			}
 		} 
 		
 		if (explosion != null && !explosion.isActive()) {
 			explosion = null;
+		}
+		
+		
+		if (health <= 0 && (this.getClass() == TacticalSub.class || this.getClass() == MotherShip.class) ) {
+			if(shipExplosion == null) {
+				shipExplosion = new ShipExplosion(localPosition.getX(), localPosition.getY());
+			} else {
+				shipExplosion.setPosition(localPosition.getX(), localPosition.getY());
+			}
+		}
+		
+		if (shipExplosion != null && !shipExplosion.isActive()) {
+			shipExplosion = null;
 		}
 		
 		health = updater.health;
@@ -733,7 +749,7 @@ public abstract class AtlantisEntity extends Entity implements
 		if (tacticalTorpedo != null) tacticalTorpedo.render(g);
 
 		if (explosion !=null) explosion.render(g);
-
+		if (shipExplosion != null) shipExplosion.render(g);
 		
 		g.setColor(Color.red);
 		float x = getCoarseGrainedMinX();
