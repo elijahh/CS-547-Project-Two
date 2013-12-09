@@ -32,17 +32,27 @@ public class GameStatus {
 		random_generator.setSeed(System.currentTimeMillis());
 	}
 	
+	public MotherShip mothership_on_server_1;
+	public MotherShip mothership_on_server_2;
+	
 	// TEMPORARY FOR DEVELOPMENT
 	public Soldier soldier_on_server_1;
 	public Soldier soldier_on_server_2;
-	public MotherShip mothership_on_server_1;
-	public MotherShip mothership_on_server_2;
 	public Torpedo torpedo_on_server;
 	public TacticalSub tactical_on_server;
 	// TEMPORARY FOR DEVELOPMENT
 	
 	public GameStatus(PlayingState playing_state) {
 		this.playing_state = playing_state;
+		
+		mothership_on_server_1 = new MotherShip(200, 200, new Vector(0, 0));
+		motherships_server_model.put(mothership_on_server_1.getIdentity(),
+				mothership_on_server_1);
+
+		mothership_on_server_2 = new MotherShip(400, 200, new Vector(0, 0));
+		mothership_on_server_2.setTeam(Team.BLUE);
+		motherships_server_model.put(mothership_on_server_2.getIdentity(),
+				mothership_on_server_2);
 		
 		// TEMPORARY FOR DEVELOPMENT
 		soldier_on_server_1 = 
@@ -54,14 +64,6 @@ public class GameStatus {
 		soldier_on_server_2.setTeam(Team.BLUE);
 		soldiers_server_model.put(soldier_on_server_2.getIdentity(),
 				soldier_on_server_2);
-		
-		mothership_on_server_1 = new MotherShip(200, 200, new Vector(0,0));
-		motherships_server_model.put(mothership_on_server_1.getIdentity(), mothership_on_server_1);
-		
-		mothership_on_server_2 = new MotherShip(400, 200, new Vector(0,0));
-		mothership_on_server_2.setTeam(Team.BLUE);
-		motherships_server_model.put(mothership_on_server_2.getIdentity(), mothership_on_server_2);
-		
 		tactical_on_server = new TacticalSub(600, 200, new Vector(0,0));
 		tacticals_server_model.put(tactical_on_server.getIdentity(), tactical_on_server);
 		// TEMPORARY FOR DEVELOPMENT
@@ -83,6 +85,11 @@ public class GameStatus {
 		if (null != server) {
 		
 			// TODO -- Game is over when one of the MotherShip objects is killed 
+			
+			if(0 >= mothership_on_server_1.getHealth() ||
+					0 >= mothership_on_server_2.getHealth()) {
+				
+			}
 			
 			List<AtlantisEntity.Updater> updaters = 
 					new ArrayList<AtlantisEntity.Updater>();
