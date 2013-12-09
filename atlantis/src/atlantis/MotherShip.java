@@ -230,16 +230,12 @@ public class MotherShip extends FloatingEntity {
 		/* 
 		 * If the MotherShip is involved in a collision with a TacticalSub,
 		 * and the TacticalSub is not moving, the momentum of the MotherShip
-		 * should push the TacticalSub out of the way. Once the TacticalSub
-		 * is moving, its collision handling will cause it to move away from
-		 * the MotherShip.
+		 * should nudge the TacticalSub out of the way. 
 		 */
 				
 		Collision collision = this.collides(e);
 		
-		if (null != collision) {
-			System.out.println(e.getMovementDirection());
-			
+		if (null != collision) {			
 			if(e.getMovementDirection().equals(STOPPED_VECTOR)) {
 				Vector their_position = e.getPosition();
 				double angle_to_other_ship = getPosition().angleTo(their_position);
