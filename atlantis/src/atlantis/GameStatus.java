@@ -3,6 +3,7 @@ package atlantis;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -80,18 +81,11 @@ public class GameStatus {
 		AtlantisServer server = playing_state.getServer();
 		
 		if (null != server) {
+		
+			// TODO -- Game is over when one of the MotherShip objects is killed 
+			
 			List<AtlantisEntity.Updater> updaters = 
 					new ArrayList<AtlantisEntity.Updater>();
-
-			synchronized(soldiers_server_model) {
-				for(Soldier soldier : soldiers_server_model.values()) {
-					Vector position = soldier.getDestination();
-					if(position != null /*&& false == soldier.isHandlingCollision()*/)
-						soldier.moveTo(position);
-					soldier.update(delta);
-					updaters.add(soldier.getUpdater());
-				}
-			}
 			
 			synchronized(motherships_server_model) {
 				for(MotherShip mothership : motherships_server_model.values()) {
@@ -102,19 +96,44 @@ public class GameStatus {
 					updaters.add(mothership.getUpdater());
 				}
 			}
+
+			synchronized(soldiers_server_model) {
+				List<Soldier> remove_soldiers = new LinkedList<Soldier>();
+	
+				for(Soldier soldier : soldiers_server_model.values()) {
+					Vector position = soldier.getDestination();
+					if(position != null /*&& false == soldier.isHandlingCollision()*/)
+						soldier.moveTo(position);
+					soldier.update(delta);
+					updaters.add(soldier.getUpdater());
+					
+					if(soldier.getHealth() <= 0) 
+						remove_soldiers.add(soldier);
+				}
+					
+				for(Soldier remove_soldier : remove_soldiers) 
+					soldiers_server_model.remove(remove_soldier);
+			}
+
 			
 			synchronized(tacticals_server_model) {
+				List<TacticalSub> remove_subs = new LinkedList<TacticalSub>();
+				
 				for(TacticalSub tactical : tacticals_server_model.values()) {
 					Vector position = tactical.getDestination();
 					if(position != null && false == tactical.isHandlingCollision())
 						tactical.moveTo(position);
 					tactical.update(delta);
 					updaters.add(tactical.getUpdater());
+					
+					if(tactical.getHealth() <= 0)
+						remove_subs.add(tactical);
 				}
+				
+				for(TacticalSub remove_sub : remove_subs)
+					tacticalsOnClient.remove(remove_sub);
 			}
 		
-			
-				
 			server.sendUpdates(updaters, playing_state.getCurrentFrame());
 			
 			/* Process the commands sent by the clients */
@@ -174,7 +193,7 @@ public class GameStatus {
 
 				updated_entity.update(updater);
 
-				if(updated_entity.getHealth() >= 0) 
+				if(updated_entity.getHealth() > 0) 
 					soldiersOnClient.put(identity, updated_entity);
 				else
 					soldiersOnClient.remove(identity);
@@ -189,7 +208,7 @@ public class GameStatus {
 
 				updated_entity.update(updater);
 
-				if(updated_entity.getHealth() >= 0)
+				if(updated_entity.getHealth() > 0)
 					motherShipsOnClient.put(identity, updated_entity);
 				else
 					motherShipsOnClient.remove(identity);
@@ -204,7 +223,7 @@ public class GameStatus {
 
 				updated_entity.update(updater);
 
-				if(updated_entity.getHealth() >= 0)
+				if(updated_entity.getHealth() > 0)
 					tacticalsOnClient.put(identity, updated_entity);
 				else
 					tacticalsOnClient.remove(identity);
