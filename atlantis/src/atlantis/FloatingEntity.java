@@ -50,12 +50,13 @@ abstract class FloatingEntity extends AtlantisEntity {
 				if (0 < j)
 					Graph.addLane(map_edges, map_nodes, n, n - MAP_GRID_X,
 							MAP_VERTICAL_MOVE_COST);
-				if ((0 < j) && (0 < i))
-					Graph.addLane(map_edges, map_nodes, n, n - MAP_GRID_X - 1,
-							MAP_DIAGONAL_MOVE_COST);
-				if ((0 < j) && ((MAP_GRID_X - 1) > i))
-					Graph.addLane(map_edges, map_nodes, n, n - MAP_GRID_X + 1,
-							MAP_DIAGONAL_MOVE_COST);
+				
+//				if ((0 < j) && (0 < i))
+//					Graph.addLane(map_edges, map_nodes, n, n - MAP_GRID_X - 1,
+//							MAP_DIAGONAL_MOVE_COST);
+//				if ((0 < j) && ((MAP_GRID_X - 1) > i))
+//					Graph.addLane(map_edges, map_nodes, n, n - MAP_GRID_X + 1,
+//							MAP_DIAGONAL_MOVE_COST);
 			}
 		}
 
