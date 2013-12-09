@@ -102,28 +102,28 @@ public class Overlay {
 				isArrowCursorSet = true;
 				isDefaultCursorSet = false;
 			}
-			PlayingState.viewportOffsetX += 10;			
+			if(PlayingState.viewportOffsetX < 0) PlayingState.viewportOffsetX += 10;			
 		}	else if (isCursorAtTopEdge(x,y)) {// cursor becomes arrow at edge
 			if (!isArrowCursorSet) {
 				container.setMouseCursor(upArrow, 0, 0);
 				isArrowCursorSet = true;
 				isDefaultCursorSet = false;
 			}
-			PlayingState.viewportOffsetY += 10;			
+			if(PlayingState.viewportOffsetY < 0) PlayingState.viewportOffsetY += 10;			
 		} else if (isCursorAtRightEdge(x,y)) {// cursor becomes arrow at edge
 			if (!isArrowCursorSet) {
 				container.setMouseCursor(rightArrow, 0, 0);
 				isArrowCursorSet = true;
 				isDefaultCursorSet = false;
 			}
-			PlayingState.viewportOffsetX -= 10;			
+			if(PlayingState.viewportOffsetX > -PlayingState.MAP_WIDTH + 800) PlayingState.viewportOffsetX -= 10;			
 		} else if (isCursorAtBottomEdge(x,y)) {// cursor becomes arrow at edge
 			if (!isArrowCursorSet) {
 				container.setMouseCursor(downArrow, 0, 0);
 				isArrowCursorSet = true;
 				isDefaultCursorSet = false;
 			}
-			PlayingState.viewportOffsetY -= 10;			
+			if(PlayingState.viewportOffsetY > -PlayingState.MAP_HEIGHT + 470) PlayingState.viewportOffsetY -= 10;			
 		}  else if (y > 470) { // select action
 			if (!isDefaultCursorSet) {
 				container.setMouseCursor(AtlantisGame.cursor, 0, 0);
