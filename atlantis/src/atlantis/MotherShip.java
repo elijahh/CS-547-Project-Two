@@ -197,6 +197,7 @@ public class MotherShip extends FloatingEntity {
 		// TODO Auto-generated method stub
 	}
 	
+	
 	private boolean handling_mother_ship_collision = false;
 	private int mother_ship_collision_countdown;
 	

@@ -89,16 +89,18 @@ public class TacticalSub extends FloatingEntity {
 			}
 			torpedoTimer = 6000;
 
-			double damage = Math.random() * 100 % 100 + 1000 ;
-			target.health -= damage;
-			reward += damage * 5;
-			this.health -= Math.random() * 5 % 5;
-
 			if (target.health <= 0) isAttacking = false;
 			System.out.println("target health: " + target.health);
 			System.out.println("this health: " + health);
 		} else {
 			setDestination(target.getPosition());
+		}
+	}
+	
+	public void fireBack() {
+		if (attackSource != null) {
+			fire(attackSource);
+			attackSource = null;
 		}
 	}
 	
@@ -247,6 +249,9 @@ public class TacticalSub extends FloatingEntity {
 			tacticalTorpedo.update(delta);
 			if(tacticalTorpedo.collides(target)!=null) {
 				hitTarget = true;
+				double damage = Math.random() * 100 % 100 + 1000 ;
+				target.health -= damage;
+				reward += damage * 5;
 				attackPosition = new Vector(tacticalTorpedo.getX(), tacticalTorpedo.getY());
 				tacticalTorpedo = null;
 			}
