@@ -26,8 +26,6 @@ Open Issues
 - **[58]** Target fire back. (Bo)
 - **[59]** When game starts, red team appears on top left corner of the map and blue team appears on bottom right of the map. (Bo)
 - **[60]** Add unit model to left side of overlay and add in-game tutorial. (Elijah)
-- **[61]** When TacticalSub attacks soldier, wait until torpedo animation completes the "kill" before removing the soldier
-           from the game (Greg)
 ...
  
 
@@ -104,6 +102,8 @@ Resolved Issues
 - **[50]** Implement purchasing tactical subs and allow soldiers to attack them.
 - **[51]** Add ship explosion effect.
 - **[5]**  Make Parallel Dijkstra function for split adjacencies. Investigate possible optimizations.
+- **[61]** When TacticalSub attacks soldier, wait until torpedo animation completes the "kill" before removing the soldier
+           from the game (Greg)
 
 
 May Need to Revisit
