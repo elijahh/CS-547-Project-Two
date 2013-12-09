@@ -38,6 +38,9 @@ public class PlayingState extends BasicGameState{
 	public static int viewportOffsetX;
 	public static int viewportOffsetY;
 	
+	public static int MAP_WIDTH;
+	public static int MAP_HEIGHT;
+	
 	/* Team is assumed to be BLUE (remote player). Code which starts server 
 	 * below reassigns team as RED (local player */
 	
@@ -66,6 +69,10 @@ public class PlayingState extends BasicGameState{
 		viewportOffsetY = 0;
 		
 		map = GamePrepareState.getMap();
+		
+		MAP_WIDTH = map.getWidth() * map.getTileWidth();
+		MAP_HEIGHT = map.getHeight() * map.getTileHeight();
+		
 		GroundEntity.populateTerrainMap(map);
 		shimmer = new Animation(
 				ResourceManager.getSpriteSheet(AtlantisGame.SHIMMER,
@@ -81,7 +88,6 @@ public class PlayingState extends BasicGameState{
 			Graphics g) throws SlickException {
 		
 		map.render(viewportOffsetX, viewportOffsetY);
-		
 		//System.out.println("RENDERING SOLDIERS");
 
 		Queue<Soldier> soldiers = 

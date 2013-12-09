@@ -37,10 +37,10 @@ public abstract class AtlantisEntity extends Entity implements
 	protected static final Vector RIGHT_UNIT_VECTOR = new Vector(1, 0);
 	protected static final Vector STOPPED_VECTOR = new Vector(0, 0);
 
-	protected static final int MAP_GRID_X = 40;
+	protected static final int MAP_GRID_X = 64;
 	protected static final int MAP_X_NODE_DIMENSION = 32; /* Pixels */
 
-	protected static final int MAP_GRID_Y = 40;
+	protected static final int MAP_GRID_Y = 64;
 	protected static final int MAP_Y_NODE_DIMENSION = 32; /* Pixels */
 	
 	protected static final int MAP_HORIZONTAL_MOVE_COST = 100; /* mS */
@@ -668,6 +668,8 @@ public abstract class AtlantisEntity extends Entity implements
 			
 			if (explosion == null){
 				explosion = new Explosion(explosionX, explosionY, this);
+			} else {
+				explosion.setPosition(explosionX, explosionY);
 			}
 		} 
 		
