@@ -42,7 +42,7 @@ public class AtlantisGame extends StateBasedGame {
 	public static final String ARROW_RIGHT = "atlantis/resource/Arrow-Right.png";
 	public static final String ARROW_DOWN = "atlantis/resource/Arrow-Down.png";
 	public static final String ARROW_LEFT = "atlantis/resource/Arrow-Left.png";
-	
+	public static final String SHIMMER = "atlantis/resource/shimmer.png";
 	
 	public static final int DISPLAY_SIZE_X = 800;
 	public static final int DISPLAY_SIZE_Y = 600;
@@ -86,6 +86,7 @@ public class AtlantisGame extends StateBasedGame {
 		ResourceManager.loadImage(ARROW_RIGHT);
 		ResourceManager.loadImage(ARROW_LEFT);
 		ResourceManager.loadImage(ARROW_DOWN);
+		ResourceManager.loadImage(SHIMMER);
 		
 		cursor = ResourceManager.getImage(CURSOR);
 		container.setMouseCursor(cursor, 0, 0);

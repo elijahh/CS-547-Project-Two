@@ -42,8 +42,6 @@ public class MotherShip extends FloatingEntity {
 	private static int ANIMATION_FRAME_WIDTH = 50; /* pixels */
 	private static int ANIMATION_FRAME_HEIGHT = 200; /* pixels */
 	
-	private static int MAX_HEALTH_VALUE = 5000;
-	
 	private static List<MotherShip> mother_ships = new LinkedList<MotherShip>();
 	
 	public MotherShip() {
@@ -57,6 +55,7 @@ public class MotherShip extends FloatingEntity {
 	public MotherShip(float x, float y, Vector movement_direction) {
 		super(x, y, movement_direction);
 		
+		MAX_HEALTH_VALUE = 5000;
 		health = MAX_HEALTH_VALUE;
 		
 		mother_ships.add(this);
@@ -102,7 +101,9 @@ public class MotherShip extends FloatingEntity {
 
 	@Override
 	boolean isHandlingCollision() {
-		// TODO Auto-generated method stub
+		if(this.handling_mother_ship_collision)
+			return true;
+		
 		return false;
 	}
 
@@ -194,21 +195,66 @@ public class MotherShip extends FloatingEntity {
 	@Override
 	public void fire(AtlantisEntity target) {
 		// TODO Auto-generated method stub
-		
 	}
 	
-	private void enforceMotherShipMotherShipDistance(final FloatingEntity e) {
+	boolean handling_mother_ship_collision = false;
+	int mother_ship_collision_countdown;
+	
+	private void enforceMotherShipMotherShipDistance(final MotherShip e,
+			final int delta) {
+		
+		/*
+		 * If one MotherShip is in a potential collision with the other,
+		 * movement should briefly reverse and then stop.
+		 */
+
+		if(0 < mother_ship_collision_countdown)
+			mother_ship_collision_countdown -= delta;
+		else if (handling_mother_ship_collision){
+			handling_mother_ship_collision = false;
+			this.destination_position = this.getPosition();
+		}
+		
 		Collision collision = this.collides(e);
-				
-		if (null != collision) {
+		
+		if ((null != collision) && (handling_mother_ship_collision == false)) {
 			Vector their_position = e.getPosition();
 			double angle_to_other_ship = getPosition().angleTo(their_position);
 			Vector direction_to_other_ship = this
 					.getVectorForAngle(angle_to_other_ship);
-						
-			if(this.getMovementDirection().equals(direction_to_other_ship)) {
-				// System.out.println("HERE");
-			}			
+
+			if (this.getMovementDirection().equals(direction_to_other_ship)) {
+				handling_mother_ship_collision = true;
+				mother_ship_collision_countdown = 500;
+				
+				velocity = velocity.negate();
+			}
+		}
+	}
+	
+	private void enforceMotherShipTacticalSubDistance(final TacticalSub e,
+			final int delta) {
+		
+		/* 
+		 * If the MotherShip is involved in a collision with a TacticalSub,
+		 * and the TacticalSub is not moving, the momentum of the MotherShip
+		 * should push the TacticalSub out of the way. Once the TacticalSub
+		 * is moving, its collision handling will cause it to move away from
+		 * the MotherShip.
+		 */
+				
+		Collision collision = this.collides(e);
+		
+		if (null != collision) {
+			System.out.println(e.getMovementDirection());
+			
+			if(e.getMovementDirection().equals(STOPPED_VECTOR)) {
+				Vector their_position = e.getPosition();
+				double angle_to_other_ship = getPosition().angleTo(their_position);
+				Vector direction_to_other_ship = this
+						.getVectorForAngle(angle_to_other_ship);
+				e.nudgeNudge(direction_to_other_ship);
+			}
 		}
 	}
 	
@@ -221,10 +267,9 @@ public class MotherShip extends FloatingEntity {
 			/* MotherShip to MotherShip collision */
 
 			if(e instanceof MotherShip)
-				enforceMotherShipMotherShipDistance(e);
-			else
-				// TODO MotherShip TacticalSub collision
-				;
+				enforceMotherShipMotherShipDistance((MotherShip)e, delta);
+			else 
+				enforceMotherShipTacticalSubDistance((TacticalSub)e, delta);
 		}
 	}
 }

@@ -301,6 +301,16 @@ public class GameStatus {
 					tactical.stopMoving();
 				}
 			}
+			synchronized (tacticals_server_model) {
+				TacticalSub targetSub = tacticals_server_model.get(command.attackTargetId);
+				if (soldier != null && targetSub != null) {
+					soldier.setTarget(targetSub);
+					soldier.stopMoving();
+				} else if (tactical != null && targetSub != null) {
+					tactical.setTarget(targetSub);
+					tactical.stopMoving();
+				}
+			}
 			break;
 		case Command.MOVEMENT:
 			synchronized (soldiers_server_model) {
@@ -330,7 +340,14 @@ public class GameStatus {
 					soldiers_server_model.put(newSoldier.getIdentity(), newSoldier);
 				}
 			}
-			// TODO: if (command.entityId == 1) { // purchase tactical sub
+			synchronized (tacticals_server_model) {
+				if (command.entityId == 1) { // purchase tactical sub
+					TacticalSub newTactical = new TacticalSub(command.target.getX(),
+							command.target.getY());
+					newTactical.setTeam(Team.values()[(int) command.attackTargetId]);
+					tacticals_server_model.put(newTactical.getIdentity(), newTactical);
+				}
+			}
 		}
 	}
 }

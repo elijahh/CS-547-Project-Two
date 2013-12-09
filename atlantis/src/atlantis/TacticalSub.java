@@ -39,8 +39,6 @@ public class TacticalSub extends FloatingEntity {
 	private static int ANIMATION_FRAME_WIDTH = 100; /* pixels */
 	private static int ANIMATION_FRAME_HEIGHT = 100; /* pixels */
 	
-	private static int MAX_HEALTH_VALUE = 5000;
-	
 	private static List<TacticalSub> tactical_subs = new LinkedList<TacticalSub>();
 	
 	public TacticalSub() {
@@ -54,6 +52,7 @@ public class TacticalSub extends FloatingEntity {
 	public TacticalSub(float x, float y, Vector movement_direction) {
 		super(x, y, movement_direction);
 		
+		MAX_HEALTH_VALUE = 500;
 		health = MAX_HEALTH_VALUE;
 		
 		tactical_subs.add(this);
@@ -225,5 +224,7 @@ public class TacticalSub extends FloatingEntity {
 		}
 	}
 	
-	
+	public void nudgeNudge(Vector direction) {
+		System.out.println("NUDGE " + direction);
+	}
 }
