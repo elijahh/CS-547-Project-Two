@@ -243,8 +243,8 @@ public class MotherShip extends FloatingEntity {
 			if(e.getMovementDirection().equals(STOPPED_VECTOR)) {
 				Vector their_position = e.getPosition();
 				double angle_to_other_ship = getPosition().angleTo(their_position);
-				Vector direction_to_other_ship = this
-						.getVectorForAngle(angle_to_other_ship);
+				Vector direction_to_other_ship =
+						getVectorForAngle(angle_to_other_ship);
 				e.nudgeNudge(direction_to_other_ship);
 			}
 		}
