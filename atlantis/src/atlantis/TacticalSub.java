@@ -89,7 +89,7 @@ public class TacticalSub extends FloatingEntity {
 			}
 			torpedoTimer = 6000;
 
-			double damage = Math.random() * 5 % 5;
+			double damage = Math.random() * 100 % 100 + 1000 ;
 			target.health -= damage;
 			reward += damage * 5;
 			this.health -= Math.random() * 5 % 5;

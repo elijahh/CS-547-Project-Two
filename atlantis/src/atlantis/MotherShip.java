@@ -246,6 +246,8 @@ public class MotherShip extends FloatingEntity {
 		}
 	}
 	
+	ShipExplosion shipExplosion;
+	
 	@Override
 	public void update(final int delta) {
 		super.update(delta);		
@@ -259,5 +261,6 @@ public class MotherShip extends FloatingEntity {
 			else 
 				enforceMotherShipTacticalSubDistance((TacticalSub)e, delta);
 		}
+		
 	}
 }

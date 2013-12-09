@@ -532,6 +532,7 @@ public abstract class AtlantisEntity extends Entity implements
 	
 
 	protected Explosion explosion;
+	protected ShipExplosion shipExplosion;
 	/* -------------------------------------------------------------------- */
 
 	public static class Updater implements Serializable {
@@ -666,15 +667,29 @@ public abstract class AtlantisEntity extends Entity implements
 			float explosionX = updater.explosionPosition.getX() + PlayingState.viewportOffsetX;
 			float explosionY = updater.explosionPosition.getY() + PlayingState.viewportOffsetY;
 			
+			
 			if (explosion == null){
 				explosion = new Explosion(explosionX, explosionY, this);
 			} else {
-				explosion.setPosition(explosionX, explosionY);
+				//explosion.setPosition(explosionX, explosionY);
 			}
 		} 
 		
 		if (explosion != null && !explosion.isActive()) {
 			explosion = null;
+		}
+		
+		
+		if (health <= 0 && (this.getClass() == TacticalSub.class || this.getClass() == MotherShip.class) ) {
+			if(shipExplosion == null) {
+				shipExplosion = new ShipExplosion(localPosition.getX(), localPosition.getY());
+			} else {
+				shipExplosion.setPosition(localPosition.getX(), localPosition.getY());
+			}
+		}
+		
+		if (shipExplosion != null && !shipExplosion.isActive()) {
+			shipExplosion = null;
 		}
 		
 		health = updater.health;
@@ -733,7 +748,7 @@ public abstract class AtlantisEntity extends Entity implements
 		if (tacticalTorpedo != null) tacticalTorpedo.render(g);
 
 		if (explosion !=null) explosion.render(g);
-
+		if (shipExplosion != null) shipExplosion.render(g);
 		
 		g.setColor(Color.red);
 		float x = getCoarseGrainedMinX();
