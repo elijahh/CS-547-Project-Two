@@ -144,8 +144,12 @@ public class Soldier extends GroundEntity {
 			torpedo.update(delta);
 			if(torpedo.collides(target)!=null) {		
 				hitTarget = true;
+				double damage = Math.random() * 5 % 5;
+				target.health -= damage;
+				reward += damage * 5;
 				attackPosition = new Vector(torpedo.getX(), torpedo.getY());
-				torpedo = null;
+				torpedo = null;	
+				target.attackSource = this;
 			} 
 		}
 		
@@ -155,8 +159,9 @@ public class Soldier extends GroundEntity {
 			torpedo = null;
 			if (isAttacking) {
 				fire(target);
-			}
+			} 
 		}
+		
 				
 		
 		int managing_collisisons_count = 
@@ -252,12 +257,7 @@ public class Soldier extends GroundEntity {
 				torpedo.setPosition(new Vector(getX(), getY()));
 				torpedo.setRotation(theta);
 			}
-			torpedoTimer = 2000;
-
-			double damage = Math.random() * 5 % 5;
-			target.health -= damage;
-			reward += damage * 5;
-			this.health -= Math.random() * 5 % 5;
+			torpedoTimer = 2000;	
 
 			if (target.health <= 0) isAttacking = false;
 			System.out.println("target health: " + target.health);
@@ -266,5 +266,4 @@ public class Soldier extends GroundEntity {
 			setDestination(target.getPosition());
 		}
 	}
-	
 }
