@@ -218,7 +218,7 @@ public class TacticalSub extends FloatingEntity {
 			
 			if(e instanceof MotherShip)
 				this.enforceTacticalSubMotherShipDistance((MotherShip)e, delta);
-			else 
+			else /* assume TacticalSub */
 				this.enforceTacticalSubTacticalSubDistance((TacticalSub)e, delta);
 		}
 		
