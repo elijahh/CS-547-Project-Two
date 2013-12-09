@@ -4,6 +4,7 @@ import org.newdawn.slick.Animation;
 
 import jig.Entity;
 import jig.ResourceManager;
+import jig.Vector;
 
 public class Explosion extends Entity{
 	

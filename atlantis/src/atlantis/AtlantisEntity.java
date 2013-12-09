@@ -668,6 +668,8 @@ public abstract class AtlantisEntity extends Entity implements
 			
 			if (explosion == null){
 				explosion = new Explosion(explosionX, explosionY, this);
+			} else {
+				explosion.setPosition(explosionX, explosionY);
 			}
 		} 
 		

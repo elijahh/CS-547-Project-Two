@@ -20,9 +20,13 @@ Open Issues
 - **[43]** FloatingEntity collision handling. 
 - **[44]** Explore truncating the path when attacking to prevent collision with the target.
 - **[45]** Add "visible" flag to AtlantisEntity.Updater. When clients receive an updater with this flag, the corresponding
-           entity should be removed from the list of rendered objects.
+           entity should be removed from the list of rendered objects. Add an "eyesight" property for each entity, if an opponent entity
+		   is out of every eyesight of player's entity, its "visible" flag is turned off.
 - **[47]** Floating units should be able to move in 8 directions.
-- **[48]** Each soldier/tactical should have a list of torpedos instead of one.	   
+- **[48]** Each soldier/tactical should have a list of torpedos instead of one.	  
+- **[51]** Add ship explosion effect.
+- **[52]** Add soldier-is-dead image.
+- **[53]** Add a small map on the empty space in overlay. 
 ...
  
 
