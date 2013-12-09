@@ -215,10 +215,7 @@ public class GameStatus {
 
 				updated_entity.update(updater);
 
-				if(updated_entity.getHealth() > 0)
-					motherShipsOnClient.put(identity, updated_entity);
-				else
-					motherShipsOnClient.remove(identity);
+				motherShipsOnClient.put(identity, updated_entity);
 			}
 		} else if (updater.getEntityClass() == TacticalSub.class){
 			synchronized (tacticalsOnClient) {
