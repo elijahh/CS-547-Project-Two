@@ -286,6 +286,56 @@ public class Overlay {
 		}
 		
 		g.drawImage(overlay, 0, 470);
+		// unit model
+		if (selectWorkerUnit) {
+			Soldier s = playingState.getStatus().getIdSoldiersMapOnClient()
+					.get(selectedUnitID);
+			if (s != null) {
+				g.setColor(Color.white);
+				g.drawString("Soldier", 5, 475);
+				g.drawImage(ResourceManager.getImage(s
+						.getStillImageFilename(AtlantisEntity.DOWN_UNIT_VECTOR))
+						.getScaledCopy(.9f), 40, 490);
+				if (x < 120 && y > 470) { // info
+					g.drawString("High Damage", 10, 500);
+					g.drawString("Low Health", 10, 520);
+					g.drawString("Short Range", 10, 540);
+				}
+			}
+		} else if (selectMotherShipUnit) {
+			MotherShip m = playingState.getStatus().getIdMotherShipsMapOnClient()
+					.get(selectedUnitID);
+			if (m != null) {
+				g.setColor(Color.white);
+				g.drawString("Mothership", 5, 475);
+				g.drawImage(ResourceManager.getImage(m
+						.getStillImageFilename(AtlantisEntity.RIGHT_UNIT_VECTOR))
+						.getScaledCopy(.6f), 5, 500);
+				if (x < 120 && y > 470) { // info
+					g.drawString("Central Base", 10, 500);
+					g.drawString("High Health", 10, 520);
+					g.drawString("Low Speed", 10, 540);
+				}
+			}
+		} else if (selectTacticalUnit) {
+			TacticalSub t = playingState.getStatus().getIdTacticalsMapOnClient()
+					.get(selectedUnitID);
+			if (t != null) {
+				g.setColor(Color.white);
+				g.drawString("Tactical Sub", 5, 475);
+				g.drawImage(ResourceManager.getImage(t
+						.getStillImageFilename(AtlantisEntity.RIGHT_UNIT_VECTOR))
+						.getScaledCopy(.8f), 5, 500);
+				if (x < 120 && y > 470) { // info
+					g.drawString("Transport", 10, 500);
+					g.drawString("Long Range", 10, 520);
+					g.drawString("Medium Health", 10, 540);
+					g.drawString("Low Damage", 10, 560);
+				}
+			}
+		}
+		
+		// minimap
 		g.setColor(Color.black);
 		g.fillRect(675, 475, 120, 120);
 		g.setColor(Color.white);

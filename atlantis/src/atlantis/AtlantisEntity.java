@@ -538,6 +538,7 @@ public abstract class AtlantisEntity extends Entity implements
 	protected Vector attackPosition;
 	protected Explosion explosion;
 	protected ShipExplosion shipExplosion;
+	protected AtlantisEntity attackSource;
 	/* -------------------------------------------------------------------- */
 
 	public static class Updater implements Serializable {
