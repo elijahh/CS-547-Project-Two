@@ -197,9 +197,30 @@ public class TacticalSub extends FloatingEntity {
 		}
 	}
 
+	private void enforceTacticalSubMotherShipDistance(final MotherShip e,
+			final int delta) {
+		
+	}
+	
+	private void enforceTacticalSubTacticalSubDistance(final TacticalSub e,
+			final int delta) {
+		
+	}
 	
 	public void update(int delta) {
 		super.update(delta);
+		
+		for(FloatingEntity e : this.getPotentialCollisions()) {
+			
+			/* MotherShip to MotherShip collision */
+
+			System.out.println(e);
+			
+			if(e instanceof MotherShip)
+				this.enforceTacticalSubMotherShipDistance((MotherShip)e, delta);
+			else /* assume TacticalSub */
+				this.enforceTacticalSubTacticalSubDistance((TacticalSub)e, delta);
+		}
 		
 		reward = 0;
 		
