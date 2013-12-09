@@ -86,28 +86,28 @@ public class PlayingState extends BasicGameState{
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
-		
+
 		map.render(viewportOffsetX, viewportOffsetY);
 		//System.out.println("RENDERING SOLDIERS");
 
 		Queue<Soldier> soldiers = 
 				new PriorityQueue<Soldier>(status.getSoldiers());
 		for (Soldier w : soldiers) {
-			w.render(g);
+			if (w.visible) w.render(g);
 		}
 		
 		// Render mothership
 		Queue<MotherShip> motherShips = 
 				new PriorityQueue<MotherShip>(status.getMotherShips());
 		for (MotherShip mothership : motherShips) {
-			mothership.render(g); 
+			if (mothership.visible) mothership.render(g); 
 		}
 		
 		// Render tacticalsub
 		Queue<TacticalSub> tacticals = 
 				new PriorityQueue<TacticalSub>(status.getTacticals());
 		for (TacticalSub tactical : tacticals) {
-			tactical.render(g); 
+			if (tactical.visible) tactical.render(g); 
 		}
 		
 		shimmer.draw();

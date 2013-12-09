@@ -9,15 +9,11 @@ Open Issues
 - **[38]** Add health counter to base AtlantisEntity class. Send to clients as part of Updater serialization. Units
            should be removed from server and clients when health counter goes below zero. Game is over when one of
            the MotherShip units is destroyed -- create static method to track health of each MotherShip created. Indicate winner.(Greg)
-- **[39]** Add flag to base AtlantisEntity class indicating whether unit is visible. Send to clients as part of
-           Updater serialization. Clients should stop tracking and remove from the active entity list any object
-           with the visible flag set to false. (Elijah)
 - **[40]** Add method to AtlantisMap to identify whether a location x,y coordinates are inside a terrain
            "obstacle" tile. (Greg)
 - **[42]** Adjust map rendering offset in such a way that Soldier's "feet" appear near center of tile corresponding to
            current location. (Greg)
 - **[47]** Floating units should be able to move in 8 directions. (Greg)	  
-- **[53]** Add a small map on the empty space in overlay. (Elijah)
 - **[54]** Add an "eyesight" property for each entity, if an opponent entity
 		   is out of every eyesight of player's entity, its "visible" flag is turned off.(Bo)
 - **[55]** Add "mount" action for soldier to mount on tactical sub. (Elijah)
@@ -102,8 +98,12 @@ Resolved Issues
 - **[46]** Fix torpedo collision detection. Maybe add explosion effect.
 - **[49]** Add visual health indicators	
 - **[50]** Implement purchasing tactical subs and allow soldiers to attack them.
+- **[53]** Add a small map on the empty space in overlay. (Elijah)
 - **[51]** Add ship explosion effect.
 - **[5]**  Make Parallel Dijkstra function for split adjacencies. Investigate possible optimizations.
+- **[39]** Add flag to base AtlantisEntity class indicating whether unit is visible. Send to clients as part of
+           Updater serialization. Clients should stop tracking and remove from the active entity list any object
+           with the visible flag set to false. (Elijah)
 
 
 May Need to Revisit

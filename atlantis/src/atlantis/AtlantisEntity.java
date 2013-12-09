@@ -63,6 +63,8 @@ public abstract class AtlantisEntity extends Entity implements
 	
 	protected int health;
 	int MAX_HEALTH_VALUE = 100;
+	
+	protected boolean visible = true;
 
 	@Override
 	public int compareTo(final AtlantisEntity other) {
@@ -560,6 +562,8 @@ public abstract class AtlantisEntity extends Entity implements
 		
 		Vector attackPosition;
 		boolean hitTarget;
+		
+		boolean visible;
 
 		Updater(AtlantisEntity e) {
 
@@ -587,6 +591,7 @@ public abstract class AtlantisEntity extends Entity implements
 				attackPosition = e.attackPosition;
 			}
 
+			visible = e.visible;
 		}
 
 		private static final long serialVersionUID = 234098222823485285L;
@@ -697,6 +702,8 @@ public abstract class AtlantisEntity extends Entity implements
 		
 		health = updater.health;
 		reward = updater.reward;
+		
+		visible = updater.visible;
 	}
 
 	private Animation movement_animation = null;
