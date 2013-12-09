@@ -96,6 +96,9 @@ public class PlayingState extends BasicGameState{
 		for (TacticalSub tactical : tacticals) {
 			tactical.render(g); 
 		}
+		
+		// Render explosion
+		
 
 		overlay.render(container, game, g);
 

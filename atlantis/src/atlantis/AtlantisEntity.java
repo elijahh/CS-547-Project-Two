@@ -523,8 +523,10 @@ public abstract class AtlantisEntity extends Entity implements
 	protected TacticalTorpedo tacticalTorpedo;
 	protected int torpedoTimer = 0;
 	int reward = 0;
-	public abstract void fire(AtlantisEntity target);	
+	public abstract void fire(AtlantisEntity target);
+	
 
+	protected Explosion explosion;
 	/* -------------------------------------------------------------------- */
 
 	public static class Updater implements Serializable {
@@ -546,6 +548,8 @@ public abstract class AtlantisEntity extends Entity implements
 		
 		Vector tacticalTorpedoPosition;
 		double tacticalTorpedoRotation;
+		
+		Vector explosionPosition;
 
 		Updater(AtlantisEntity e) {
 
@@ -567,6 +571,11 @@ public abstract class AtlantisEntity extends Entity implements
 				tacticalTorpedoPosition = e.tacticalTorpedo.getPosition();
 				tacticalTorpedoRotation = e.tacticalTorpedo.getRotation();
 			}
+			
+			if (e.explosion != null) {
+				explosionPosition = e.explosion.getPosition();
+			}
+
 		}
 
 		private static final long serialVersionUID = 234098222823485285L;
@@ -647,6 +656,19 @@ public abstract class AtlantisEntity extends Entity implements
 			tacticalTorpedo = null;
 		}
 		
+		if (updater.explosionPosition != null) {
+			float explosionX = updater.explosionPosition.getX() + PlayingState.viewportOffsetX;
+			float explosionY = updater.explosionPosition.getY() + PlayingState.viewportOffsetY;
+			
+			if (explosion == null){
+				explosion = new Explosion(explosionX, explosionY, this);
+			}
+		} 
+		
+		if (explosion != null && !explosion.isActive()) {
+			explosion = null;
+		}
+		
 		reward = updater.reward;
 	}
 
@@ -700,5 +722,6 @@ public abstract class AtlantisEntity extends Entity implements
 		super.render(g);
 		if (torpedo != null) torpedo.render(g);
 		if (tacticalTorpedo != null) tacticalTorpedo.render(g);
+		if (explosion !=null) explosion.render(g);
 	}
 }
