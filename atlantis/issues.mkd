@@ -4,18 +4,16 @@
 Open Issues
 -----------
 	
-- **[30]** Modify worker addition so that new workers show up in empty spaces in top left (red) and
-           bottom right corners of the virtual world, scattered in such a way to avoid terrain obstacles
-           and other workers.
+- **[30]** Modify soldier addition to spawn next to MotherShip. Depends on 56. (Elijah)
            
 - **[38]** Add health counter to base AtlantisEntity class. Send to clients as part of Updater serialization. Units
            should be removed from server and clients when health counter goes below zero. Game is over when one of
-           the MotherShip units is destroyed -- create static method to track health of each MotherShip created.
+           the MotherShip units is destroyed -- create static method to track health of each MotherShip created. Indicate winner.(Greg)
 - **[39]** Add flag to base AtlantisEntity class indicating whether unit is visible. Send to clients as part of
            Updater serialization. Clients should stop tracking and remove from the active entity list any object
-           with the visible flag set to false.
+           with the visible flag set to false. (Elijah)
 - **[40]** Add method to AtlantisMap to identify whether a location x,y coordinates are inside a terrain
-           "obstacle" tile.
+           "obstacle" tile. (Greg)
 - **[42]** Adjust map rendering offset in such a way that Soldier's "feet" appear near center of tile corresponding to
            current location.
 - **[44]** Explore truncating the path when attacking to prevent collision with the target.
@@ -26,6 +24,19 @@ Open Issues
 - **[48]** Each soldier/tactical should have a list of torpedos instead of one.	  
 - **[51]** Add ship explosion effect.
 - **[52]** Add soldier-is-dead image.
+
+           current location. (Greg)
+- **[47]** Floating units should be able to move in 8 directions. (Greg)	  
+- **[54]** Add an "eyesight" property for each entity, if an opponent entity
+		   is out of every eyesight of player's entity, its "visible" flag is turned off.(Bo)
+- **[55]** Add "mount" action for soldier to mount on tactical sub. (Elijah)
+- **[56]** Add nudge method for soldiers. (Greg)
+- **[57]** Test play. (Bo)
+- **[58]** Target fire back. (Bo)
+- **[59]** When game starts, red team appears on top left corner of the map and blue team appears on bottom right of the map. (Bo)
+- **[60]** Add unit model to left side of overlay and add in-game tutorial. (Elijah)
+- **[61]** When TacticalSub attacks soldier, wait until torpedo animation completes the "kill" before removing the soldier
+           from the game (Greg)
 ...
  
 
@@ -96,14 +107,17 @@ Resolved Issues
 - **[36]** Fix map to correctly parse location of terrain obstacles. Ground units should avoid the obstacles.
 - **[37]** Implement "Store" interface, where players use gold to buy new units.
 - **[41]** Create TacticalSub class and associated Torpedo class for the entity's "attack" method.
+- **[44]** Explore truncating the path when attacking to prevent collision with the target.
 - **[46]** Fix torpedo collision detection. Maybe add explosion effect.
 - **[49]** Add visual health indicators	
 - **[50]** Implement purchasing tactical subs and allow soldiers to attack them.
-- **[53]** Add a small map on the empty space in overlay. 
+- **[53]** Add a small map on the empty space in overlay. (Elijah)
+- **[51]** Add ship explosion effect.
+- **[5]**  Make Parallel Dijkstra function for split adjacencies. Investigate possible optimizations.
 
 
 May Need to Revisit
 -------------------
-- **[5]**  Make Parallel Dijkstra function for split adjacencies. Investigate possible optimizations.
+
 - **[25]** Address collision handling between two workers. Inelegant as currently written.
 - **[43]** FloatingEntity collision handling. 
