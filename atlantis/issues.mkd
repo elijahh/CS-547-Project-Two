@@ -24,7 +24,6 @@ Open Issues
 		   is out of every eyesight of player's entity, its "visible" flag is turned off.
 - **[47]** Floating units should be able to move in 8 directions.
 - **[48]** Each soldier/tactical should have a list of torpedos instead of one.	  
-- **[51]** Add ship explosion effect.
 - **[52]** Add soldier-is-dead image.
 - **[53]** Add a small map on the empty space in overlay. 
 ...
@@ -100,6 +99,7 @@ Resolved Issues
 - **[46]** Fix torpedo collision detection. Maybe add explosion effect.
 - **[49]** Add visual health indicators	
 - **[50]** Implement purchasing tactical subs and allow soldiers to attack them.
+- **[51]** Add ship explosion effect.
 
 
 May Need to Revisit
