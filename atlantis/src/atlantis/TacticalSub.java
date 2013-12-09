@@ -12,6 +12,7 @@ import java.util.Set;
 import org.newdawn.slick.Animation;
 
 import atlantis.AtlantisEntity.Team;
+import jig.Collision;
 import jig.ResourceManager;
 import jig.Shape;
 import jig.Vector;
@@ -108,7 +109,9 @@ public class TacticalSub extends FloatingEntity {
 
 	@Override
 	boolean isHandlingCollision() {
-		// TODO Auto-generated method stub
+		if(this.handling_mother_ship_collision)
+			return true;
+		
 		return false;
 	}
 
@@ -197,9 +200,29 @@ public class TacticalSub extends FloatingEntity {
 		}
 	}
 
+	private boolean handling_mother_ship_collision = false;
+	int mother_ship_collision_countdown;
+	
 	private void enforceTacticalSubMotherShipDistance(final MotherShip e,
 			final int delta) {
 		
+		if(0 < mother_ship_collision_countdown) {
+			mother_ship_collision_countdown -= delta;
+		} else if (handling_mother_ship_collision){
+			handling_mother_ship_collision = false;
+			this.destination_position = this.getPosition();
+		}
+		
+		Collision collision = this.collides(e);
+				
+		if ((null != collision) && (handling_mother_ship_collision == false)) {
+			Vector their_position = e.getPosition();
+			double angle_to_other_ship = getPosition().angleTo(their_position);
+			
+			handling_mother_ship_collision = true;
+			mother_ship_collision_countdown = 150;
+			velocity = velocity.negate();
+		}
 	}
 	
 	private void enforceTacticalSubTacticalSubDistance(final TacticalSub e,
@@ -213,8 +236,6 @@ public class TacticalSub extends FloatingEntity {
 		for(FloatingEntity e : this.getPotentialCollisions()) {
 			
 			/* MotherShip to MotherShip collision */
-
-			System.out.println(e);
 			
 			if(e instanceof MotherShip)
 				this.enforceTacticalSubMotherShipDistance((MotherShip)e, delta);

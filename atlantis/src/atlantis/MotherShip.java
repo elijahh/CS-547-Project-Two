@@ -197,8 +197,8 @@ public class MotherShip extends FloatingEntity {
 		// TODO Auto-generated method stub
 	}
 	
-	boolean handling_mother_ship_collision = false;
-	int mother_ship_collision_countdown;
+	private boolean handling_mother_ship_collision = false;
+	private int mother_ship_collision_countdown;
 	
 	private void enforceMotherShipMotherShipDistance(final MotherShip e,
 			final int delta) {
@@ -220,15 +220,10 @@ public class MotherShip extends FloatingEntity {
 		if ((null != collision) && (handling_mother_ship_collision == false)) {
 			Vector their_position = e.getPosition();
 			double angle_to_other_ship = getPosition().angleTo(their_position);
-			Vector direction_to_other_ship = this
-					.getVectorForAngle(angle_to_other_ship);
 
-			if (this.getMovementDirection().equals(direction_to_other_ship)) {
-				handling_mother_ship_collision = true;
-				mother_ship_collision_countdown = 500;
-				
-				velocity = velocity.negate();
-			}
+			handling_mother_ship_collision = true;
+			mother_ship_collision_countdown = 500;
+			velocity = velocity.negate();
 		}
 	}
 	
