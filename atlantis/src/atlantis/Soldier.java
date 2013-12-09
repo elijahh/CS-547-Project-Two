@@ -139,10 +139,16 @@ public class Soldier extends GroundEntity {
 		super.update(delta);
 		
 		reward = 0;
+		if(explosion != null) {
+			explosion = null;
+		}
 			
 		if (torpedo != null) {
 			torpedo.update(delta);
-			if(torpedo.collides(target)!=null) System.out.println("hits target"); // The if condition never turns true
+			if(torpedo.collides(target)!=null) {		
+				explosion = new Explosion(torpedo.getX(), torpedo.getY(), this);
+				torpedo = null;
+			}
 		}
 		
 		if (torpedoTimer > 0) {
@@ -239,9 +245,7 @@ public class Soldier extends GroundEntity {
 	public void fire(AtlantisEntity target) {
 		double theta = this.getPosition().angleTo(target.getPosition());
 		
-		//moveTo(target.getPosition());
-		
-		if (getPosition().distance(target.getPosition()) < 200) {
+		if (getPosition().distance(target.getPosition()) < 100) {
 			stopMoving();
 			
 			if (torpedo == null) {

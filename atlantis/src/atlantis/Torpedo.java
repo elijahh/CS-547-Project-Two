@@ -22,19 +22,6 @@ import org.newdawn.slick.Animation;
 
 public class Torpedo extends Entity {
 	
-	private static final String FACE_U_GRAPHIC_FILE = "atlantis/resource/Torpedo-Up.png";
-	private static final String FACE_D_GRAPHIC_FILE = "atlantis/resource/Torpedo-down.png";
-	private static final String FACE_L_GRAPHIC_FILE = "atlantis/resource/Torpedo-left.png";
-	private static final String FACE_R_GRAPHIC_FILE = "atlantis/resource/Torpedo-right.png";
-	
-	private static final String MOVE_L_ANIMATION_FILE = "atlantis/resource/Torpedo-Left.png";
-	private static final String MOVE_R_ANIMATION_FILE = "atlantis/resource/Torpedo-Right.png";
-	private static final String MOVE_U_ANIMATION_FILE = "atlantis/resource/Torpedo-Up.png";
-	private static final String MOVE_D_ANIMATION_FILE = "atlantis/resource/Torpedo-Down.png";
-	
-//	private static final String RED_ICON = "atlantis/resource/red-worker.png";
-//	private static final String BLUE_ICON = "atlantis/resource/blue-worker.png";
-	
 	private static final float MAX_VELOCITY = 0.12f;       /* pixels/mS */
 	
 	private static final int ANIMATION_FRAMES = 1;

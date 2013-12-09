@@ -204,7 +204,17 @@ public class TacticalSub extends FloatingEntity {
 		
 		reward = 0;
 		
-		if (tacticalTorpedo != null) tacticalTorpedo.update(delta);
+		if(explosion != null) {
+			explosion = null;
+		}
+		
+		if (tacticalTorpedo != null) {
+			tacticalTorpedo.update(delta);
+			if(tacticalTorpedo.collides(target)!=null) {
+				explosion = new Explosion(tacticalTorpedo.getX(), tacticalTorpedo.getY(), this);
+				tacticalTorpedo = null;
+			}
+		}
 		if (torpedoTimer > 0) {
 			torpedoTimer -= delta;
 		} else {
