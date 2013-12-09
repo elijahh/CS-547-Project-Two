@@ -26,7 +26,6 @@ Open Issues
 - **[48]** Each soldier/tactical should have a list of torpedos instead of one.	  
 - **[51]** Add ship explosion effect.
 - **[52]** Add soldier-is-dead image.
-- **[53]** Add a small map on the empty space in overlay. 
 ...
  
 
@@ -100,6 +99,7 @@ Resolved Issues
 - **[46]** Fix torpedo collision detection. Maybe add explosion effect.
 - **[49]** Add visual health indicators	
 - **[50]** Implement purchasing tactical subs and allow soldiers to attack them.
+- **[53]** Add a small map on the empty space in overlay. 
 
 
 May Need to Revisit

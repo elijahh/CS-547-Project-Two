@@ -286,6 +286,15 @@ public class Overlay {
 		}
 		
 		g.drawImage(overlay, 0, 470);
+		g.setColor(Color.black);
+		g.fillRect(675, 475, 120, 120);
+		g.setColor(Color.white);
+		// Total minimap size scale:  120/2048 ~= 0.0586
+		// Region width:              800/2048 * 120 ~= 46.875
+		// Region height:             470/2048 * 120 ~= 27.539
+		float miniMapX = 675 - PlayingState.viewportOffsetX * 0.0586f;
+		float miniMapY = 475 - PlayingState.viewportOffsetY * 0.0586f;
+		g.drawRect(miniMapX, miniMapY, 46.875f, 27.539f);
 		
 		if (!purchaseMenuOpen) {
 			g.drawImage(actionPurchase, 230, 520);
