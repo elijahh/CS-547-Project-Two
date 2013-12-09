@@ -95,6 +95,8 @@ public abstract class AtlantisEntity extends Entity implements
 	public long getIdentity() {
 		return identity;
 	}
+	
+	public int getHealth() { return health; }
 
 	public enum Team {
 		RED, BLUE

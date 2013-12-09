@@ -162,9 +162,11 @@ public class GameStatus {
 	private Map<Long, TacticalSub> tacticalsOnClient = new HashMap<Long, TacticalSub>();
 	
 	private void processUpdater(AtlantisEntity.Updater updater) {
+		long identity = updater.getIdentity();
+		
 		if(updater.getEntityClass() == Soldier.class) {			
 			synchronized (soldiersOnClient) {
-				Soldier updated_entity = soldiersOnClient.get(updater.getIdentity());
+				Soldier updated_entity = soldiersOnClient.get(identity);
 
 				if (null == updated_entity) {
 					updated_entity = new Soldier();
@@ -172,12 +174,14 @@ public class GameStatus {
 
 				updated_entity.update(updater);
 
-				soldiersOnClient.put(new Long(updater.getIdentity()),
-						(Soldier) updated_entity);
+				if(updated_entity.getHealth() >= 0) 
+					soldiersOnClient.put(identity, updated_entity);
+				else
+					soldiersOnClient.remove(identity);
 			}
 		} else if (updater.getEntityClass() == MotherShip.class){		
 			synchronized (motherShipsOnClient) {
-				MotherShip updated_entity = motherShipsOnClient.get(updater.getIdentity());
+				MotherShip updated_entity = motherShipsOnClient.get(identity);
 
 				if (null == updated_entity) {
 					updated_entity = new MotherShip();
@@ -185,12 +189,14 @@ public class GameStatus {
 
 				updated_entity.update(updater);
 
-				motherShipsOnClient.put(new Long(updater.getIdentity()),
-						(MotherShip) updated_entity);
+				if(updated_entity.getHealth() >= 0)
+					motherShipsOnClient.put(identity, updated_entity);
+				else
+					motherShipsOnClient.remove(identity);
 			}
 		} else if (updater.getEntityClass() == TacticalSub.class){
 			synchronized (tacticalsOnClient) {
-				TacticalSub updated_entity = tacticalsOnClient.get(updater.getIdentity());
+				TacticalSub updated_entity = tacticalsOnClient.get(identity);
 
 				if (null == updated_entity) {
 					updated_entity = new TacticalSub();
@@ -198,8 +204,10 @@ public class GameStatus {
 
 				updated_entity.update(updater);
 
-				tacticalsOnClient.put(new Long(updater.getIdentity()),
-						(TacticalSub) updated_entity);
+				if(updated_entity.getHealth() >= 0)
+					tacticalsOnClient.put(identity, updated_entity);
+				else
+					tacticalsOnClient.remove(identity);
 			}
 		} else {
 			// TODO: update of other entity types
