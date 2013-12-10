@@ -546,6 +546,8 @@ public abstract class AtlantisEntity extends Entity implements
 	protected ShipExplosion shipExplosion;
 	protected AtlantisEntity attackSource;
 	
+	public boolean didExplodeOnClient = false; // This is only for client side to determine whether explode animation has happened
+
 	/* -------------------------------------------------------------------- */
 
 	public static class Updater implements Serializable {
@@ -716,6 +718,7 @@ public abstract class AtlantisEntity extends Entity implements
 		
 		if (shipExplosion != null && !shipExplosion.isActive()) {
 			shipExplosion = null;
+			didExplodeOnClient = true;
 		}
 		
 		health = updater.health;

@@ -100,6 +100,9 @@ public class GameStatus {
 		AtlantisServer server = playing_state.getServer();
 		
 		if (null != server) {
+			
+			/* ---------------------------------------------------------- */
+			/* Is entity visible to opponent */
 			atlantisEntities_team_red = new ArrayList<AtlantisEntity>();
 			atlantisEntities_team_blue = new ArrayList<AtlantisEntity>();
 			
@@ -143,7 +146,7 @@ public class GameStatus {
 			
 			for (AtlantisEntity entity1: atlantisEntities_team_red) {
 				for (AtlantisEntity entity2: atlantisEntities_team_blue) {
-					if (Math.pow(entity1.getX()-entity2.getX(),2) + Math.pow(entity1.getY()-entity2.getY(),2) <= Math.pow(entity1.eyesight,2)){
+					if (entity1.getPosition().distance(entity2.getPosition()) <= entity2.eyesight){
 						entity1.visibleToOpponent = true;
 						break;
 					}
@@ -151,12 +154,16 @@ public class GameStatus {
 			}
 			for (AtlantisEntity entity1: atlantisEntities_team_blue) {
 				for (AtlantisEntity entity2: atlantisEntities_team_red) {
-					if (Math.pow(entity1.getX()-entity2.getX(),2) + Math.pow(entity1.getY()-entity2.getY(),2) <= Math.pow(entity1.eyesight,2)){
+					if (entity1.getPosition().distance(entity2.getPosition()) <= entity2.eyesight){
 						entity1.visibleToOpponent = true;
 						break;
 					}
 				}
 			}
+
+			/* ---------------------------------------- */
+
+
 			
 			if(0 >= mothership_on_server_1.getHealth()) {
 				game_over = true;
@@ -257,8 +264,7 @@ public class GameStatus {
 						if (null != updater)
 							processUpdaters(updater);
 					}
-				}
-				
+				}			
 				if(game_over == false) break;
 			}
 		}
@@ -312,6 +318,8 @@ public class GameStatus {
 				
 				if (updated_entity.visibleToOpponent || updated_entity.getTeam() == playing_state.team){
 					motherShipsOnClient.put(identity, updated_entity);
+				} else {
+					motherShipsOnClient.remove(identity);
 				}
 			}
 		} else if (updater.getEntityClass() == TacticalSub.class){
@@ -327,8 +335,9 @@ public class GameStatus {
 				if (updated_entity.visibleToOpponent || updated_entity.getTeam() == playing_state.team){
 					if(updated_entity.getHealth() > 0)
 						tacticalsOnClient.put(identity, updated_entity);
-					else
+					else if(updated_entity.didExplodeOnClient == true) {
 						tacticalsOnClient.remove(identity);
+					} 
 				} else {
 					tacticalsOnClient.remove(identity);
 				}
@@ -418,7 +427,7 @@ public class GameStatus {
 				if (soldier != null && targetSoldier != null) {
 					soldier.setTarget(targetSoldier);
 					soldier.stopMoving();
-				} else if (tactical != null && targetSoldier != null) {
+				} else if (tactical != null && targetSoldier != null && tactical.health > 0) {
 					tactical.setTarget(targetSoldier);
 					tactical.stopMoving();
 				}
@@ -428,7 +437,7 @@ public class GameStatus {
 				if (soldier != null && targetShip != null) {
 					soldier.setTarget(targetShip);
 					soldier.stopMoving();
-				} else if (tactical != null && targetShip != null) {
+				} else if (tactical != null && targetShip != null && tactical.health > 0) {
 					tactical.setTarget(targetShip);
 					tactical.stopMoving();
 				}
@@ -438,7 +447,7 @@ public class GameStatus {
 				if (soldier != null && targetSub != null) {
 					soldier.setTarget(targetSub);
 					soldier.stopMoving();
-				} else if (tactical != null && targetSub != null) {
+				} else if (tactical != null && targetSub != null && tactical.health > 0) {
 					tactical.setTarget(targetSub);
 					tactical.stopMoving();
 				}
@@ -480,7 +489,7 @@ public class GameStatus {
 				}
 			}
 			synchronized (tacticals_server_model) {
-				if(tactical != null) {
+				if(tactical != null && tactical.health > 0) {
 					tactical.setDestination(command.target);
 					tactical.isAttacking = false;
 				}

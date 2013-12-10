@@ -11,6 +11,10 @@ import java.util.Set;
 
 import org.newdawn.slick.Animation;
 
+import dijkstra.engine.DijkstraAlgorithm;
+import dijkstra.model.Edge;
+import dijkstra.model.Graph;
+import dijkstra.model.Vertex;
 import atlantis.AtlantisEntity.Team;
 import jig.Collision;
 import jig.ResourceManager;
@@ -20,14 +24,22 @@ import jig.Vector;
 public class TacticalSub extends FloatingEntity {
 	
 	private static final String FACE_U_GRAPHIC_FILE = "atlantis/resource/tactical-up.png";
+	private static final String FACE_UL_GRAPHIC_FILE = "atlantis/resource/tactical-upleft.png";
+	private static final String FACE_UR_GRAPHIC_FILE = "atlantis/resource/tactical-upright.png";
 	private static final String FACE_D_GRAPHIC_FILE = "atlantis/resource/tactical-down.png";
+	private static final String FACE_DL_GRAPHIC_FILE = "atlantis/resource/tactical-downleft.png";
+	private static final String FACE_DR_GRAPHIC_FILE = "atlantis/resource/tactical-downright.png";
 	private static final String FACE_L_GRAPHIC_FILE = "atlantis/resource/tactical-left.png";
 	private static final String FACE_R_GRAPHIC_FILE = "atlantis/resource/tactical-right.png";
 	
 	private static final String MOVE_L_ANIMATION_FILE = "atlantis/resource/tactical-left.png";
 	private static final String MOVE_R_ANIMATION_FILE = "atlantis/resource/tactical-right.png";
 	private static final String MOVE_U_ANIMATION_FILE = "atlantis/resource/tactical-up.png";
+	private static final String MOVE_UL_ANIMATION_FILE = "atlantis/resource/tactical-upleft.png";
+	private static final String MOVE_UR_ANIMATION_FILE = "atlantis/resource/tactical-upright.png";
 	private static final String MOVE_D_ANIMATION_FILE = "atlantis/resource/tactical-down.png";
+	private static final String MOVE_DL_ANIMATION_FILE = "atlantis/resource/tactical-downleft.png";
+	private static final String MOVE_DR_ANIMATION_FILE = "atlantis/resource/tactical-downright.png";
 	
 	private static final String RED_ICON = "atlantis/resource/red-worker.png";
 	private static final String BLUE_ICON = "atlantis/resource/blue-worker.png";
@@ -55,21 +67,62 @@ public class TacticalSub extends FloatingEntity {
 	public TacticalSub(float x, float y, Vector movement_direction) {
 		super(x, y, movement_direction);
 		
-		MAX_HEALTH_VALUE = 500;
+		MAX_HEALTH_VALUE = 600;
 		health = MAX_HEALTH_VALUE;
 		eyesight = 500;
 		
 		tactical_subs.add(this);
+		
+		dijkstra = new DijkstraAlgorithm(graph_with_diagonals);
+	}
+	
+	static private Graph graph_with_diagonals;
+	
+	static {
+		List<Edge> map_edges = new ArrayList<Edge>();
+		List<Vertex> map_nodes = new ArrayList<Vertex>();
+		
+		for (int j = 0; j < MAP_GRID_Y; j++) {
+			for (int i = 0; i < MAP_GRID_X; i++) {
+				int n = j * MAP_GRID_X + i;
+
+				Vertex location = new Vertex("Node_" + n);
+				map_nodes.add(location);
+
+				if (0 < i)
+					Graph.addLane(map_edges, map_nodes, n, n - 1,
+							MAP_HORIZONTAL_MOVE_COST);
+				if (0 < j)
+					Graph.addLane(map_edges, map_nodes, n, n - MAP_GRID_X,
+							MAP_VERTICAL_MOVE_COST);
+				if ((0 < j) && (0 < i))
+					Graph.addLane(map_edges, map_nodes, n, n - MAP_GRID_X - 1,
+							MAP_DIAGONAL_MOVE_COST);
+				if ((0 < j) && ((MAP_GRID_X - 1) > i))
+					Graph.addLane(map_edges, map_nodes, n, n - MAP_GRID_X + 1,
+							MAP_DIAGONAL_MOVE_COST);
+			}
+		}
+
+		graph_with_diagonals = new Graph(map_nodes, map_edges);
 	}
 	
 	static {
 		ResourceManager.loadImage(FACE_D_GRAPHIC_FILE);
+		ResourceManager.loadImage(FACE_DL_GRAPHIC_FILE);
+		ResourceManager.loadImage(FACE_DR_GRAPHIC_FILE);
 		ResourceManager.loadImage(FACE_U_GRAPHIC_FILE);
+		ResourceManager.loadImage(FACE_UL_GRAPHIC_FILE);
+		ResourceManager.loadImage(FACE_UR_GRAPHIC_FILE);
 		ResourceManager.loadImage(FACE_L_GRAPHIC_FILE);
 		ResourceManager.loadImage(FACE_R_GRAPHIC_FILE);	
 		
 		ResourceManager.loadImage(MOVE_D_ANIMATION_FILE);
+		ResourceManager.loadImage(MOVE_DL_ANIMATION_FILE);
+		ResourceManager.loadImage(MOVE_DR_ANIMATION_FILE);
 		ResourceManager.loadImage(MOVE_U_ANIMATION_FILE);
+		ResourceManager.loadImage(MOVE_UL_ANIMATION_FILE);
+		ResourceManager.loadImage(MOVE_UR_ANIMATION_FILE);
 		ResourceManager.loadImage(MOVE_L_ANIMATION_FILE);
 		ResourceManager.loadImage(MOVE_R_ANIMATION_FILE);
 		
@@ -87,25 +140,19 @@ public class TacticalSub extends FloatingEntity {
 			stopMoving();
 			
 			if (tacticalTorpedo == null) {
+				System.out.println("new torpedo");
 				tacticalTorpedo = new TacticalTorpedo(getX(), getY(), theta, team);
 			} else {
 				tacticalTorpedo.setPosition(new Vector(getX(), getY()));
 				tacticalTorpedo.setRotation(theta);
 			}
-			torpedoTimer = 6000;
+			torpedoTimer = 5000;
 
 			if (target.health <= 0) isAttacking = false;
 			System.out.println("target health: " + target.health);
 			System.out.println("this health: " + health);
-		} else {
+		} else if(target.visibleToOpponent){		
 			setDestination(target.getPosition());
-		}
-	}
-	
-	public void fireBack() {
-		if (attackSource != null) {
-			fire(attackSource);
-			attackSource = null;
 		}
 	}
 	
@@ -133,10 +180,28 @@ public class TacticalSub extends FloatingEntity {
 
 		return movement_animation;
 	}
+		
+	private Vector parseDirection(final Vector dir) {
+		Vector direction = new Vector(0, 0);
+		
+		if(dir.getX() > 0)
+			direction = direction.add(RIGHT_UNIT_VECTOR);
+		else if(dir.getX() < 0)
+			direction = direction.add(LEFT_UNIT_VECTOR);
+		
+		if(dir.getY() > 0)
+			direction = direction.add(DOWN_UNIT_VECTOR);
+		else if(dir.getY() < 0)
+			direction = direction.add(UP_UNIT_VECTOR);
+		
+		return direction;
+	}
 	
-	private final String getMovementAnimationFilename(final Vector direction) {
+	private final String getMovementAnimationFilename(final Vector unit_direction) {
 		String animation_filename;
-
+		
+		Vector direction = parseDirection(unit_direction);
+				
 		if (direction.equals(LEFT_UNIT_VECTOR)) {
 			animation_filename = MOVE_L_ANIMATION_FILE;		
 			ANIMATION_FRAME_WIDTH = 130;
@@ -157,6 +222,24 @@ public class TacticalSub extends FloatingEntity {
 			for (Shape shape: shapes)
 				removeShape(shape);
 			this.addImageWithBoundingBox(ResourceManager.getImage(FACE_U_GRAPHIC_FILE));
+		} else if (direction.equals(UP_LEFT_UNIT_VECTOR)) {
+			animation_filename = MOVE_UL_ANIMATION_FILE;
+			ANIMATION_FRAME_WIDTH = 100;
+			ANIMATION_FRAME_HEIGHT = 81;
+			removeImage(ResourceManager.getImage(getStillImageFilename(face_direction)));
+			List<Shape> shapes = getShapes();
+			for (Shape shape: shapes)
+				removeShape(shape);
+			this.addImageWithBoundingBox(ResourceManager.getImage(FACE_UL_GRAPHIC_FILE));
+		} else if (direction.equals(UP_RIGHT_UNIT_VECTOR)) {
+			animation_filename = MOVE_UR_ANIMATION_FILE;
+			ANIMATION_FRAME_WIDTH = 100;
+			ANIMATION_FRAME_HEIGHT = 81;
+			removeImage(ResourceManager.getImage(getStillImageFilename(face_direction)));
+			List<Shape> shapes = getShapes();
+			for (Shape shape: shapes)
+				removeShape(shape);
+			this.addImageWithBoundingBox(ResourceManager.getImage(FACE_UR_GRAPHIC_FILE));
 		} else if (direction.equals(RIGHT_UNIT_VECTOR)) {
 			animation_filename = MOVE_R_ANIMATION_FILE;
 			ANIMATION_FRAME_WIDTH = 130;
@@ -166,6 +249,24 @@ public class TacticalSub extends FloatingEntity {
 			for (Shape shape: shapes)
 				removeShape(shape);
 			this.addImageWithBoundingBox(ResourceManager.getImage(FACE_R_GRAPHIC_FILE));
+		} else if (direction.equals(DOWN_LEFT_UNIT_VECTOR)) {
+			animation_filename = MOVE_DL_ANIMATION_FILE;
+			ANIMATION_FRAME_WIDTH = 105;
+			ANIMATION_FRAME_HEIGHT = 80;
+			removeImage(ResourceManager.getImage(getStillImageFilename(face_direction)));
+			List<Shape> shapes = getShapes();
+			for (Shape shape: shapes)
+				removeShape(shape);
+			this.addImageWithBoundingBox(ResourceManager.getImage(FACE_DL_GRAPHIC_FILE));
+		} else if (direction.equals(DOWN_RIGHT_UNIT_VECTOR)) {
+			animation_filename = MOVE_DR_ANIMATION_FILE;
+			ANIMATION_FRAME_WIDTH = 105;
+			ANIMATION_FRAME_HEIGHT = 80;
+			removeImage(ResourceManager.getImage(getStillImageFilename(face_direction)));
+			List<Shape> shapes = getShapes();
+			for (Shape shape: shapes)
+				removeShape(shape);
+			this.addImageWithBoundingBox(ResourceManager.getImage(FACE_DR_GRAPHIC_FILE));
 		} else {
 			animation_filename = MOVE_D_ANIMATION_FILE;
 			ANIMATION_FRAME_WIDTH = 100;
@@ -181,15 +282,25 @@ public class TacticalSub extends FloatingEntity {
 	}
 
 	@Override
-	String getStillImageFilename(Vector face_direction) {
+	String getStillImageFilename(Vector direction) {
 		String graphic_filename;
+		
+		Vector face_direction = parseDirection(direction);
 		
 		if (face_direction.equals(LEFT_UNIT_VECTOR)) {
 			graphic_filename = FACE_L_GRAPHIC_FILE;
 		} else if (face_direction.equals(UP_UNIT_VECTOR)) {
 			graphic_filename = FACE_U_GRAPHIC_FILE;
+		} else if (face_direction.equals(UP_LEFT_UNIT_VECTOR)) {
+			graphic_filename = FACE_UL_GRAPHIC_FILE;
+		} else if (face_direction.equals(UP_RIGHT_UNIT_VECTOR)) {
+			graphic_filename = FACE_UR_GRAPHIC_FILE;
 		} else if (face_direction.equals(RIGHT_UNIT_VECTOR)) {
 			graphic_filename = FACE_R_GRAPHIC_FILE;
+		} else if (face_direction.equals(DOWN_LEFT_UNIT_VECTOR)) {
+			graphic_filename = FACE_DL_GRAPHIC_FILE;
+		} else if (face_direction.equals(DOWN_RIGHT_UNIT_VECTOR)) {
+			graphic_filename = FACE_DR_GRAPHIC_FILE;
 		} else {
 			graphic_filename = FACE_D_GRAPHIC_FILE;
 		}
@@ -255,9 +366,9 @@ public class TacticalSub extends FloatingEntity {
 			if(tacticalTorpedo.collides(target)!=null) {
 				hitTarget = true;
 				ResourceManager.getSound(HIT_SOUND).play();
-				double damage = Math.random() * 100 % 100 + 1000 ;
+				double damage = Math.random() * 50 % 50 + 100 ;
 				target.health -= damage;
-				reward += damage * 5;
+				reward += damage;
 				attackPosition = new Vector(tacticalTorpedo.getX(), tacticalTorpedo.getY());
 				tacticalTorpedo = null;
 			}
@@ -266,7 +377,7 @@ public class TacticalSub extends FloatingEntity {
 			torpedoTimer -= delta;
 		} else {
 			tacticalTorpedo = null;
-			if (isAttacking) {
+			if (isAttacking && target.health > 0) {
 					fire(target);
 			}
 		}

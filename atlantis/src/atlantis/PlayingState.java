@@ -162,6 +162,12 @@ public class PlayingState extends BasicGameState{
 		for (Soldier w : soldiers) {
 			if (w.getTeam() == this.team) gold += w.reward;
 		}
+		
+		Queue<TacticalSub> tacticals = 
+				new PriorityQueue<TacticalSub>(status.getTacticals());
+		for (TacticalSub w : tacticals) {
+			if (w.getTeam() == this.team) gold += w.reward;
+		}
 	}
 
 	@Override

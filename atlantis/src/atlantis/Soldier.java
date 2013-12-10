@@ -54,6 +54,7 @@ public class Soldier extends GroundEntity {
 
 	public Soldier(float x, float y, Vector move_direction) {
 		super(x, y, move_direction);
+		MAX_HEALTH_VALUE = 1200;
 		health = MAX_HEALTH_VALUE;
 		eyesight = 400;
 	}
@@ -154,9 +155,9 @@ public class Soldier extends GroundEntity {
 			if(torpedo.collides(target)!=null) {		
 				hitTarget = true;
 				ResourceManager.getSound(HIT_SOUND).play();
-				double damage = Math.random() * 5 % 5;
+				double damage = Math.random() * 20 % 20 + 150;
 				target.health -= damage;
-				reward += damage * 5;
+				reward += damage;
 				attackPosition = new Vector(torpedo.getX(), torpedo.getY());
 				torpedo = null;	
 				target.attackSource = this;
@@ -167,7 +168,7 @@ public class Soldier extends GroundEntity {
 			torpedoTimer -= delta;
 		} else {
 			torpedo = null;
-			if (isAttacking) {
+			if (isAttacking && target.health > 0) {
 				fire(target);
 			} 
 		}
@@ -272,7 +273,7 @@ public class Soldier extends GroundEntity {
 			if (target.health <= 0) isAttacking = false;
 			System.out.println("target health: " + target.health);
 			System.out.println("this health: " + health);
-		} else {
+		} else if(target.visibleToOpponent){
 			setDestination(target.getPosition());
 		}
 	}
