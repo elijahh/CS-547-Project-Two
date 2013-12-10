@@ -122,7 +122,7 @@ public class AtlantisServer extends Thread{
 		}
 	}
 	
-	public void sendUpdates(List<AtlantisEntity.Updater> updaters, int frameNum) {
+	public void sendUpdaters(List<AtlantisEntity.Updater> updaters, int frameNum) {
 		ResultLockStep step = new ResultLockStep(frameNum);
 
 		for (AtlantisEntity.Updater u : updaters) {
