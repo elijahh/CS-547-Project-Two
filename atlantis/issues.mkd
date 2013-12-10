@@ -17,6 +17,7 @@ Open Issues
 - **[56]** Add nudge method for soldiers. (Greg)
 - **[57]** Test play. (Bo)
 - **[58]** Target fire back. (Bo)
+- **[62]** Improve minimap. (Elijah)
 ...
  
 
