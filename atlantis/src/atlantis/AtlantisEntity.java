@@ -65,7 +65,7 @@ public abstract class AtlantisEntity extends Entity implements
 	int MAX_HEALTH_VALUE = 100;
 	
 	protected boolean visible = true;
-	protected boolean visibleToOpponent = false;
+	protected boolean visibleToOpponent = true;
 	protected int eyesight;
 
 	@Override
@@ -770,7 +770,7 @@ public abstract class AtlantisEntity extends Entity implements
 		g.setColor(Color.red);
 		float x = getCoarseGrainedMinX();
 		float y = getCoarseGrainedMinY();
-		g.fill(new Rectangle(x, y, ((float) health / MAX_HEALTH_VALUE) * 40, 4));
+		if(health >= 0) g.fill(new Rectangle(x, y, ((float) health / MAX_HEALTH_VALUE) * 40, 4));
 		g.setColor(Color.white);
 		g.draw(new Rectangle(x, y, 40, 4));
 	}

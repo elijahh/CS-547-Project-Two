@@ -38,8 +38,8 @@ public class GameStatus {
 	// TEMPORARY FOR DEVELOPMENT
 	public Soldier soldier_on_server_1;
 	public Soldier soldier_on_server_2;
-	public Torpedo torpedo_on_server;
-	public TacticalSub tactical_on_server;
+	public TacticalSub tactical_on_server_1;
+	public TacticalSub tactical_on_server_2;
 	// TEMPORARY FOR DEVELOPMENT
 	
 	public GameStatus(PlayingState playing_state) {
@@ -49,23 +49,27 @@ public class GameStatus {
 		motherships_server_model.put(mothership_on_server_1.getIdentity(),
 				mothership_on_server_1);
 
-		mothership_on_server_2 = new MotherShip(400, 200, new Vector(0, 0));
+		mothership_on_server_2 = new MotherShip(1848, 1848, new Vector(0, 0));
 		mothership_on_server_2.setTeam(Team.BLUE);
 		motherships_server_model.put(mothership_on_server_2.getIdentity(),
 				mothership_on_server_2);
 		
 		// TEMPORARY FOR DEVELOPMENT
 		soldier_on_server_1 = 
-				new Soldier(350, 300, new Vector(0, 0));
+				new Soldier(350, 200, new Vector(0, 0));
 		soldiers_server_model.put(soldier_on_server_1.getIdentity(),
 				soldier_on_server_1);
 		soldier_on_server_2 = 
-				new Soldier(450, 300, new Vector(0, 0));
+				new Soldier(1698, 1848, new Vector(0, 0));
 		soldier_on_server_2.setTeam(Team.BLUE);
 		soldiers_server_model.put(soldier_on_server_2.getIdentity(),
 				soldier_on_server_2);
-		tactical_on_server = new TacticalSub(600, 200, new Vector(0,0));
-		tacticals_server_model.put(tactical_on_server.getIdentity(), tactical_on_server);
+		
+		tactical_on_server_1 = new TacticalSub(500, 200, new Vector(0,0));
+		tacticals_server_model.put(tactical_on_server_1.getIdentity(), tactical_on_server_1);	
+		tactical_on_server_2 = new TacticalSub(1548, 1848, new Vector(0,0));
+		tactical_on_server_2.setTeam(Team.BLUE);
+		tacticals_server_model.put(tactical_on_server_2.getIdentity(), tactical_on_server_2);
 		// TEMPORARY FOR DEVELOPMENT
 		
 	}
