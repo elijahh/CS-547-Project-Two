@@ -151,6 +151,8 @@ public class PlayingState extends BasicGameState{
 		}
 		
 		if(status.isGameOver()) {
+			System.out.println("GAME OVER");
+			
 			// TODO Game over. Move to appropriate state.
 		}
 	}
