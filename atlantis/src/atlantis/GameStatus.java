@@ -147,7 +147,7 @@ public class GameStatus {
 			
 			for (AtlantisEntity entity1: atlantisEntities_team_red) {
 				for (AtlantisEntity entity2: atlantisEntities_team_blue) {
-					if (Math.pow(entity1.getX()-entity2.getX(),2) + Math.pow(entity1.getY()-entity2.getY(),2) <= Math.pow(entity1.eyesight,2)){
+					if (Math.pow(entity1.getX()-entity2.getX(),2) + Math.pow(entity1.getY()-entity2.getY(),2) <= Math.pow(entity2.eyesight,2)){
 						entity1.visibleToOpponent = true;
 						break;
 					}
@@ -155,7 +155,7 @@ public class GameStatus {
 			}
 			for (AtlantisEntity entity1: atlantisEntities_team_blue) {
 				for (AtlantisEntity entity2: atlantisEntities_team_red) {
-					if (Math.pow(entity1.getX()-entity2.getX(),2) + Math.pow(entity1.getY()-entity2.getY(),2) <= Math.pow(entity1.eyesight,2)){
+					if (Math.pow(entity1.getX()-entity2.getX(),2) + Math.pow(entity1.getY()-entity2.getY(),2) <= Math.pow(entity2.eyesight,2)){
 						entity1.visibleToOpponent = true;
 						break;
 					}
@@ -311,6 +311,8 @@ public class GameStatus {
 				
 				if (updated_entity.visibleToOpponent || updated_entity.getTeam() == playing_state.team){
 					motherShipsOnClient.put(identity, updated_entity);
+				} else {
+					motherShipsOnClient.remove(identity);
 				}
 			}
 		} else if (updater.getEntityClass() == TacticalSub.class){
