@@ -44,9 +44,11 @@ public class AtlantisMap extends TiledMap {
 		return Collections.unmodifiableList(blocked_nodes);
 	}
 	
-	static public boolean isPositionVectorInsideTerrainTile(Vector position) {
-		
-		return false;
+	public boolean isPositionVectorInsideTerrainTile(final Vector position) {
+		final int map_node_num = 
+			AtlantisEntity.calculateMapNode(position.getX(),position.getY());
+	
+		return blocked_nodes.contains(map_node_num);
 	}
 	
 	public void processMovementCostsIntoEdges(final List<Vertex> nodes,

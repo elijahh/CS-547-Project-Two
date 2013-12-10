@@ -168,5 +168,5 @@ public class PlayingState extends BasicGameState{
 		return AtlantisGame.PLAYING;
 	}
 	
-	public TiledMap getMap() { return map; }
+	public AtlantisMap getMap() { return map; }
 }
