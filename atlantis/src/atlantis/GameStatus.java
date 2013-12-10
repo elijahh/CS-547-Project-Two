@@ -98,8 +98,6 @@ public class GameStatus {
 		int currentFrame = playing_state.getCurrentFrame();
 		AtlantisServer server = playing_state.getServer();
 		
-		
-		
 		if (null != server) {
 			atlantisEntities_team_red = new ArrayList<AtlantisEntity>();
 			atlantisEntities_team_blue = new ArrayList<AtlantisEntity>();
@@ -201,8 +199,7 @@ public class GameStatus {
 				for(Soldier remove_soldier : remove_soldiers) 
 					soldiers_server_model.remove(remove_soldier);
 			}
-
-			
+	
 			synchronized(tacticals_server_model) {
 				List<TacticalSub> remove_subs = new LinkedList<TacticalSub>();
 				
@@ -218,10 +215,8 @@ public class GameStatus {
 				}
 				
 				for(TacticalSub remove_sub : remove_subs)
-					tacticalsOnClient.remove(remove_sub);
+					tacticals_server_model.remove(remove_sub);
 			}
-			
-			
 		
 			server.sendUpdaters(updaters, currentFrame);
 			
