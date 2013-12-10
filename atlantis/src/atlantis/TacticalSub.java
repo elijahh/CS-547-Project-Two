@@ -186,10 +186,30 @@ public class TacticalSub extends FloatingEntity {
 
 		return movement_animation;
 	}
+		
+	private Vector parseDirection(final Vector dir) {
+		Vector direction = new Vector(0, 0);
+		
+		if(dir.getX() > 0)
+			direction = direction.add(RIGHT_UNIT_VECTOR);
+		else if(dir.getX() < 0)
+			direction = direction.add(LEFT_UNIT_VECTOR);
+		
+		if(dir.getY() > 0)
+			direction = direction.add(DOWN_UNIT_VECTOR);
+		else if(dir.getY() < 0)
+			direction = direction.add(UP_UNIT_VECTOR);
+		
+		return direction;
+	}
 	
-	private final String getMovementAnimationFilename(final Vector direction) {
+	private final String getMovementAnimationFilename(final Vector unit_direction) {
 		String animation_filename;
-
+		
+		Vector direction = parseDirection(unit_direction);
+		
+		System.out.println(direction);
+		
 		if (direction.equals(LEFT_UNIT_VECTOR)) {
 			animation_filename = MOVE_L_ANIMATION_FILE;		
 			ANIMATION_FRAME_WIDTH = 130;
@@ -210,6 +230,24 @@ public class TacticalSub extends FloatingEntity {
 			for (Shape shape: shapes)
 				removeShape(shape);
 			this.addImageWithBoundingBox(ResourceManager.getImage(FACE_U_GRAPHIC_FILE));
+		} else if (direction.equals(UP_LEFT_UNIT_VECTOR)) {
+			animation_filename = MOVE_UL_ANIMATION_FILE;
+			ANIMATION_FRAME_WIDTH = 100;
+			ANIMATION_FRAME_HEIGHT = 81;
+			removeImage(ResourceManager.getImage(getStillImageFilename(face_direction)));
+			List<Shape> shapes = getShapes();
+			for (Shape shape: shapes)
+				removeShape(shape);
+			this.addImageWithBoundingBox(ResourceManager.getImage(FACE_UL_GRAPHIC_FILE));
+		} else if (direction.equals(UP_RIGHT_UNIT_VECTOR)) {
+			animation_filename = MOVE_UR_ANIMATION_FILE;
+			ANIMATION_FRAME_WIDTH = 100;
+			ANIMATION_FRAME_HEIGHT = 81;
+			removeImage(ResourceManager.getImage(getStillImageFilename(face_direction)));
+			List<Shape> shapes = getShapes();
+			for (Shape shape: shapes)
+				removeShape(shape);
+			this.addImageWithBoundingBox(ResourceManager.getImage(FACE_UR_GRAPHIC_FILE));
 		} else if (direction.equals(RIGHT_UNIT_VECTOR)) {
 			animation_filename = MOVE_R_ANIMATION_FILE;
 			ANIMATION_FRAME_WIDTH = 130;
@@ -219,6 +257,24 @@ public class TacticalSub extends FloatingEntity {
 			for (Shape shape: shapes)
 				removeShape(shape);
 			this.addImageWithBoundingBox(ResourceManager.getImage(FACE_R_GRAPHIC_FILE));
+		} else if (direction.equals(DOWN_LEFT_UNIT_VECTOR)) {
+			animation_filename = MOVE_DL_ANIMATION_FILE;
+			ANIMATION_FRAME_WIDTH = 105;
+			ANIMATION_FRAME_HEIGHT = 80;
+			removeImage(ResourceManager.getImage(getStillImageFilename(face_direction)));
+			List<Shape> shapes = getShapes();
+			for (Shape shape: shapes)
+				removeShape(shape);
+			this.addImageWithBoundingBox(ResourceManager.getImage(FACE_DL_GRAPHIC_FILE));
+		} else if (direction.equals(DOWN_RIGHT_UNIT_VECTOR)) {
+			animation_filename = MOVE_DR_ANIMATION_FILE;
+			ANIMATION_FRAME_WIDTH = 105;
+			ANIMATION_FRAME_HEIGHT = 80;
+			removeImage(ResourceManager.getImage(getStillImageFilename(face_direction)));
+			List<Shape> shapes = getShapes();
+			for (Shape shape: shapes)
+				removeShape(shape);
+			this.addImageWithBoundingBox(ResourceManager.getImage(FACE_DR_GRAPHIC_FILE));
 		} else {
 			animation_filename = MOVE_D_ANIMATION_FILE;
 			ANIMATION_FRAME_WIDTH = 100;
@@ -234,15 +290,25 @@ public class TacticalSub extends FloatingEntity {
 	}
 
 	@Override
-	String getStillImageFilename(Vector face_direction) {
+	String getStillImageFilename(Vector direction) {
 		String graphic_filename;
+		
+		Vector face_direction = parseDirection(direction);
 		
 		if (face_direction.equals(LEFT_UNIT_VECTOR)) {
 			graphic_filename = FACE_L_GRAPHIC_FILE;
 		} else if (face_direction.equals(UP_UNIT_VECTOR)) {
 			graphic_filename = FACE_U_GRAPHIC_FILE;
+		} else if (face_direction.equals(UP_LEFT_UNIT_VECTOR)) {
+			graphic_filename = FACE_UL_GRAPHIC_FILE;
+		} else if (face_direction.equals(UP_RIGHT_UNIT_VECTOR)) {
+			graphic_filename = FACE_UR_GRAPHIC_FILE;
 		} else if (face_direction.equals(RIGHT_UNIT_VECTOR)) {
 			graphic_filename = FACE_R_GRAPHIC_FILE;
+		} else if (face_direction.equals(DOWN_LEFT_UNIT_VECTOR)) {
+			graphic_filename = FACE_DL_GRAPHIC_FILE;
+		} else if (face_direction.equals(DOWN_RIGHT_UNIT_VECTOR)) {
+			graphic_filename = FACE_DR_GRAPHIC_FILE;
 		} else {
 			graphic_filename = FACE_D_GRAPHIC_FILE;
 		}
