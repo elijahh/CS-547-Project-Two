@@ -53,6 +53,7 @@ public class Soldier extends GroundEntity {
 	public Soldier(float x, float y, Vector move_direction) {
 		super(x, y, move_direction);
 		health = MAX_HEALTH_VALUE;
+		eyesight = 400;
 	}
 	
 	static {
