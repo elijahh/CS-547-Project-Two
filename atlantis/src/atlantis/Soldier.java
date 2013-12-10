@@ -58,6 +58,10 @@ public class Soldier extends GroundEntity {
 		eyesight = 400;
 	}
 	
+	public static int getHeight() {
+		return ANIMATION_FRAME_HEIGHT;
+	}
+	
 	static {
 		ResourceManager.loadImage(FACE_D_GRAPHIC_FILE);
 		ResourceManager.loadImage(FACE_U_GRAPHIC_FILE);

@@ -89,8 +89,9 @@ public class PlayingState extends BasicGameState{
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
-
-		map.render(viewportOffsetX, viewportOffsetY);
+		
+		int map_y_offset = Soldier.getHeight()/4;
+		map.render(viewportOffsetX, viewportOffsetY + map_y_offset);
 		//System.out.println("RENDERING SOLDIERS");
 
 		Queue<Soldier> soldiers = 
