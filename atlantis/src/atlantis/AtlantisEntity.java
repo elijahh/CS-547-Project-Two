@@ -222,6 +222,12 @@ public abstract class AtlantisEntity extends Entity implements
 			set.add(node_number);
 	}
 	
+	public void nudgeNudge(Vector direction) {
+		// System.out.println("NUDGE " + direction);
+		Vector position = this.getPosition().add(direction.unit());
+		this.setPosition(position);
+	}
+	
 //	private final void calculateAndAddNodeToSetIfSane(final float x,
 //			final float y, Set<Integer> set) {
 //		final int node_number = calculateMapNode(x, y);
@@ -539,6 +545,7 @@ public abstract class AtlantisEntity extends Entity implements
 	protected Explosion explosion;
 	protected ShipExplosion shipExplosion;
 	protected AtlantisEntity attackSource;
+	
 	/* -------------------------------------------------------------------- */
 
 	public static class Updater implements Serializable {
