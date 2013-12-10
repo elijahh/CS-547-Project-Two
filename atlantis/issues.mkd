@@ -106,7 +106,7 @@ Resolved Issues
            the MotherShip units is destroyed.(Greg)
 - **[40]** Add method to AtlantisMap to identify whether a position vector is inside a terrain
            "obstacle" tile. (Greg)
-- **[56]** Add nudge method for soldiers. (Greg)
+- **[56]** Add "nudge" method for soldiers -- move nudgeNudge() up from TacticalSub. (Greg)
 
 
 May Need to Revisit
