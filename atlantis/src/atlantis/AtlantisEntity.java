@@ -521,8 +521,6 @@ public abstract class AtlantisEntity extends Entity implements
 		isMoving = false;
 	}
 	
-	// TODO: set isAttacking to false when another command is given
-	// or conflict is resolved
 	boolean isAttacking = false;
 	AtlantisEntity target;
 	public void setTarget(AtlantisEntity t) {
@@ -567,6 +565,8 @@ public abstract class AtlantisEntity extends Entity implements
 		boolean hitTarget;
 		
 		boolean visible;
+		
+		int numSoldiers; // on tactical sub
 		boolean visibleToOpponent;
 
 		Updater(AtlantisEntity e) {
@@ -578,9 +578,8 @@ public abstract class AtlantisEntity extends Entity implements
 			health = e.health;
 			reward = e.reward;
 			hitTarget = e.hitTarget;
-					
+			
 			entity_class = e.getClass();
-
 			
 			if (e.torpedo != null) {
 				torpedoPosition = e.torpedo.getPosition();
@@ -597,6 +596,12 @@ public abstract class AtlantisEntity extends Entity implements
 			}
 
 			visible = e.visible;
+			
+			if (entity_class == TacticalSub.class) {
+				numSoldiers = ((TacticalSub) e).soldiers.size();
+			} else {
+				numSoldiers = 0;
+			}
 			visibleToOpponent = e.visibleToOpponent;
 		}
 
@@ -637,7 +642,6 @@ public abstract class AtlantisEntity extends Entity implements
 
 		/* Derived values */
 		movement_direction = getMovementDirection();
-
 
 		// TODO - Finish with as many variables as necessary to accurately
 		// communicate entity status to client for rendering.
@@ -708,10 +712,18 @@ public abstract class AtlantisEntity extends Entity implements
 		}
 		
 		health = updater.health;
+		reward = updater.reward;
+		
+		visible = updater.visible;
+		
+		numSoldiers = updater.numSoldiers;
+
 		reward = updater.reward;	
 		visible = updater.visible;
 		visibleToOpponent = updater.visibleToOpponent;
 	}
+	
+	int numSoldiers; // on tactical sub
 
 	private Animation movement_animation = null;
 

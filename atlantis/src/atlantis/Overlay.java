@@ -39,12 +39,15 @@ public class Overlay {
 	Image overlay;
 	Image actionMove;
 	Image actionAttack;
+	Image actionMount;
+	Image actionUnmount;
 	Image actionPurchase;
 	Image actionPurchaseSoldier;
 	Image actionPurchaseTactical;
 	Image actionBack;
 	Image targetMove;
 	Image targetAttack;
+	Image targetMount;
 	Image pixel;
 	Image upArrow;
 	Image rightArrow;
@@ -63,21 +66,23 @@ public class Overlay {
 	
 	PlayingState playingState;
 	public long selectedUnitID = -1;
-	public short action = 0; // 1 = move, 2 = attack
+	public short action = 0; // 1 = move, 2 = attack, 3 = mount
 	
 	public Overlay(PlayingState ps) {
 		playingState = ps;
 		
-		// TODO: model of unit on left, minimap on right
 		overlay = ResourceManager.getImage(AtlantisGame.OVERLAY);
 		actionMove = ResourceManager.getImage(AtlantisGame.ACTION_MOVE);
 		actionAttack = ResourceManager.getImage(AtlantisGame.ACTION_ATTACK);
+		actionMount = ResourceManager.getImage(AtlantisGame.ACTION_MOUNT);
+		actionUnmount = ResourceManager.getImage(AtlantisGame.ACTION_UNMOUNT);
 		actionPurchase = ResourceManager.getImage(AtlantisGame.ACTION_PURCHASE);
 		actionPurchaseSoldier = ResourceManager.getImage(AtlantisGame.ACTION_PURCHASE_SOLDIER);
 		actionPurchaseTactical = ResourceManager.getImage(AtlantisGame.ACTION_PURCHASE_TACTICAL);
 		actionBack = ResourceManager.getImage(AtlantisGame.ACTION_BACK);
 		targetMove = ResourceManager.getImage(AtlantisGame.TARGET_MOVE);
 		targetAttack = ResourceManager.getImage(AtlantisGame.TARGET_ATTACK);
+		targetMount = ResourceManager.getImage(AtlantisGame.TARGET_MOUNT);
 		pixel = ResourceManager.getImage(AtlantisGame.PIXEL);
 		
 		upArrow = ResourceManager.getImage(AtlantisGame.ARROW_UP);
@@ -109,10 +114,16 @@ public class Overlay {
 				selectedUnit = playingState.getStatus()
 						.getIdTacticalsMapOnClient().get(selectedUnitID);
 			}
-			g.drawRect(selectedUnit.getCoarseGrainedMinX(),
-					selectedUnit.getCoarseGrainedMinY(),
-					selectedUnit.getCoarseGrainedWidth(),
-					selectedUnit.getCoarseGrainedHeight());
+			if (selectedUnit.visible) {
+				g.drawRect(selectedUnit.getCoarseGrainedMinX(),
+						selectedUnit.getCoarseGrainedMinY(),
+						selectedUnit.getCoarseGrainedWidth(),
+						selectedUnit.getCoarseGrainedHeight());
+			} else { // deselect if invisible
+				selectedUnitID = -1;
+				selectWorkerUnit = selectMotherShipUnit = selectTacticalUnit = false; 
+				selectedUnit = null;
+			}
 		}
 		
 		if (isCursorAtLeftEdge(x,y)) {// cursor becomes arrow at edge
@@ -166,6 +177,7 @@ public class Overlay {
 				for (Long id : soldiers.keySet()) {
 					Soldier soldier = soldiers.get(id);
 					if (soldier.getTeam() != playingState.team) continue;
+					if (!soldier.visible) continue;
 					if (y > soldier.getCoarseGrainedMinY() &&
 							y < soldier.getCoarseGrainedMaxY() &&
 							x > soldier.getCoarseGrainedMinX() &&
@@ -182,6 +194,7 @@ public class Overlay {
 					for (Long id : motherships.keySet()) {
 						MotherShip mothership = motherships.get(id);
 						if (mothership.getTeam() != playingState.team) continue;
+						if (!mothership.visible) continue;
 						if (y > mothership.getCoarseGrainedMinY() &&
 								y < mothership.getCoarseGrainedMaxY() &&
 								x > mothership.getCoarseGrainedMinX() &&
@@ -199,6 +212,7 @@ public class Overlay {
 					for (Long id : tacticals.keySet()) {
 						TacticalSub tactical = tacticals.get(id);
 						if (tactical.getTeam() != playingState.team) continue;
+						if (!tactical.visible) continue;
 						if (y > tactical.getCoarseGrainedMinY() &&
 								y < tactical.getCoarseGrainedMaxY() &&
 								x > tactical.getCoarseGrainedMinX() &&
@@ -260,6 +274,7 @@ public class Overlay {
 				for (Long id : soldiers.keySet()) {
 					Soldier soldier = soldiers.get(id);
 					if (soldier.getTeam() == playingState.team) continue;
+					if (!soldier.visible) continue;
 					if (y > soldier.getCoarseGrainedMinY() &&
 							y < soldier.getCoarseGrainedMaxY() &&
 							x > soldier.getCoarseGrainedMinX() &&
@@ -271,11 +286,12 @@ public class Overlay {
 				}
 				
 				if(!targetUnit) {
-					Map<Long, MotherShip> motherships = playingState.getStatus()
+					Map<Long, MotherShip> motherships = status
 							.getIdMotherShipsMapOnClient();
 					for (Long id : motherships.keySet()) {
 						MotherShip mothership = motherships.get(id);
 						if (mothership.getTeam() == playingState.team) continue;
+						if (!mothership.visible) continue;
 						if (y > mothership.getCoarseGrainedMinY() &&
 								y < mothership.getCoarseGrainedMaxY() &&
 								x > mothership.getCoarseGrainedMinX() &&
@@ -288,11 +304,12 @@ public class Overlay {
 				}
 				
 				if (!targetUnit) {
-					Map<Long, TacticalSub> tacticalSubs = playingState.getStatus()
+					Map<Long, TacticalSub> tacticalSubs = status
 							.getIdTacticalsMapOnClient();
 					for (Long id : tacticalSubs.keySet()) {
 						TacticalSub tactical = tacticalSubs.get(id);
 						if (tactical.getTeam() == playingState.team) continue;
+						if (!tactical.visible) continue;
 						if (y > tactical.getCoarseGrainedMinY() &&
 								y < tactical.getCoarseGrainedMaxY() &&
 								x > tactical.getCoarseGrainedMinX() &&
@@ -320,6 +337,56 @@ public class Overlay {
 
 				action = 0;
 			}
+		} else if (action == 3) { // mount
+			if (isDefaultCursorSet || isArrowCursorSet) {
+				container.setMouseCursor(pixel, 0, 0);
+				isDefaultCursorSet = false;
+				isArrowCursorSet = false;
+			}
+			g.drawImage(targetMount, x, y);
+
+			if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON) ||
+					input.isMousePressed(Input.MOUSE_RIGHT_BUTTON)) {
+				GameStatus status = playingState.getStatus();
+			
+				targetUnit = false;
+				long targetUnitID = -1;
+				y += targetMount.getHeight() / 2f;
+				x += targetMount.getWidth() / 2f;
+				
+				Map<Long, TacticalSub> tacticalSubs = status
+						.getIdTacticalsMapOnClient();
+				for (Long id : tacticalSubs.keySet()) {
+					TacticalSub tactical = tacticalSubs.get(id);
+					if (tactical.getTeam() != playingState.team) continue;
+					if (!tactical.visible) continue;
+					if (tactical.soldiers.size() >= 4) continue;
+					if (y > tactical.getCoarseGrainedMinY() &&
+							y < tactical.getCoarseGrainedMaxY() &&
+							x > tactical.getCoarseGrainedMinX() &&
+							x < tactical.getCoarseGrainedMaxX()) {
+						targetUnitID = id.longValue();
+						targetUnit = true;
+						break;
+					}
+				}
+				
+				if (targetUnit) {
+					Command mount_command = new Command(Command.MOUNT,
+							playingState.getCurrentFrame(), new Vector(x-PlayingState.viewportOffsetX, y-PlayingState.viewportOffsetY),
+							selectedUnitID, targetUnitID);
+					status.sendCommand(mount_command);
+				}
+
+				action = 0;
+			}			
+		} else if (action == 4) { // unmount
+			GameStatus status = playingState.getStatus();
+			Command unmount_command = new Command(Command.UNMOUNT,
+					playingState.getCurrentFrame(), new Vector(0, 0),
+					selectedUnitID, 0);
+			status.sendCommand(unmount_command);
+			action = 0;
 		}
 		
 		g.drawImage(overlay, 0, 470);
@@ -364,7 +431,7 @@ public class Overlay {
 						.getStillImageFilename(AtlantisEntity.RIGHT_UNIT_VECTOR))
 						.getScaledCopy(.8f), 5, 500);
 				if (x < 120 && y > 470) { // info
-					g.drawString("Transport", 10, 500);
+					g.drawString("Holds 4 Soldiers", 10, 500);
 					g.drawString("Long Range", 10, 520);
 					g.drawString("Medium Health", 10, 540);
 					g.drawString("Low Damage", 10, 560);
@@ -388,6 +455,11 @@ public class Overlay {
 			if (selectedUnitID != -1) {
 				g.drawImage(actionMove, 290, 520);
 				if (!selectMotherShipUnit) g.drawImage(actionAttack, 350, 520);
+				if (selectWorkerUnit) {
+					g.drawImage(actionMount, 410, 520);
+				} else if (selectTacticalUnit) {
+					g.drawImage(actionUnmount, 410, 520);
+				}
 			}
 		} else {
 			g.drawImage(actionBack, 230, 520);
@@ -416,6 +488,30 @@ public class Overlay {
 						g.drawString("Attack(A)", x, y);
 						
 						if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) action = 2;
+					} else if (x > 410 && x < 460 && selectWorkerUnit) { // mount button
+						// tooltip
+						x += 20;
+						g.setColor(Color.yellow);
+						g.fillRect(x, y, 110, 20);
+						g.setColor(Color.black);
+						g.drawString("Mount(T) Sub", x, y);
+						
+						if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) action = 3;
+					} else if (x > 410 && x < 460 && selectTacticalUnit) { // unmount button
+						// tooltip
+						x += 20;
+						g.setColor(Color.yellow);
+						g.fillRect(x, y, 190, 20);
+						g.setColor(Color.black);
+						int numSoldiers = playingState.getStatus()
+								.getIdTacticalsMapOnClient()
+								.get(selectedUnitID)
+								.numSoldiers;
+						String unloadMessage = "Unload(U) " + numSoldiers + " Soldier";
+						if (numSoldiers != 1) unloadMessage += "s";
+						g.drawString(unloadMessage, x, y);
+						
+						if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) action = 4;						
 					}
 				}
 				
@@ -507,10 +603,16 @@ public class Overlay {
 	}
 	
 	private void checkHotKey(Input input) {
-		if (input.isKeyPressed(Input.KEY_M)) {
+		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
+			action = 0;
+		} else if (input.isKeyPressed(Input.KEY_M) && (selectWorkerUnit || selectMotherShipUnit || selectTacticalUnit)) {
 			action = 1;
-		} else if(input.isKeyPressed(Input.KEY_A)) {
+		} else if(input.isKeyPressed(Input.KEY_A) && (selectWorkerUnit || selectTacticalUnit)) {
 			action = 2;
+		} else if (input.isKeyPressed(Input.KEY_T) && selectWorkerUnit) {
+			action = 3;
+		} else if (input.isKeyPressed(Input.KEY_U) && selectTacticalUnit) {
+			action = 4;
 		} else if(input.isKeyPressed(Input.KEY_P)) {
 			purchaseMenuOpen = true;
 		}

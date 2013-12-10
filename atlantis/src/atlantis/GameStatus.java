@@ -81,9 +81,10 @@ public class GameStatus {
 	}
 	
 	private boolean game_over = false;
-	private boolean red_wins = false;
-	
 	public boolean isGameOver() { return game_over; }
+	
+	private boolean red_wins = false;
+	public boolean isRedWinner() { return red_wins; }
 
 	private List<Command> commands_to_server = new ArrayList<Command>();
 
@@ -163,13 +164,13 @@ public class GameStatus {
 			if(0 >= mothership_on_server_1.getHealth()) {
 				game_over = true;
 				red_wins = false;
-				//server.sendGameOver(playing_state.getCurrentFrame(), false);
+				server.sendGameOver(currentFrame, false);
 			}
 			
 			if(0 >= mothership_on_server_2.getHealth()) {
 				game_over = true;
 				red_wins = true;
-				//server.sendGameOver(playing_state.getCurrentFrame(), true);
+				server.sendGameOver(currentFrame, true);
 			}
 						
 			List<AtlantisEntity.Updater> updaters = 
@@ -224,13 +225,13 @@ public class GameStatus {
 			
 			
 		
-			server.sendUpdates(updaters, playing_state.getCurrentFrame());
+			server.sendUpdaters(updaters, currentFrame);
 			
 			/* Process the commands sent by the clients */
 			
 			while(!server.incomingLockSteps.isEmpty()) {
 				CommandLockStep step = server.incomingLockSteps.poll();
-				if (step.frameNum < playing_state.getCurrentFrame()) {
+				if (step.frameNum < currentFrame) {
 					for(Command c : step.frameCommands)
 						processCommand(c);
 				}
@@ -244,27 +245,24 @@ public class GameStatus {
  		while (client.incomingLockSteps.isEmpty()) {} 		
 		while (!client.incomingLockSteps.isEmpty()) {
 			ResultLockStep step = client.incomingLockSteps.poll();
-			if(step.frameNum == currentFrame) {
+			if(step.frameNum <= currentFrame) {
 				for (SimulationResult result : step.frameResults) {
 					if (result.type == SimulationResult.GAME_OVER) {
 						game_over = true;
-						red_wins = result.red_wins;						
+						red_wins = result.red_wins;
+					} else {
+						AtlantisEntity.Updater updater = result.entity_updater;
+						if (null != updater)
+							processUpdaters(updater);
 					}
-					
-					AtlantisEntity.Updater updater = result.entity_updater;
-					if (null != updater)
-						processUpdater(updater);
 				}
-				
-				break;
 			}
 		}
 		
 		/* Send commands to the server */		
 		
 		synchronized (commands_to_server) {
-			client.sendCommands(commands_to_server,
-					playing_state.getCurrentFrame());
+			client.sendCommands(commands_to_server, currentFrame);
 			commands_to_server.clear();
 		}
 	}
@@ -275,7 +273,7 @@ public class GameStatus {
 	private Map<Long, MotherShip> motherShipsOnClient = new HashMap<Long, MotherShip>();
 	private Map<Long, TacticalSub> tacticalsOnClient = new HashMap<Long, TacticalSub>();
 	
-	private void processUpdater(AtlantisEntity.Updater updater) {
+	private void processUpdaters(AtlantisEntity.Updater updater) {
 		long identity = updater.getIdentity();
 		
 		if(updater.getEntityClass() == Soldier.class) {			
@@ -439,6 +437,22 @@ public class GameStatus {
 				} else if (tactical != null && targetSub != null) {
 					tactical.setTarget(targetSub);
 					tactical.stopMoving();
+				}
+			}
+			break;
+		case Command.MOUNT:
+			synchronized (soldiers_server_model) {
+				if (soldier != null) {
+					synchronized (tacticals_server_model) {
+						soldier.mount(tacticals_server_model.get(command.attackTargetId));
+					}
+				}
+			}
+			break;
+		case Command.UNMOUNT:
+			synchronized (tacticals_server_model) {
+				if (tactical != null) {
+					tactical.unload();
 				}
 			}
 			break;
