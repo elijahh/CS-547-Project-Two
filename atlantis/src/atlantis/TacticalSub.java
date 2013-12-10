@@ -55,7 +55,7 @@ public class TacticalSub extends FloatingEntity {
 	public TacticalSub(float x, float y, Vector movement_direction) {
 		super(x, y, movement_direction);
 		
-		MAX_HEALTH_VALUE = 500;
+		MAX_HEALTH_VALUE = 600;
 		health = MAX_HEALTH_VALUE;
 		eyesight = 500;
 		
@@ -87,25 +87,19 @@ public class TacticalSub extends FloatingEntity {
 			stopMoving();
 			
 			if (tacticalTorpedo == null) {
+				System.out.println("new torpedo");
 				tacticalTorpedo = new TacticalTorpedo(getX(), getY(), theta, team);
 			} else {
 				tacticalTorpedo.setPosition(new Vector(getX(), getY()));
 				tacticalTorpedo.setRotation(theta);
 			}
-			torpedoTimer = 6000;
+			torpedoTimer = 5000;
 
 			if (target.health <= 0) isAttacking = false;
 			System.out.println("target health: " + target.health);
 			System.out.println("this health: " + health);
-		} else {
+		} else if(target.visibleToOpponent){		
 			setDestination(target.getPosition());
-		}
-	}
-	
-	public void fireBack() {
-		if (attackSource != null) {
-			fire(attackSource);
-			attackSource = null;
 		}
 	}
 	
@@ -255,9 +249,9 @@ public class TacticalSub extends FloatingEntity {
 			if(tacticalTorpedo.collides(target)!=null) {
 				hitTarget = true;
 				ResourceManager.getSound(HIT_SOUND).play();
-				double damage = Math.random() * 100 % 100 + 300 ;
+				double damage = Math.random() * 50 % 50 + 100 ;
 				target.health -= damage;
-				reward += damage * 5;
+				reward += damage;
 				attackPosition = new Vector(tacticalTorpedo.getX(), tacticalTorpedo.getY());
 				tacticalTorpedo = null;
 			}
@@ -266,17 +260,12 @@ public class TacticalSub extends FloatingEntity {
 			torpedoTimer -= delta;
 		} else {
 			tacticalTorpedo = null;
-			if (isAttacking) {
+			if (isAttacking && target.health > 0) {
 					fire(target);
 			}
 		}
 	}
-	
-	public void nudgeNudge(Vector direction) {
-		// System.out.println("NUDGE " + direction);
-		Vector position = this.getPosition().add(direction);
-		this.setPosition(position);
-	}
+
 	
 	ArrayList<Soldier> soldiers = new ArrayList<Soldier>();
 	public void load(Soldier soldier) {
@@ -284,7 +273,6 @@ public class TacticalSub extends FloatingEntity {
 	}
 	
 	public void unload() {
-		System.out.println("unload");
 		for (Soldier soldier : soldiers) {
 			soldier.setPosition(getPosition());
 			soldier.visible = true;

@@ -89,8 +89,9 @@ public class PlayingState extends BasicGameState{
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
-
-		map.render(viewportOffsetX, viewportOffsetY);
+		
+		int map_y_offset = Soldier.getHeight()/4;
+		map.render(viewportOffsetX, viewportOffsetY + map_y_offset);
 		//System.out.println("RENDERING SOLDIERS");
 
 		Queue<Soldier> soldiers = 
@@ -161,6 +162,12 @@ public class PlayingState extends BasicGameState{
 		for (Soldier w : soldiers) {
 			if (w.getTeam() == this.team) gold += w.reward;
 		}
+		
+		Queue<TacticalSub> tacticals = 
+				new PriorityQueue<TacticalSub>(status.getTacticals());
+		for (TacticalSub w : tacticals) {
+			if (w.getTeam() == this.team) gold += w.reward;
+		}
 	}
 
 	@Override
@@ -168,5 +175,5 @@ public class PlayingState extends BasicGameState{
 		return AtlantisGame.PLAYING;
 	}
 	
-	public TiledMap getMap() { return map; }
+	public AtlantisMap getMap() { return map; }
 }

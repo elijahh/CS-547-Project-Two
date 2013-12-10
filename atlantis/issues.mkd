@@ -4,20 +4,14 @@
 Open Issues
 -----------
 	
-- **[30]** Modify soldier addition to spawn next to MotherShip. Depends on 56. (Elijah)
-           
 
-- **[40]** Add method to AtlantisMap to identify whether a position vector is inside a terrain
-           "obstacle" tile. (Greg)
-- **[42]** Adjust map rendering offset in such a way that Soldier's "feet" appear near center of tile corresponding to
-           current location. (Greg)
 - **[47]** Floating units should be able to move in 8 directions. (Greg)	  
-- **[56]** Add nudge method for soldiers. (Greg)
 - **[57]** Test play. (Bo)
 - **[58]** Target fire back. (Bo)
-- **[62]** Improve minimap. (Elijah)
 - **[63]** Improve transition to GameOverState. Briefly display winning side to both users and shut down server thread.
            Add map and other eye candy to GameOverState. (Greg)
+- **[64]** Create another DijkstraAlgorithm JUnit test using a randomly generated map with many adjacencies not confined
+           to a grid in an effort to find a situation where Parallel Dijkstra's will outperform the standard version. (Greg)
 ...
  
 
@@ -108,6 +102,14 @@ Resolved Issues
 - **[38]** Add health counter to base AtlantisEntity class. Send to clients as part of Updater serialization. Units
            should be removed from server and clients when health counter goes below zero. Game is over when one of
            the MotherShip units is destroyed.(Greg)
+- **[40]** Add method to AtlantisMap to identify whether a position vector is inside a terrain
+           "obstacle" tile. (Greg)
+- **[56]** Add "nudge" method for soldiers -- move nudgeNudge() up from TacticalSub. (Greg)
+- **[30]** Modify soldier addition to spawn next to MotherShip while avoiding terrain. Depends on 56 and 40. (Elijah)
+- **[62]** Improve minimap. (Elijah)
+- **[42]** Adjust map rendering offset in such a way that Soldier's "feet" appear near center of tile corresponding to
+           current location. (Greg)
+
 
 May Need to Revisit
 -------------------

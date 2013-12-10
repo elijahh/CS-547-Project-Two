@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import jig.Vector;
+
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.tiled.TileSet;
 import org.newdawn.slick.tiled.TiledMap;
@@ -40,6 +42,13 @@ public class AtlantisMap extends TiledMap {
 	
 	static public List<Integer> getBlockedNodes() {
 		return Collections.unmodifiableList(blocked_nodes);
+	}
+	
+	public boolean isPositionVectorInsideTerrainTile(final Vector position) {
+		final int map_node_num = 
+			AtlantisEntity.calculateMapNode(position.getX(),position.getY());
+	
+		return blocked_nodes.contains(map_node_num);
 	}
 	
 	public void processMovementCostsIntoEdges(final List<Vertex> nodes,

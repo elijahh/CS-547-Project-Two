@@ -56,7 +56,7 @@ public class TacticalTorpedo extends Entity {
 	}
 	
 	public void update(int delta) {
-		translate(Vector.getUnit(getRotation()).scale(delta / 16f));
+		translate(Vector.getUnit(getRotation()).scale(delta / 5f));
 	}
 	
 	@Override

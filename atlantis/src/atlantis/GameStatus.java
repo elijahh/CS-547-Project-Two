@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import jig.Collision;
 import jig.Vector;
 
 import org.newdawn.slick.GameContainer;
@@ -60,7 +61,7 @@ public class GameStatus {
 		
 		// TEMPORARY FOR DEVELOPMENT
 		soldier_on_server_1 = 
-				new Soldier(1698, 1848, new Vector(0, 0));
+				new Soldier(1698, 1948, new Vector(0, 0));
 		soldiers_server_model.put(soldier_on_server_1.getIdentity(),
 				soldier_on_server_1);
 		soldier_on_server_2 = 
@@ -97,8 +98,6 @@ public class GameStatus {
 	public void update(GameContainer container, int delta) {
 		int currentFrame = playing_state.getCurrentFrame();
 		AtlantisServer server = playing_state.getServer();
-		
-		
 		
 		if (null != server) {
 			
@@ -147,7 +146,7 @@ public class GameStatus {
 			
 			for (AtlantisEntity entity1: atlantisEntities_team_red) {
 				for (AtlantisEntity entity2: atlantisEntities_team_blue) {
-					if (Math.pow(entity1.getX()-entity2.getX(),2) + Math.pow(entity1.getY()-entity2.getY(),2) <= Math.pow(entity2.eyesight,2)){
+					if (entity1.getPosition().distance(entity2.getPosition()) <= entity2.eyesight){
 						entity1.visibleToOpponent = true;
 						break;
 					}
@@ -155,13 +154,15 @@ public class GameStatus {
 			}
 			for (AtlantisEntity entity1: atlantisEntities_team_blue) {
 				for (AtlantisEntity entity2: atlantisEntities_team_red) {
-					if (Math.pow(entity1.getX()-entity2.getX(),2) + Math.pow(entity1.getY()-entity2.getY(),2) <= Math.pow(entity2.eyesight,2)){
+					if (entity1.getPosition().distance(entity2.getPosition()) <= entity2.eyesight){
 						entity1.visibleToOpponent = true;
 						break;
 					}
 				}
 			}
+
 			/* ---------------------------------------- */
+
 
 			
 			if(0 >= mothership_on_server_1.getHealth()) {
@@ -206,8 +207,7 @@ public class GameStatus {
 				for(Soldier remove_soldier : remove_soldiers) 
 					soldiers_server_model.remove(remove_soldier);
 			}
-
-			
+	
 			synchronized(tacticals_server_model) {
 				List<TacticalSub> remove_subs = new LinkedList<TacticalSub>();
 				
@@ -223,10 +223,8 @@ public class GameStatus {
 				}
 				
 				for(TacticalSub remove_sub : remove_subs)
-					tacticalsOnClient.remove(remove_sub);
+					tacticals_server_model.remove(remove_sub);
 			}
-			
-			
 		
 			server.sendUpdaters(updaters, currentFrame);
 			
@@ -258,8 +256,8 @@ public class GameStatus {
 						if (null != updater)
 							processUpdaters(updater);
 					}
-				}
-				break;
+				}			
+				if(game_over == false) break;
 			}
 		}
 		
@@ -421,7 +419,7 @@ public class GameStatus {
 				if (soldier != null && targetSoldier != null) {
 					soldier.setTarget(targetSoldier);
 					soldier.stopMoving();
-				} else if (tactical != null && targetSoldier != null) {
+				} else if (tactical != null && targetSoldier != null && tactical.health > 0) {
 					tactical.setTarget(targetSoldier);
 					tactical.stopMoving();
 				}
@@ -431,7 +429,7 @@ public class GameStatus {
 				if (soldier != null && targetShip != null) {
 					soldier.setTarget(targetShip);
 					soldier.stopMoving();
-				} else if (tactical != null && targetShip != null) {
+				} else if (tactical != null && targetShip != null && tactical.health > 0) {
 					tactical.setTarget(targetShip);
 					tactical.stopMoving();
 				}
@@ -441,7 +439,7 @@ public class GameStatus {
 				if (soldier != null && targetSub != null) {
 					soldier.setTarget(targetSub);
 					soldier.stopMoving();
-				} else if (tactical != null && targetSub != null) {
+				} else if (tactical != null && targetSub != null && tactical.health > 0) {
 					tactical.setTarget(targetSub);
 					tactical.stopMoving();
 				}
@@ -465,9 +463,16 @@ public class GameStatus {
 			break;
 		case Command.MOVEMENT:
 			synchronized (soldiers_server_model) {
-				if(soldier != null) {
+				boolean is_target_inside_obstacle = 
+					this.playing_state.getMap()
+						.isPositionVectorInsideTerrainTile(command.target);
+				
+				if(soldier != null && (false == is_target_inside_obstacle)) {
 					soldier.setDestination(command.target);
 					soldier.isAttacking = false;
+				} else {
+					System.out.println("Can't move there.");
+					// TODO Notify the user
 				}
 			}
 			synchronized (motherships_server_model) {
@@ -476,7 +481,7 @@ public class GameStatus {
 				}
 			}
 			synchronized (tacticals_server_model) {
-				if(tactical != null) {
+				if(tactical != null && tactical.health > 0) {
 					tactical.setDestination(command.target);
 					tactical.isAttacking = false;
 				}
@@ -489,6 +494,18 @@ public class GameStatus {
 							command.target.getY());
 					newSoldier.setTeam(Team.values()[(int) command.attackTargetId]);
 					soldiers_server_model.put(newSoldier.getIdentity(), newSoldier);
+					for (Soldier other : soldiers_server_model.values()) { // nudge
+						Collision collision = newSoldier.collides(other);
+						if (null != collision) {
+							if(other.getMovementDirection().equals(AtlantisEntity.STOPPED_VECTOR)) {
+								Vector their_position = other.getPosition();
+								double angle_to_other_soldier = newSoldier.getPosition().angleTo(their_position);
+								Vector direction_to_other_soldier =
+										AtlantisEntity.getVectorForAngle(angle_to_other_soldier);
+								other.nudgeNudge(direction_to_other_soldier);
+							}
+						}
+					}
 				}
 			}
 			synchronized (tacticals_server_model) {
