@@ -149,6 +149,10 @@ public class PlayingState extends BasicGameState{
 		for (Soldier w : soldiers) {
 			if (w.getTeam() == this.team) gold += w.reward;
 		}
+		
+		if(status.isGameOver()) {
+			// TODO Game over. Move to appropriate state.
+		}
 	}
 
 	@Override

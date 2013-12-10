@@ -73,6 +73,11 @@ public class GameStatus {
 		// TEMPORARY FOR DEVELOPMENT
 		
 	}
+	
+	private boolean game_over = false;
+	private boolean red_wins = false;
+	
+	public boolean isGameOver() { return game_over; }
 
 	private List<Command> commands_to_server = new ArrayList<Command>();
 
@@ -86,15 +91,19 @@ public class GameStatus {
 		int currentFrame = playing_state.getCurrentFrame();
 		AtlantisServer server = playing_state.getServer();
 		
-		if (null != server) {
-		
-			// TODO -- Game is over when one of the MotherShip objects is killed 
-			
-			if(0 >= mothership_on_server_1.getHealth() ||
-					0 >= mothership_on_server_2.getHealth()) {
-				
+		if (null != server) {			
+			if(0 >= mothership_on_server_1.getHealth()) {
+				game_over = true;
+				red_wins = false;
+				//server.sendGameOver(playing_state.getCurrentFrame(), false);
 			}
 			
+			if(0 >= mothership_on_server_2.getHealth()) {
+				game_over = true;
+				red_wins = true;
+				//server.sendGameOver(playing_state.getCurrentFrame(), true);
+			}
+						
 			List<AtlantisEntity.Updater> updaters = 
 					new ArrayList<AtlantisEntity.Updater>();
 			
@@ -167,6 +176,11 @@ public class GameStatus {
 			ResultLockStep step = client.incomingLockSteps.poll();
 			if(step.frameNum == currentFrame) {
 				for (SimulationResult result : step.frameResults) {
+					if (result.type == SimulationResult.GAME_OVER) {
+						game_over = true;
+						red_wins = result.red_wins;						
+					}
+					
 					AtlantisEntity.Updater updater = result.entity_updater;
 					if (null != updater)
 						processUpdater(updater);

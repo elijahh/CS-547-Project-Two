@@ -21,7 +21,6 @@ Open Issues
 - **[57]** Test play. (Bo)
 - **[58]** Target fire back. (Bo)
 - **[59]** When game starts, red team appears on top left corner of the map and blue team appears on bottom right of the map. (Bo)
-- **[60]** Add unit model to left side of overlay and add in-game tutorial. (Elijah)
 ...
  
 
@@ -104,7 +103,7 @@ Resolved Issues
 - **[39]** Add flag to base AtlantisEntity class indicating whether unit is visible. Send to clients as part of
            Updater serialization. Clients should stop tracking and remove from the active entity list any object
            with the visible flag set to false. (Elijah)
-
+- **[60]** Add unit model to left side of overlay and add in-game tutorial. (Elijah)
 
 May Need to Revisit
 -------------------

@@ -134,6 +134,16 @@ public class AtlantisServer extends Thread{
 		sendResult(step, frameNum);
 	}
 	
+	public void sendGameOver(int frameNum, boolean red_wins) {
+		ResultLockStep step = new ResultLockStep(frameNum);
+		
+		SimulationResult result = new SimulationResult();
+		result.type = SimulationResult.GAME_OVER;
+		step.addResult(result);
+		
+		sendResult(step, frameNum);
+	}
+	
 	public class ClientListener extends Thread{
 		
 		Socket socket;

@@ -41,9 +41,7 @@ public class MotherShip extends FloatingEntity {
 	
 	private static int ANIMATION_FRAME_WIDTH = 50; /* pixels */
 	private static int ANIMATION_FRAME_HEIGHT = 200; /* pixels */
-	
-	private static List<MotherShip> mother_ships = new LinkedList<MotherShip>();
-	
+		
 	public MotherShip() {
 		this(0,0);
 	}
