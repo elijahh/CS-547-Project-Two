@@ -147,9 +147,9 @@ public class PlayingState extends BasicGameState{
 		overlay.update(delta);
 		
 		if(status.isGameOver()) {
-			System.out.println("GAME OVER");
+			// TODO Shut down server. Display winning side. Wait for a bit.
 			
-			// TODO Game over. Move to appropriate state.
+			game.enterState(AtlantisGame.MENU);
 		}
 		
 		// collect battle winnings
