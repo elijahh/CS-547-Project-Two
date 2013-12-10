@@ -101,6 +101,9 @@ public class GameStatus {
 		
 		
 		if (null != server) {
+			
+			/* ---------------------------------------------------------- */
+			/* Is entity visible to opponent */
 			atlantisEntities_team_red = new ArrayList<AtlantisEntity>();
 			atlantisEntities_team_blue = new ArrayList<AtlantisEntity>();
 			
@@ -158,7 +161,7 @@ public class GameStatus {
 					}
 				}
 			}
-			
+			/* ---------------------------------------- */
 
 			
 			if(0 >= mothership_on_server_1.getHealth()) {
@@ -323,8 +326,9 @@ public class GameStatus {
 				if (updated_entity.visibleToOpponent || updated_entity.getTeam() == playing_state.team){
 					if(updated_entity.getHealth() > 0)
 						tacticalsOnClient.put(identity, updated_entity);
-					else
+					else if(updated_entity.didExplodeOnClient == true) {
 						tacticalsOnClient.remove(identity);
+					} 
 				} else {
 					tacticalsOnClient.remove(identity);
 				}

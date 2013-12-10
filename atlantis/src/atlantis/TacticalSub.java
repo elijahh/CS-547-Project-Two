@@ -255,7 +255,7 @@ public class TacticalSub extends FloatingEntity {
 			if(tacticalTorpedo.collides(target)!=null) {
 				hitTarget = true;
 				ResourceManager.getSound(HIT_SOUND).play();
-				double damage = Math.random() * 100 % 100 + 1000 ;
+				double damage = Math.random() * 100 % 100 + 300 ;
 				target.health -= damage;
 				reward += damage * 5;
 				attackPosition = new Vector(tacticalTorpedo.getX(), tacticalTorpedo.getY());
