@@ -42,32 +42,35 @@ public class GameStatus {
 	public TacticalSub tactical_on_server_2;
 	// TEMPORARY FOR DEVELOPMENT
 	
+	public ArrayList<AtlantisEntity> atlantisEntities_team_red;
+	public ArrayList<AtlantisEntity> atlantisEntities_team_blue;
+	
 	public GameStatus(PlayingState playing_state) {
 		this.playing_state = playing_state;
 		
-		mothership_on_server_1 = new MotherShip(200, 200, new Vector(0, 0));
+		mothership_on_server_1 = new MotherShip(1848, 1848, new Vector(0, 0));
 		motherships_server_model.put(mothership_on_server_1.getIdentity(),
 				mothership_on_server_1);
 
-		mothership_on_server_2 = new MotherShip(1848, 1848, new Vector(0, 0));
+		mothership_on_server_2 = new MotherShip(200, 200, new Vector(0, 0));
 		mothership_on_server_2.setTeam(Team.BLUE);
 		motherships_server_model.put(mothership_on_server_2.getIdentity(),
 				mothership_on_server_2);
 		
 		// TEMPORARY FOR DEVELOPMENT
 		soldier_on_server_1 = 
-				new Soldier(350, 200, new Vector(0, 0));
+				new Soldier(1698, 1848, new Vector(0, 0));
 		soldiers_server_model.put(soldier_on_server_1.getIdentity(),
 				soldier_on_server_1);
 		soldier_on_server_2 = 
-				new Soldier(1698, 1848, new Vector(0, 0));
+				new Soldier(350, 200, new Vector(0, 0));
 		soldier_on_server_2.setTeam(Team.BLUE);
 		soldiers_server_model.put(soldier_on_server_2.getIdentity(),
 				soldier_on_server_2);
 		
-		tactical_on_server_1 = new TacticalSub(500, 200, new Vector(0,0));
+		tactical_on_server_1 = new TacticalSub(1548, 1848, new Vector(0,0));
 		tacticals_server_model.put(tactical_on_server_1.getIdentity(), tactical_on_server_1);	
-		tactical_on_server_2 = new TacticalSub(1548, 1848, new Vector(0,0));
+		tactical_on_server_2 = new TacticalSub(500, 200, new Vector(0,0));
 		tactical_on_server_2.setTeam(Team.BLUE);
 		tacticals_server_model.put(tactical_on_server_2.getIdentity(), tactical_on_server_2);
 		// TEMPORARY FOR DEVELOPMENT
@@ -91,7 +94,69 @@ public class GameStatus {
 		int currentFrame = playing_state.getCurrentFrame();
 		AtlantisServer server = playing_state.getServer();
 		
-		if (null != server) {			
+		
+		
+		if (null != server) {
+			atlantisEntities_team_red = new ArrayList<AtlantisEntity>();
+			atlantisEntities_team_blue = new ArrayList<AtlantisEntity>();
+			
+			for(AtlantisEntity entity: motherships_server_model.values()) {
+				if (entity.getTeam() == Team.RED) {
+					entity.visibleToOpponent = false;
+					atlantisEntities_team_red.add(entity);
+				}
+			}
+			for(AtlantisEntity entity: soldiers_server_model.values()) {
+				if (entity.getTeam() == Team.RED) {
+					entity.visibleToOpponent = false;
+					atlantisEntities_team_red.add(entity);
+				}
+			}
+			for(AtlantisEntity entity: tacticals_server_model.values()) {
+				if (entity.getTeam() == Team.RED) {
+					entity.visibleToOpponent = false;
+					atlantisEntities_team_red.add(entity);
+				}
+			}
+			
+			for(AtlantisEntity entity: motherships_server_model.values()) {
+				if (entity.getTeam() == Team.BLUE) {
+					entity.visibleToOpponent = false;
+					atlantisEntities_team_blue.add(entity);
+				}
+			}
+			for(AtlantisEntity entity: soldiers_server_model.values()) {
+				if (entity.getTeam() == Team.BLUE) {
+					entity.visibleToOpponent = false;
+					atlantisEntities_team_blue.add(entity);
+				}
+			}
+			for(AtlantisEntity entity: tacticals_server_model.values()) {
+				if (entity.getTeam() == Team.BLUE) {
+					entity.visibleToOpponent = false;
+					atlantisEntities_team_blue.add(entity);
+				}
+			}
+			
+			for (AtlantisEntity entity1: atlantisEntities_team_red) {
+				for (AtlantisEntity entity2: atlantisEntities_team_blue) {
+					if (Math.pow(entity1.getX()-entity2.getX(),2) + Math.pow(entity1.getY()-entity2.getY(),2) <= Math.pow(entity1.eyesight,2)){
+						entity1.visibleToOpponent = true;
+						break;
+					}
+				}
+			}
+			for (AtlantisEntity entity1: atlantisEntities_team_blue) {
+				for (AtlantisEntity entity2: atlantisEntities_team_red) {
+					if (Math.pow(entity1.getX()-entity2.getX(),2) + Math.pow(entity1.getY()-entity2.getY(),2) <= Math.pow(entity1.eyesight,2)){
+						entity1.visibleToOpponent = true;
+						break;
+					}
+				}
+			}
+			
+
+			
 			if(0 >= mothership_on_server_1.getHealth()) {
 				game_over = true;
 				red_wins = false;
@@ -153,6 +218,8 @@ public class GameStatus {
 				for(TacticalSub remove_sub : remove_subs)
 					tacticalsOnClient.remove(remove_sub);
 			}
+			
+			
 		
 			server.sendUpdates(updaters, playing_state.getCurrentFrame());
 			
@@ -237,8 +304,10 @@ public class GameStatus {
 				}
 
 				updated_entity.update(updater);
-
-				motherShipsOnClient.put(identity, updated_entity);
+				
+				if (updated_entity.visibleToOpponent || updated_entity.getTeam() == playing_state.team){
+					motherShipsOnClient.put(identity, updated_entity);
+				}
 			}
 		} else if (updater.getEntityClass() == TacticalSub.class){
 			synchronized (tacticalsOnClient) {
@@ -249,11 +318,15 @@ public class GameStatus {
 				}
 
 				updated_entity.update(updater);
-
-				if(updated_entity.getHealth() > 0)
-					tacticalsOnClient.put(identity, updated_entity);
-				else
+				
+				if (updated_entity.visibleToOpponent || updated_entity.getTeam() == playing_state.team){
+					if(updated_entity.getHealth() > 0)
+						tacticalsOnClient.put(identity, updated_entity);
+					else
+						tacticalsOnClient.remove(identity);
+				} else {
 					tacticalsOnClient.remove(identity);
+				}
 			}
 		} else {
 			// TODO: update of other entity types
