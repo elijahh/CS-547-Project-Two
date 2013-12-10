@@ -259,6 +259,7 @@ public class GameStatus {
 							processUpdaters(updater);
 					}
 				}
+				break;
 			}
 		}
 		
