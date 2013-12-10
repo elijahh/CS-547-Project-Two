@@ -60,7 +60,7 @@ public class GameStatus {
 		
 		// TEMPORARY FOR DEVELOPMENT
 		soldier_on_server_1 = 
-				new Soldier(1698, 1848, new Vector(0, 0));
+				new Soldier(1698, 1948, new Vector(0, 0));
 		soldiers_server_model.put(soldier_on_server_1.getIdentity(),
 				soldier_on_server_1);
 		soldier_on_server_2 = 
@@ -158,8 +158,6 @@ public class GameStatus {
 					}
 				}
 			}
-			
-
 			
 			if(0 >= mothership_on_server_1.getHealth()) {
 				game_over = true;
@@ -458,9 +456,16 @@ public class GameStatus {
 			break;
 		case Command.MOVEMENT:
 			synchronized (soldiers_server_model) {
-				if(soldier != null) {
+				boolean is_target_inside_obstacle = 
+					this.playing_state.getMap()
+						.isPositionVectorInsideTerrainTile(command.target);
+				
+				if(soldier != null && (false == is_target_inside_obstacle)) {
 					soldier.setDestination(command.target);
 					soldier.isAttacking = false;
+				} else {
+					System.out.println("Can't move there.");
+					// TODO Notify the user
 				}
 			}
 			synchronized (motherships_server_model) {
