@@ -55,6 +55,7 @@ public class TacticalSub extends FloatingEntity {
 		
 		MAX_HEALTH_VALUE = 500;
 		health = MAX_HEALTH_VALUE;
+		eyesight = 600;
 		
 		tactical_subs.add(this);
 	}

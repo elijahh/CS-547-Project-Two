@@ -57,6 +57,7 @@ public class MotherShip extends FloatingEntity {
 		
 		MAX_HEALTH_VALUE = 5000;
 		health = MAX_HEALTH_VALUE;
+		eyesight = 600;
 		
 		mother_ships.add(this);
 	}

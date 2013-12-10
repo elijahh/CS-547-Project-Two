@@ -65,6 +65,8 @@ public abstract class AtlantisEntity extends Entity implements
 	int MAX_HEALTH_VALUE = 100;
 	
 	protected boolean visible = true;
+	protected boolean visibleToOpponent = false;
+	protected int eyesight;
 
 	@Override
 	public int compareTo(final AtlantisEntity other) {
@@ -565,6 +567,7 @@ public abstract class AtlantisEntity extends Entity implements
 		boolean hitTarget;
 		
 		boolean visible;
+		boolean visibleToOpponent;
 
 		Updater(AtlantisEntity e) {
 
@@ -575,8 +578,9 @@ public abstract class AtlantisEntity extends Entity implements
 			health = e.health;
 			reward = e.reward;
 			hitTarget = e.hitTarget;
-			
+					
 			entity_class = e.getClass();
+
 			
 			if (e.torpedo != null) {
 				torpedoPosition = e.torpedo.getPosition();
@@ -593,6 +597,7 @@ public abstract class AtlantisEntity extends Entity implements
 			}
 
 			visible = e.visible;
+			visibleToOpponent = e.visibleToOpponent;
 		}
 
 		private static final long serialVersionUID = 234098222823485285L;
@@ -632,6 +637,7 @@ public abstract class AtlantisEntity extends Entity implements
 
 		/* Derived values */
 		movement_direction = getMovementDirection();
+
 
 		// TODO - Finish with as many variables as necessary to accurately
 		// communicate entity status to client for rendering.
@@ -702,9 +708,9 @@ public abstract class AtlantisEntity extends Entity implements
 		}
 		
 		health = updater.health;
-		reward = updater.reward;
-		
+		reward = updater.reward;	
 		visible = updater.visible;
+		visibleToOpponent = updater.visibleToOpponent;
 	}
 
 	private Animation movement_animation = null;
