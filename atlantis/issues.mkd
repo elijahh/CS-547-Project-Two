@@ -16,7 +16,6 @@ Open Issues
 - **[47]** Floating units should be able to move in 8 directions. (Greg)	  
 - **[54]** Add an "eyesight" property for each entity, if an opponent entity
 		   is out of every eyesight of player's entity, its "visible" flag is turned off.(Bo)
-- **[55]** Add "mount" action for soldier to mount on tactical sub. (Elijah)
 - **[56]** Add nudge method for soldiers. (Greg)
 - **[57]** Test play. (Bo)
 - **[58]** Target fire back. (Bo)
@@ -104,6 +103,7 @@ Resolved Issues
            Updater serialization. Clients should stop tracking and remove from the active entity list any object
            with the visible flag set to false. (Elijah)
 - **[60]** Add unit model to left side of overlay and add in-game tutorial. (Elijah)
+- **[55]** Add "mount" action for soldier to mount on tactical sub. (Elijah)
 
 May Need to Revisit
 -------------------

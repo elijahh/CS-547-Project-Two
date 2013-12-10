@@ -563,6 +563,8 @@ public abstract class AtlantisEntity extends Entity implements
 		boolean hitTarget;
 		
 		boolean visible;
+		
+		int numSoldiers; // on tactical sub
 
 		Updater(AtlantisEntity e) {
 
@@ -591,6 +593,12 @@ public abstract class AtlantisEntity extends Entity implements
 			}
 
 			visible = e.visible;
+			
+			if (entity_class == TacticalSub.class) {
+				numSoldiers = ((TacticalSub) e).soldiers.size();
+			} else {
+				numSoldiers = 0;
+			}
 		}
 
 		private static final long serialVersionUID = 234098222823485285L;
@@ -703,7 +711,11 @@ public abstract class AtlantisEntity extends Entity implements
 		reward = updater.reward;
 		
 		visible = updater.visible;
+		
+		numSoldiers = updater.numSoldiers;
 	}
+	
+	int numSoldiers; // on tactical sub
 
 	private Animation movement_animation = null;
 

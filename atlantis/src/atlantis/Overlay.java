@@ -21,6 +21,7 @@ public class Overlay {
 	Image actionMove;
 	Image actionAttack;
 	Image actionMount;
+	Image actionUnmount;
 	Image actionPurchase;
 	Image actionPurchaseSoldier;
 	Image actionPurchaseTactical;
@@ -55,6 +56,7 @@ public class Overlay {
 		actionMove = ResourceManager.getImage(AtlantisGame.ACTION_MOVE);
 		actionAttack = ResourceManager.getImage(AtlantisGame.ACTION_ATTACK);
 		actionMount = ResourceManager.getImage(AtlantisGame.ACTION_MOUNT);
+		actionUnmount = ResourceManager.getImage(AtlantisGame.ACTION_UNMOUNT);
 		actionPurchase = ResourceManager.getImage(AtlantisGame.ACTION_PURCHASE);
 		actionPurchaseSoldier = ResourceManager.getImage(AtlantisGame.ACTION_PURCHASE_SOLDIER);
 		actionPurchaseTactical = ResourceManager.getImage(AtlantisGame.ACTION_PURCHASE_TACTICAL);
@@ -341,6 +343,13 @@ public class Overlay {
 
 				action = 0;
 			}			
+		} else if (action == 4) { // unmount
+			GameStatus status = playingState.getStatus();
+			Command unmount_command = new Command(Command.UNMOUNT,
+					playingState.getCurrentFrame(), new Vector(0, 0),
+					selectedUnitID, 0);
+			status.sendCommand(unmount_command);
+			action = 0;
 		}
 		
 		g.drawImage(overlay, 0, 470);
@@ -409,7 +418,11 @@ public class Overlay {
 			if (selectedUnitID != -1) {
 				g.drawImage(actionMove, 290, 520);
 				if (!selectMotherShipUnit) g.drawImage(actionAttack, 350, 520);
-				if (selectWorkerUnit) g.drawImage(actionMount, 410, 520);
+				if (selectWorkerUnit) {
+					g.drawImage(actionMount, 410, 520);
+				} else if (selectTacticalUnit) {
+					g.drawImage(actionUnmount, 410, 520);
+				}
 			}
 		} else {
 			g.drawImage(actionBack, 230, 520);
@@ -447,6 +460,21 @@ public class Overlay {
 						g.drawString("Mount(T) Sub", x, y);
 						
 						if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) action = 3;
+					} else if (x > 410 && x < 460 && selectTacticalUnit) { // unmount button
+						// tooltip
+						x += 20;
+						g.setColor(Color.yellow);
+						g.fillRect(x, y, 190, 20);
+						g.setColor(Color.black);
+						int numSoldiers = playingState.getStatus()
+								.getIdTacticalsMapOnClient()
+								.get(selectedUnitID)
+								.numSoldiers;
+						String unloadMessage = "Unload(U) " + numSoldiers + " Soldier";
+						if (numSoldiers != 1) unloadMessage += "s";
+						g.drawString(unloadMessage, x, y);
+						
+						if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) action = 4;						
 					}
 				}
 				
@@ -546,6 +574,8 @@ public class Overlay {
 			action = 2;
 		} else if (input.isKeyPressed(Input.KEY_T) && selectWorkerUnit) {
 			action = 3;
+		} else if (input.isKeyPressed(Input.KEY_U) && selectTacticalUnit) {
+			action = 4;
 		} else if(input.isKeyPressed(Input.KEY_P)) {
 			purchaseMenuOpen = true;
 		}

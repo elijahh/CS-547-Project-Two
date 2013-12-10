@@ -278,7 +278,9 @@ public class TacticalSub extends FloatingEntity {
 	}
 	
 	public void unload() {
+		System.out.println("unload");
 		for (Soldier soldier : soldiers) {
+			soldier.setPosition(getPosition());
 			soldier.visible = true;
 		}
 		soldiers.clear();
