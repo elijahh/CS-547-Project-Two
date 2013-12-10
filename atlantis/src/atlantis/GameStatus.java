@@ -199,11 +199,16 @@ public class GameStatus {
 				}
 
 				updated_entity.update(updater);
-
-				if(updated_entity.getHealth() > 0) 
-					soldiersOnClient.put(identity, updated_entity);
-				else
+				
+				if (updated_entity.visibleToOpponent || updated_entity.getTeam() == playing_state.team){
+					if(updated_entity.getHealth() > 0) {					
+						soldiersOnClient.put(identity, updated_entity);
+					} else {
+						soldiersOnClient.remove(identity);
+					}
+				} else {
 					soldiersOnClient.remove(identity);
+				}
 			}
 		} else if (updater.getEntityClass() == MotherShip.class){		
 			synchronized (motherShipsOnClient) {
