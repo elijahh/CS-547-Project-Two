@@ -201,9 +201,7 @@ public class TacticalSub extends FloatingEntity {
 		String animation_filename;
 		
 		Vector direction = parseDirection(unit_direction);
-		
-		System.out.println(direction);
-		
+				
 		if (direction.equals(LEFT_UNIT_VECTOR)) {
 			animation_filename = MOVE_L_ANIMATION_FILE;		
 			ANIMATION_FRAME_WIDTH = 130;
