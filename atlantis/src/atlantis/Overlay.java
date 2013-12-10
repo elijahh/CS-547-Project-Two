@@ -1,5 +1,6 @@
 package atlantis;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
+import atlantis.AtlantisEntity.Team;
 import atlantis.networking.Command;
 import jig.ResourceManager;
 import jig.Vector;
@@ -445,12 +447,46 @@ public class Overlay {
 		g.setColor(Color.black);
 		g.fillRect(675, 475, 120, 120);
 		g.setColor(Color.white);
-		// Total minimap size scale:  120/2048 ~= 0.0586
+		// Total minimap size scale:  120/2048 ~= 0.0586; inverse 2048/120 ~= 17.067
 		// Region width:              800/2048 * 120 ~= 46.875
 		// Region height:             470/2048 * 120 ~= 27.539
 		float miniMapX = 675 - PlayingState.viewportOffsetX * 0.0586f;
 		float miniMapY = 475 - PlayingState.viewportOffsetY * 0.0586f;
 		g.drawRect(miniMapX, miniMapY, 46.875f, 27.539f);
+		GameStatus status = playingState.getStatus();
+		ArrayList<AtlantisEntity> allEntities = new ArrayList<AtlantisEntity>();
+		allEntities.addAll(status.getSoldiers());
+		allEntities.addAll(status.getMotherShips());
+		allEntities.addAll(status.getTacticals());
+		for (AtlantisEntity s : allEntities) {
+			if (s.visible && s.getTeam() == playingState.team) {
+				if (playingState.team == Team.RED) {
+					g.setColor(Color.red);
+					if (s.getClass() == MotherShip.class) g.setColor(Color.magenta); 
+				}
+				else {
+					g.setColor(Color.blue);
+					if (s.getClass() == MotherShip.class) g.setColor(Color.cyan);
+				}
+				g.drawOval(675 + (s.getX()-PlayingState.viewportOffsetX) * 0.0586f,
+						475 + (s.getY()-PlayingState.viewportOffsetY) * 0.0586f, 1, 1);
+			} else if (s.visibleToOpponent && s.getTeam() != playingState.team) {
+				if (playingState.team == Team.RED) {
+					g.setColor(Color.blue);
+					if (s.getClass() == MotherShip.class) g.setColor(Color.cyan);
+				}
+				else {
+					g.setColor(Color.red);
+					if (s.getClass() == MotherShip.class) g.setColor(Color.magenta);
+				}
+				g.drawOval(675 + (s.getX()-PlayingState.viewportOffsetX) * 0.0586f,
+						475 + (s.getY()-PlayingState.viewportOffsetY) * 0.0586f, 1, 1);
+			}
+		}
+		if (x > 675 && y > 475 && input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+			PlayingState.viewportOffsetX = Math.min(Math.max(-1250, (int) (-(x-700) * 17.067f)), 0);
+			PlayingState.viewportOffsetY = Math.min(Math.max(-1580, (int) (-(y-490) * 17.067f)), 0);
+		}
 		
 		if (!purchaseMenuOpen) {
 			g.drawImage(actionPurchase, 230, 520);
@@ -554,7 +590,7 @@ public class Overlay {
 							clickTimer <= 0 && playingState.gold >= 500) {
 						playingState.gold -= 500;
 						clickTimer = 1000;
-						GameStatus status = playingState.getStatus();
+						status = playingState.getStatus();
 						MotherShip ourShip = null;
 						for (MotherShip mothership : status.getMotherShips()) {
 							if (mothership.getTeam() == playingState.team) {
@@ -602,7 +638,7 @@ public class Overlay {
 							clickTimer <= 0 && playingState.gold >= 2000) {
 						playingState.gold -= 2000;
 						clickTimer = 1000;
-						GameStatus status = playingState.getStatus();
+						status = playingState.getStatus();
 						MotherShip ourShip = null;
 						for (MotherShip mothership : status.getMotherShips()) {
 							if (mothership.getTeam() == playingState.team) {

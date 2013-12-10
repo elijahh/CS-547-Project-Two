@@ -9,7 +9,6 @@ Open Issues
 - **[47]** Floating units should be able to move in 8 directions. (Greg)	  
 - **[57]** Test play. (Bo)
 - **[58]** Target fire back. (Bo)
-- **[62]** Improve minimap. (Elijah)
 - **[63]** Improve transition to GameOverState. Briefly display winning side to both users and shut down server thread.
            Add map and other eye candy to GameOverState. (Greg)
 - **[64]** Create another DijkstraAlgorithm JUnit test using a randomly generated map with many adjacencies not confined
@@ -108,6 +107,7 @@ Resolved Issues
            "obstacle" tile. (Greg)
 - **[56]** Add "nudge" method for soldiers -- move nudgeNudge() up from TacticalSub. (Greg)
 - **[30]** Modify soldier addition to spawn next to MotherShip while avoiding terrain. Depends on 56 and 40. (Elijah)
+- **[62]** Improve minimap. (Elijah)
 
 
 May Need to Revisit
