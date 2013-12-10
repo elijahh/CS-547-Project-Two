@@ -33,10 +33,12 @@ public class TacticalTorpedo extends Entity {
 	Image torpedo;
 	private static final String BLUETORPEDOIMG_RSC = "atlantis/resource/tactical-torpedo-blue.png";
 	private static final String REDTORPEDOIMG_RSC = "atlantis/resource/tactical-torpedo-red.png";
+	private static final String FIRE_MISSLE = "atlantis/resource/fire_missle.wav";
 	
 	static {
 		ResourceManager.loadImage(BLUETORPEDOIMG_RSC);
 		ResourceManager.loadImage(REDTORPEDOIMG_RSC);
+		ResourceManager.loadSound(FIRE_MISSLE);
 	}
 	
 	public TacticalTorpedo(final float x, final float y, double theta, Team team) {
@@ -50,6 +52,7 @@ public class TacticalTorpedo extends Entity {
 		torpedo.setRotation((float) theta);
 		
 		addImageWithBoundingBox(torpedo);
+		ResourceManager.getSound(FIRE_MISSLE).play();
 	}
 	
 	public void update(int delta) {

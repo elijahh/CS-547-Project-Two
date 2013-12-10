@@ -15,6 +15,25 @@ import jig.ResourceManager;
 import jig.Vector;
 
 public class Overlay {
+	
+	private static final String SOLDIER_SOUND_1 = "atlantis/resource/soldier_sound_1.wav";
+	private static final String SOLDIER_SOUND_2 = "atlantis/resource/soldier_sound_2.wav";
+	private static final String SOLDIER_SOUND_3 = "atlantis/resource/soldier_sound_3.wav";
+	private static final String SOLDIER_SOUND_4 = "atlantis/resource/soldier_sound_4.wav";
+	private static final String SOLDIER_SOUND_5 = "atlantis/resource/soldier_sound_5.wav";
+	private static final String MOTHERSHIP_SELECTED = "atlantis/resource/mothership_select.wav";
+	private static final String TACTICAL_SELECTED = "atlantis/resource/tactical_select.wav";
+	
+	static {		
+		ResourceManager.loadSound(SOLDIER_SOUND_1);
+		ResourceManager.loadSound(SOLDIER_SOUND_2);
+		ResourceManager.loadSound(SOLDIER_SOUND_3);
+		ResourceManager.loadSound(SOLDIER_SOUND_4);
+		ResourceManager.loadSound(SOLDIER_SOUND_5);	
+		ResourceManager.loadSound(MOTHERSHIP_SELECTED);
+		ResourceManager.loadSound(TACTICAL_SELECTED);
+	}
+		
 	int clickTimer = 0;
 	
 	Image overlay;
@@ -153,6 +172,7 @@ public class Overlay {
 							x < soldier.getCoarseGrainedMaxX()) {
 						selectedUnitID = id.longValue();
 						selectWorkerUnit = true;
+						ResourceManager.getSound(getRandomSound()).play();
 						break;
 					}
 				}
@@ -168,6 +188,7 @@ public class Overlay {
 								x < mothership.getCoarseGrainedMaxX()) {
 							selectedUnitID = id.longValue();
 							selectMotherShipUnit = true;
+							ResourceManager.getSound(MOTHERSHIP_SELECTED).play();
 							break;
 						}
 					}
@@ -184,6 +205,7 @@ public class Overlay {
 								x < tactical.getCoarseGrainedMaxX()) {
 							selectedUnitID = id.longValue();
 							selectTacticalUnit = true;
+							ResourceManager.getSound(TACTICAL_SELECTED).play();
 							break;
 						}
 					}
@@ -206,6 +228,14 @@ public class Overlay {
 				GameStatus status = playingState.getStatus();
 				status.sendCommand(move_command);
 				
+				Map<Long, Soldier> soldiers = playingState.getStatus()
+						.getIdSoldiersMapOnClient();
+				for (Long id : soldiers.keySet()) {
+					if(selectedUnitID == id.longValue()){
+						ResourceManager.getSound(getRandomSound()).play();
+						break;
+					}
+				}
 				action = 0;
 			}
 		} else if (action == 2) { // attack
@@ -279,6 +309,13 @@ public class Overlay {
 							playingState.getCurrentFrame(), new Vector(x-PlayingState.viewportOffsetX, y-PlayingState.viewportOffsetY),
 							selectedUnitID, targetUnitID);
 					status.sendCommand(attack_command);
+					
+					for (Long id : soldiers.keySet()) {
+						if(selectedUnitID == id.longValue()){
+							ResourceManager.getSound(getRandomSound()).play();
+							break;
+						}
+					}
 				}
 
 				action = 0;
@@ -477,5 +514,22 @@ public class Overlay {
 		} else if(input.isKeyPressed(Input.KEY_P)) {
 			purchaseMenuOpen = true;
 		}
+	}
+	
+	private String getRandomSound() {
+		int random = (int) (Math.random() *5 % 5);
+		switch (random){
+		case 0:
+			return SOLDIER_SOUND_1;
+		case 1:
+			return SOLDIER_SOUND_2;
+		case 2:	
+			return SOLDIER_SOUND_3;
+		case 3:
+			return SOLDIER_SOUND_4;
+		case 4:
+			return SOLDIER_SOUND_5;
+		}
+		return null;
 	}
 }

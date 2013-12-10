@@ -42,6 +42,8 @@ public class Soldier extends GroundEntity {
 	private static final int ANIMATION_FRAME_WIDTH = 54; /* pixels */
 	private static final int ANIMATION_FRAME_HEIGHT = 85; /* pixels */
 	
+	private static final String HIT_SOUND = "atlantis/resource/hit.wav";
+	
 	public Soldier() {
 		this(0, 0);
 	}
@@ -69,6 +71,8 @@ public class Soldier extends GroundEntity {
 		
 		ResourceManager.loadImage(RED_ICON);
 		ResourceManager.loadImage(BLUE_ICON);
+		
+		ResourceManager.loadSound(HIT_SOUND);
 	}
 	
 	private static Random random_generator = 
@@ -145,6 +149,7 @@ public class Soldier extends GroundEntity {
 			torpedo.update(delta);
 			if(torpedo.collides(target)!=null) {		
 				hitTarget = true;
+				ResourceManager.getSound(HIT_SOUND).play();
 				double damage = Math.random() * 5 % 5;
 				target.health -= damage;
 				reward += damage * 5;

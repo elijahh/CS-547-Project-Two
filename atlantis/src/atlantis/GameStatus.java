@@ -40,6 +40,7 @@ public class GameStatus {
 	public Soldier soldier_on_server_2;
 	public TacticalSub tactical_on_server_1;
 	public TacticalSub tactical_on_server_2;
+	public TacticalSub tactical_on_server_3;
 	// TEMPORARY FOR DEVELOPMENT
 	
 	public ArrayList<AtlantisEntity> atlantisEntities_team_red;
@@ -73,6 +74,8 @@ public class GameStatus {
 		tactical_on_server_2 = new TacticalSub(500, 200, new Vector(0,0));
 		tactical_on_server_2.setTeam(Team.BLUE);
 		tacticals_server_model.put(tactical_on_server_2.getIdentity(), tactical_on_server_2);
+		tactical_on_server_3 = new TacticalSub(700, 200, new Vector(0,0));
+		tacticals_server_model.put(tactical_on_server_3.getIdentity(), tactical_on_server_3);
 		// TEMPORARY FOR DEVELOPMENT
 		
 	}

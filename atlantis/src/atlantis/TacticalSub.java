@@ -42,6 +42,8 @@ public class TacticalSub extends FloatingEntity {
 	
 	private static List<TacticalSub> tactical_subs = new LinkedList<TacticalSub>();
 	
+	private static final String HIT_SOUND = "atlantis/resource/hit.wav";
+	
 	public TacticalSub() {
 		this(0,0);
 	}
@@ -73,6 +75,8 @@ public class TacticalSub extends FloatingEntity {
 		
 		ResourceManager.loadImage(RED_ICON);
 		ResourceManager.loadImage(BLUE_ICON);
+		
+		ResourceManager.loadSound(HIT_SOUND);
 	}
 	
 	
@@ -250,6 +254,7 @@ public class TacticalSub extends FloatingEntity {
 			tacticalTorpedo.update(delta);
 			if(tacticalTorpedo.collides(target)!=null) {
 				hitTarget = true;
+				ResourceManager.getSound(HIT_SOUND).play();
 				double damage = Math.random() * 100 % 100 + 1000 ;
 				target.health -= damage;
 				reward += damage * 5;
