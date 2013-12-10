@@ -65,6 +65,8 @@ public abstract class AtlantisEntity extends Entity implements
 	int MAX_HEALTH_VALUE = 100;
 	
 	protected boolean visible = true;
+	protected boolean visibleToOpponent = true;
+	protected int eyesight;
 
 	@Override
 	public int compareTo(final AtlantisEntity other) {
@@ -565,6 +567,7 @@ public abstract class AtlantisEntity extends Entity implements
 		boolean visible;
 		
 		int numSoldiers; // on tactical sub
+		boolean visibleToOpponent;
 
 		Updater(AtlantisEntity e) {
 
@@ -599,6 +602,7 @@ public abstract class AtlantisEntity extends Entity implements
 			} else {
 				numSoldiers = 0;
 			}
+			visibleToOpponent = e.visibleToOpponent;
 		}
 
 		private static final long serialVersionUID = 234098222823485285L;
@@ -713,6 +717,10 @@ public abstract class AtlantisEntity extends Entity implements
 		visible = updater.visible;
 		
 		numSoldiers = updater.numSoldiers;
+
+		reward = updater.reward;	
+		visible = updater.visible;
+		visibleToOpponent = updater.visibleToOpponent;
 	}
 	
 	int numSoldiers; // on tactical sub
@@ -774,7 +782,7 @@ public abstract class AtlantisEntity extends Entity implements
 		g.setColor(Color.red);
 		float x = getCoarseGrainedMinX();
 		float y = getCoarseGrainedMinY();
-		g.fill(new Rectangle(x, y, ((float) health / MAX_HEALTH_VALUE) * 40, 4));
+		if(health >= 0) g.fill(new Rectangle(x, y, ((float) health / MAX_HEALTH_VALUE) * 40, 4));
 		g.setColor(Color.white);
 		g.draw(new Rectangle(x, y, 40, 4));
 	}

@@ -79,8 +79,11 @@ public class PlayingState extends BasicGameState{
 						800, 600), 0, 0, 2, 0, true, 500, true);
 		shimmer.setPingPong(true);
 		
-		if (StartMenuState.GAME_TYPE.equals("server"))
+		if (StartMenuState.GAME_TYPE.equals("server")){
 			team = AtlantisEntity.Team.RED;
+			viewportOffsetX = -1248;
+			viewportOffsetY = -1578;
+		}
 	}
 	
 	@Override
@@ -148,6 +151,12 @@ public class PlayingState extends BasicGameState{
 				new PriorityQueue<Soldier>(status.getSoldiers());
 		for (Soldier w : soldiers) {
 			if (w.getTeam() == this.team) gold += w.reward;
+		}
+		
+		if(status.isGameOver()) {
+			System.out.println("GAME OVER");
+			
+			// TODO Game over. Move to appropriate state.
 		}
 	}
 

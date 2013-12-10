@@ -43,7 +43,7 @@ public class MotherShip extends FloatingEntity {
 	private static int ANIMATION_FRAME_HEIGHT = 200; /* pixels */
 	
 	private static List<MotherShip> mother_ships = new LinkedList<MotherShip>();
-	
+		
 	public MotherShip() {
 		this(0,0);
 	}
@@ -57,6 +57,7 @@ public class MotherShip extends FloatingEntity {
 		
 		MAX_HEALTH_VALUE = 5000;
 		health = MAX_HEALTH_VALUE;
+		eyesight = 600;
 		
 		mother_ships.add(this);
 	}
