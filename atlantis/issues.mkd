@@ -14,6 +14,8 @@ Open Issues
 - **[62]** Improve minimap. (Elijah)
 - **[63]** Improve transition to GameOverState. Briefly display winning side to both users and shut down server thread.
            Add map and other eye candy to GameOverState. (Greg)
+- **[64]** Create another DijkstraAlgorithm JUnit test using a randomly generated map with many adjacencies not confined
+           to a grid in an effort to find a situation where Parallel Dijkstra's will outperform the standard version. (Greg)
 ...
  
 
