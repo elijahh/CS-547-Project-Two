@@ -250,6 +250,8 @@ public class GameStatus {
 							processUpdaters(updater);
 					}
 				}
+				
+				if(game_over == false) break;
 			}
 		}
 		
