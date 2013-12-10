@@ -162,7 +162,7 @@ public class Soldier extends GroundEntity {
 			} 
 		}
 		
-				
+		if (isMounting) mount((TacticalSub) target);
 		
 		int managing_collisisons_count = 
 				handling_collisions_with_these_soldiers.size();
@@ -262,6 +262,20 @@ public class Soldier extends GroundEntity {
 			if (target.health <= 0) isAttacking = false;
 			System.out.println("target health: " + target.health);
 			System.out.println("this health: " + health);
+		} else {
+			setDestination(target.getPosition());
+		}
+	}
+	
+	boolean isMounting = false;
+	public void mount(TacticalSub t) {
+		isMounting = true;
+		target = t;
+		if (getPosition().distance(target.getPosition()) < 50) {
+			isMounting = false;
+			stopMoving();
+			t.load(this);
+			visible = false;
 		} else {
 			setDestination(target.getPosition());
 		}
