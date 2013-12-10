@@ -8,7 +8,8 @@ Open Issues
            
 - **[38]** Add health counter to base AtlantisEntity class. Send to clients as part of Updater serialization. Units
            should be removed from server and clients when health counter goes below zero. Game is over when one of
-           the MotherShip units is destroyed -- create static method to track health of each MotherShip created. Indicate winner.(Greg)
+           the MotherShip units is destroyed -- create static method to track health of each MotherShip created. 
+           Indicate winner.(Greg)
 - **[40]** Add method to AtlantisMap to identify whether a location x,y coordinates are inside a terrain
            "obstacle" tile. (Greg)
 - **[42]** Adjust map rendering offset in such a way that Soldier's "feet" appear near center of tile corresponding to

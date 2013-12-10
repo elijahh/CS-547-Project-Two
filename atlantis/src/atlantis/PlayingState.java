@@ -137,26 +137,29 @@ public class PlayingState extends BasicGameState{
 	}
 	
 	float gold = 0;
+
+	int game_over_countdown;
 	
 	@Override
 	public void update(GameContainer container, StateBasedGame game,
 			int delta) throws SlickException {
 		currentFrame += 1;
 		gold += delta / 180f;
+		
 		status.update(container, delta);
 		overlay.update(delta);
+		
+		if(status.isGameOver()) {
+			// TODO Shut down server. Display winning side. Wait for a bit.
+			
+			game.enterState(AtlantisGame.MENU);
+		}
 		
 		// collect battle winnings
 		Queue<Soldier> soldiers = 
 				new PriorityQueue<Soldier>(status.getSoldiers());
 		for (Soldier w : soldiers) {
 			if (w.getTeam() == this.team) gold += w.reward;
-		}
-		
-		if(status.isGameOver()) {
-			System.out.println("GAME OVER");
-			
-			// TODO Game over. Move to appropriate state.
 		}
 	}
 

@@ -78,9 +78,10 @@ public class GameStatus {
 	}
 	
 	private boolean game_over = false;
-	private boolean red_wins = false;
-	
 	public boolean isGameOver() { return game_over; }
+	
+	private boolean red_wins = false;
+	public boolean isRedWinner() { return red_wins; }
 
 	private List<Command> commands_to_server = new ArrayList<Command>();
 
