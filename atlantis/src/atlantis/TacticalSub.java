@@ -11,6 +11,10 @@ import java.util.Set;
 
 import org.newdawn.slick.Animation;
 
+import dijkstra.engine.DijkstraAlgorithm;
+import dijkstra.model.Edge;
+import dijkstra.model.Graph;
+import dijkstra.model.Vertex;
 import atlantis.AtlantisEntity.Team;
 import jig.Collision;
 import jig.ResourceManager;
@@ -68,6 +72,39 @@ public class TacticalSub extends FloatingEntity {
 		eyesight = 500;
 		
 		tactical_subs.add(this);
+		
+		dijkstra = new DijkstraAlgorithm(graph_with_diagonals);
+	}
+	
+	static private Graph graph_with_diagonals;
+	
+	static {
+		List<Edge> map_edges = new ArrayList<Edge>();
+		List<Vertex> map_nodes = new ArrayList<Vertex>();
+		
+		for (int j = 0; j < MAP_GRID_Y; j++) {
+			for (int i = 0; i < MAP_GRID_X; i++) {
+				int n = j * MAP_GRID_X + i;
+
+				Vertex location = new Vertex("Node_" + n);
+				map_nodes.add(location);
+
+				if (0 < i)
+					Graph.addLane(map_edges, map_nodes, n, n - 1,
+							MAP_HORIZONTAL_MOVE_COST);
+				if (0 < j)
+					Graph.addLane(map_edges, map_nodes, n, n - MAP_GRID_X,
+							MAP_VERTICAL_MOVE_COST);
+				if ((0 < j) && (0 < i))
+					Graph.addLane(map_edges, map_nodes, n, n - MAP_GRID_X - 1,
+							MAP_DIAGONAL_MOVE_COST);
+				if ((0 < j) && ((MAP_GRID_X - 1) > i))
+					Graph.addLane(map_edges, map_nodes, n, n - MAP_GRID_X + 1,
+							MAP_DIAGONAL_MOVE_COST);
+			}
+		}
+
+		graph_with_diagonals = new Graph(map_nodes, map_edges);
 	}
 	
 	static {
