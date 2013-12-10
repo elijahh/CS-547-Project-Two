@@ -20,14 +20,22 @@ import jig.Vector;
 public class TacticalSub extends FloatingEntity {
 	
 	private static final String FACE_U_GRAPHIC_FILE = "atlantis/resource/tactical-up.png";
+	private static final String FACE_UL_GRAPHIC_FILE = "atlantis/resource/tactical-upleft.png";
+	private static final String FACE_UR_GRAPHIC_FILE = "atlantis/resource/tactical-upright.png";
 	private static final String FACE_D_GRAPHIC_FILE = "atlantis/resource/tactical-down.png";
+	private static final String FACE_DL_GRAPHIC_FILE = "atlantis/resource/tactical-downleft.png";
+	private static final String FACE_DR_GRAPHIC_FILE = "atlantis/resource/tactical-downright.png";
 	private static final String FACE_L_GRAPHIC_FILE = "atlantis/resource/tactical-left.png";
 	private static final String FACE_R_GRAPHIC_FILE = "atlantis/resource/tactical-right.png";
 	
 	private static final String MOVE_L_ANIMATION_FILE = "atlantis/resource/tactical-left.png";
 	private static final String MOVE_R_ANIMATION_FILE = "atlantis/resource/tactical-right.png";
 	private static final String MOVE_U_ANIMATION_FILE = "atlantis/resource/tactical-up.png";
+	private static final String MOVE_UL_ANIMATION_FILE = "atlantis/resource/tactical-upleft.png";
+	private static final String MOVE_UR_ANIMATION_FILE = "atlantis/resource/tactical-upright.png";
 	private static final String MOVE_D_ANIMATION_FILE = "atlantis/resource/tactical-down.png";
+	private static final String MOVE_DL_ANIMATION_FILE = "atlantis/resource/tactical-downleft.png";
+	private static final String MOVE_DR_ANIMATION_FILE = "atlantis/resource/tactical-downright.png";
 	
 	private static final String RED_ICON = "atlantis/resource/red-worker.png";
 	private static final String BLUE_ICON = "atlantis/resource/blue-worker.png";
@@ -64,12 +72,20 @@ public class TacticalSub extends FloatingEntity {
 	
 	static {
 		ResourceManager.loadImage(FACE_D_GRAPHIC_FILE);
+		ResourceManager.loadImage(FACE_DL_GRAPHIC_FILE);
+		ResourceManager.loadImage(FACE_DR_GRAPHIC_FILE);
 		ResourceManager.loadImage(FACE_U_GRAPHIC_FILE);
+		ResourceManager.loadImage(FACE_UL_GRAPHIC_FILE);
+		ResourceManager.loadImage(FACE_UR_GRAPHIC_FILE);
 		ResourceManager.loadImage(FACE_L_GRAPHIC_FILE);
 		ResourceManager.loadImage(FACE_R_GRAPHIC_FILE);	
 		
 		ResourceManager.loadImage(MOVE_D_ANIMATION_FILE);
+		ResourceManager.loadImage(MOVE_DL_ANIMATION_FILE);
+		ResourceManager.loadImage(MOVE_DR_ANIMATION_FILE);
 		ResourceManager.loadImage(MOVE_U_ANIMATION_FILE);
+		ResourceManager.loadImage(MOVE_UL_ANIMATION_FILE);
+		ResourceManager.loadImage(MOVE_UR_ANIMATION_FILE);
 		ResourceManager.loadImage(MOVE_L_ANIMATION_FILE);
 		ResourceManager.loadImage(MOVE_R_ANIMATION_FILE);
 		
