@@ -4,8 +4,6 @@
 Open Issues
 -----------
 	
-- **[30]** Modify soldier addition to spawn next to MotherShip while avoiding terrain. Depends on 56 and 40. (Elijah)
-           
 - **[42]** Adjust map rendering offset in such a way that Soldier's "feet" appear near center of tile corresponding to
            current location. (Greg)
 - **[47]** Floating units should be able to move in 8 directions. (Greg)	  
@@ -109,6 +107,7 @@ Resolved Issues
 - **[40]** Add method to AtlantisMap to identify whether a position vector is inside a terrain
            "obstacle" tile. (Greg)
 - **[56]** Add "nudge" method for soldiers -- move nudgeNudge() up from TacticalSub. (Greg)
+- **[30]** Modify soldier addition to spawn next to MotherShip while avoiding terrain. Depends on 56 and 40. (Elijah)
 
 
 May Need to Revisit

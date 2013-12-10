@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import jig.Collision;
 import jig.Vector;
 
 import org.newdawn.slick.GameContainer;
@@ -487,6 +488,18 @@ public class GameStatus {
 							command.target.getY());
 					newSoldier.setTeam(Team.values()[(int) command.attackTargetId]);
 					soldiers_server_model.put(newSoldier.getIdentity(), newSoldier);
+					for (Soldier other : soldiers_server_model.values()) { // nudge
+						Collision collision = newSoldier.collides(other);
+						if (null != collision) {
+							if(other.getMovementDirection().equals(AtlantisEntity.STOPPED_VECTOR)) {
+								Vector their_position = other.getPosition();
+								double angle_to_other_soldier = newSoldier.getPosition().angleTo(their_position);
+								Vector direction_to_other_soldier =
+										AtlantisEntity.getVectorForAngle(angle_to_other_soldier);
+								other.nudgeNudge(direction_to_other_soldier);
+							}
+						}
+					}
 				}
 			}
 			synchronized (tacticals_server_model) {

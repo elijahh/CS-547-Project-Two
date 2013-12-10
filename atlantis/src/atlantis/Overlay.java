@@ -1,5 +1,6 @@
 package atlantis;
 
+import java.util.List;
 import java.util.Map;
 
 import org.newdawn.slick.Color;
@@ -201,6 +202,7 @@ public class Overlay {
 								x < mothership.getCoarseGrainedMaxX()) {
 							selectedUnitID = id.longValue();
 							selectMotherShipUnit = true;
+							selectTacticalUnit = false;
 							ResourceManager.getSound(MOTHERSHIP_SELECTED).play();
 							break;
 						}
@@ -552,11 +554,42 @@ public class Overlay {
 							clickTimer <= 0 && playingState.gold >= 500) {
 						playingState.gold -= 500;
 						clickTimer = 1000;
-						playingState.getStatus().sendCommand(new Command(
-								Command.PURCHASE, playingState.getCurrentFrame(),
-								new Vector(400 - PlayingState.viewportOffsetX,
-										200 - PlayingState.viewportOffsetY),
-								0, playingState.team.ordinal()));
+						GameStatus status = playingState.getStatus();
+						MotherShip ourShip = null;
+						for (MotherShip mothership : status.getMotherShips()) {
+							if (mothership.getTeam() == playingState.team) {
+								ourShip = mothership;
+								break;
+							}
+						}
+						if (ourShip != null) {
+							boolean canSpawn = false;
+							float spawnX = ourShip.getX()-PlayingState.viewportOffsetX-50;
+							float spawnY = ourShip.getY()-PlayingState.viewportOffsetY-50;
+							// scan radius 50 around mothership for spawn point
+							for (int i = 0; i <= 2; i++) {
+								for (int j = 0; j <= 2; j++) {
+									spawnX += 50*i;
+									spawnY += 50*j;
+									if (spawnX > 2040 || spawnY > 2040) continue;
+									if (!playingState.map.isPositionVectorInsideTerrainTile(
+											new Vector(spawnX, spawnY))) {
+										canSpawn = true;
+										break;
+									}
+								}
+							}
+							if (canSpawn) {
+								status.sendCommand(new Command(
+										Command.PURCHASE, playingState.getCurrentFrame(),
+										new Vector(spawnX, spawnY),
+										0, playingState.team.ordinal()));
+							} else {
+								playingState.gold += 500;
+								g.setColor(Color.red);
+								g.drawString("Unable to spawn soldier. Please move your mothership away from terrain.", 130, 575);							
+							}
+						}
 					}
 				} else if (x > 350 && x < 400) {
 					x += 20;
@@ -569,11 +602,21 @@ public class Overlay {
 							clickTimer <= 0 && playingState.gold >= 2000) {
 						playingState.gold -= 2000;
 						clickTimer = 1000;
-						playingState.getStatus().sendCommand(new Command(
-								Command.PURCHASE, playingState.getCurrentFrame(),
-								new Vector(400 - PlayingState.viewportOffsetX,
-										200 - PlayingState.viewportOffsetY),
-								1, playingState.team.ordinal()));
+						GameStatus status = playingState.getStatus();
+						MotherShip ourShip = null;
+						for (MotherShip mothership : status.getMotherShips()) {
+							if (mothership.getTeam() == playingState.team) {
+								ourShip = mothership;
+								break;
+							}
+						}
+						if (ourShip != null) {
+							status.sendCommand(new Command(
+									Command.PURCHASE, playingState.getCurrentFrame(),
+									new Vector(ourShip.getX()-PlayingState.viewportOffsetX,
+									ourShip.getY()-PlayingState.viewportOffsetY),
+									1, playingState.team.ordinal()));
+						}
 					}
 				}
 			}
