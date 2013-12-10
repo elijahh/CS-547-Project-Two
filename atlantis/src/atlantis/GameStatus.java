@@ -343,6 +343,15 @@ public class GameStatus {
 				}
 			}
 			break;
+		case Command.MOUNT:
+			synchronized (soldiers_server_model) {
+				if (soldier != null) {
+					synchronized (tacticals_server_model) {
+						soldier.mount(tacticals_server_model.get(command.attackTargetId));
+					}
+				}
+			}
+			break;
 		case Command.MOVEMENT:
 			synchronized (soldiers_server_model) {
 				if(soldier != null) {

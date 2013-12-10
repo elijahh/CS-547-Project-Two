@@ -15,6 +15,7 @@ public class Command implements Serializable {
 	public static final short MOVEMENT = 0;
 	public static final short ATTACK = 1;
 	public static final short PURCHASE = 2;
+	public static final short MOUNT = 3;
 	
 	public short type;
 	public int frameNum;

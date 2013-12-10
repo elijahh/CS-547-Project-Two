@@ -519,8 +519,6 @@ public abstract class AtlantisEntity extends Entity implements
 		isMoving = false;
 	}
 	
-	// TODO: set isAttacking to false when another command is given
-	// or conflict is resolved
 	boolean isAttacking = false;
 	AtlantisEntity target;
 	public void setTarget(AtlantisEntity t) {

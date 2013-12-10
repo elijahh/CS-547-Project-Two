@@ -271,4 +271,16 @@ public class TacticalSub extends FloatingEntity {
 		Vector position = this.getPosition().add(direction);
 		this.setPosition(position);
 	}
+	
+	ArrayList<Soldier> soldiers = new ArrayList<Soldier>();
+	public void load(Soldier soldier) {
+		soldiers.add(soldier);
+	}
+	
+	public void unload() {
+		for (Soldier soldier : soldiers) {
+			soldier.visible = true;
+		}
+		soldiers.clear();
+	}
 }
