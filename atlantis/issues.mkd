@@ -10,10 +10,8 @@ Open Issues
            Add map and other eye candy to GameOverState. (Greg)
 - **[64]** Create another DijkstraAlgorithm JUnit test using a randomly generated map with many adjacencies not confined
            to a grid in an effort to find a situation where Parallel Dijkstra's will outperform the standard version. (Greg)
-- **[65]** Revisit Dijkstra's algorithm with diagonals (in TacticalSub) to see whether GC overhead can be decreased or
-           heap size just needs to be increased. (Greg)
 ...
- 
+
 
 Removed As Part of Low Bar Re-evaluation on 12/2
 ------------------------------------------------
@@ -115,5 +113,7 @@ Resolved Issues
 May Need to Revisit
 -------------------
 
-- **[25]** Address collision handling between two workers. Inelegant as currently written.
+- **[25]** Address collision handling between two Soldiers. Inelegant as currently written.
 - **[43]** FloatingEntity collision handling. 
+- **[65]** Revisit Dijkstra's algorithm with diagonals (in TacticalSub) to see whether GC overhead can be decreased or
+           heap size just needs to be increased. (Greg)
