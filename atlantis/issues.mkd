@@ -8,8 +8,7 @@ Open Issues
 - **[58]** Target fire back. (Bo)
 - **[63]** Improve transition to GameOverState. Briefly display winning side to both users and shut down server thread.
            Add map and other eye candy to GameOverState. (Greg)
-- **[64]** Create another DijkstraAlgorithm JUnit test using a randomly generated map with many adjacencies not confined
-           to a grid in an effort to find a situation where Parallel Dijkstra's will outperform the standard version. (Greg)
+
 ...
 
 
@@ -108,6 +107,8 @@ Resolved Issues
 - **[42]** Adjust map rendering offset in such a way that Soldier's "feet" appear near center of tile corresponding to
            current location. (Greg)
 - **[47]** TacticalSub units should be able to move in 8 directions. (Greg)	  
+- **[64]** Create another DijkstraAlgorithm JUnit test using a randomly generated map with many adjacencies not confined
+           to a grid in an effort to find a situation where Parallel Dijkstra's will outperform the standard version. (Greg)
 
 
 May Need to Revisit
