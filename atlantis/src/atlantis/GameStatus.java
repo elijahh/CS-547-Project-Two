@@ -147,7 +147,7 @@ public class GameStatus {
 			for (AtlantisEntity entity1: atlantisEntities_team_red) {
 				for (AtlantisEntity entity2: atlantisEntities_team_blue) {
 					if (entity1.getPosition().distance(entity2.getPosition()) <= entity2.eyesight){
-						entity1.visibleToOpponent = true;
+						entity1.visibleToOpponent = true;					
 						break;
 					}
 				}

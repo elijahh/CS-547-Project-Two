@@ -260,7 +260,7 @@ public class TacticalSub extends FloatingEntity {
 			torpedoTimer -= delta;
 		} else {
 			tacticalTorpedo = null;
-			if (isAttacking && target.health > 0) {
+			if (isAttacking && target.health > 0 && this.health > 0) {
 					fire(target);
 			}
 		}
