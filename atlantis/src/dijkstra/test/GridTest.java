@@ -27,7 +27,7 @@ import dijkstra.model.Edge;
 import dijkstra.model.Graph;
 import dijkstra.model.Vertex;
 
-public class TestDijkstraAlgorithm {
+public class GridTest {
 
 	private List<Vertex> nodes;
 	private List<Edge> edges;
@@ -39,8 +39,8 @@ public class TestDijkstraAlgorithm {
 		nodes = new ArrayList<Vertex>();
 		edges = new ArrayList<Edge>();
 		
-		final int x = 16;
-		final int y = 12;
+		final int x = 20;
+		final int y = 20;
 		
 		for (int j = 0; j < y; j++) {
 			for (int i = 0; i < x; i++) {
