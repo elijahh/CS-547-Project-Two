@@ -73,14 +73,16 @@ public class TacticalSub extends FloatingEntity {
 		
 		tactical_subs.add(this);
 		
-		dijkstra = new DijkstraAlgorithm(graph_with_diagonals);
+		dijkstra = new DijkstraAlgorithm(dijkstra_with_diagonals);
 	}
 	
-	static private Graph graph_with_diagonals;
+	static private DijkstraAlgorithm dijkstra_with_diagonals;
 	
 	static {
 		List<Edge> map_edges = new ArrayList<Edge>();
 		List<Vertex> map_nodes = new ArrayList<Vertex>();
+		
+		Graph graph_with_diagonals;
 		
 		for (int j = 0; j < MAP_GRID_Y; j++) {
 			for (int i = 0; i < MAP_GRID_X; i++) {
@@ -105,6 +107,7 @@ public class TacticalSub extends FloatingEntity {
 		}
 
 		graph_with_diagonals = new Graph(map_nodes, map_edges);
+		dijkstra_with_diagonals = new DijkstraAlgorithm(graph_with_diagonals);
 	}
 	
 	static {
