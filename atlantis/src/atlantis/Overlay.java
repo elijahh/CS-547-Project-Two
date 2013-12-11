@@ -633,7 +633,7 @@ public class Overlay {
 					g.drawString("Purchase Tactical Submarine (2000)", x, y);
 					
 					if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) &&
-							clickTimer <= 0 && playingState.gold >= 2000) {
+							clickTimer <= 0 /*&& playingState.gold >= 2000*/) {
 						playingState.gold -= 2000;
 						clickTimer = 1000;
 						status = playingState.getStatus();
