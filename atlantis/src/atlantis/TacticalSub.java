@@ -67,7 +67,7 @@ public class TacticalSub extends FloatingEntity {
 	public TacticalSub(float x, float y, Vector movement_direction) {
 		super(x, y, movement_direction);
 		
-		MAX_HEALTH_VALUE = 600;
+		MAX_HEALTH_VALUE = 1000;
 		health = MAX_HEALTH_VALUE;
 		eyesight = 500;
 		

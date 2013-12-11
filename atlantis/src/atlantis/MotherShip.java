@@ -55,7 +55,7 @@ public class MotherShip extends FloatingEntity {
 	public MotherShip(float x, float y, Vector movement_direction) {
 		super(x, y, movement_direction);
 		
-		MAX_HEALTH_VALUE = 3000;
+		MAX_HEALTH_VALUE = 5000;
 		health = MAX_HEALTH_VALUE;
 		eyesight = 600;
 		

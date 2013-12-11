@@ -41,7 +41,6 @@ public class GameStatus {
 	public Soldier soldier_on_server_2;
 	public TacticalSub tactical_on_server_1;
 	public TacticalSub tactical_on_server_2;
-	public TacticalSub tactical_on_server_3;
 	// TEMPORARY FOR DEVELOPMENT
 	
 	public ArrayList<AtlantisEntity> atlantisEntities_team_red;
@@ -61,7 +60,7 @@ public class GameStatus {
 		
 		// TEMPORARY FOR DEVELOPMENT
 		soldier_on_server_1 = 
-				new Soldier(1698, 1948, new Vector(0, 0));
+				new Soldier(1698, 1848, new Vector(0, 0));
 		soldiers_server_model.put(soldier_on_server_1.getIdentity(),
 				soldier_on_server_1);
 		soldier_on_server_2 = 
@@ -75,8 +74,6 @@ public class GameStatus {
 		tactical_on_server_2 = new TacticalSub(500, 200, new Vector(0,0));
 		tactical_on_server_2.setTeam(Team.BLUE);
 		tacticals_server_model.put(tactical_on_server_2.getIdentity(), tactical_on_server_2);
-		tactical_on_server_3 = new TacticalSub(700, 200, new Vector(0,0));
-		tacticals_server_model.put(tactical_on_server_3.getIdentity(), tactical_on_server_3);
 		// TEMPORARY FOR DEVELOPMENT
 		
 	}
@@ -518,8 +515,8 @@ public class GameStatus {
 			}
 			synchronized (tacticals_server_model) {
 				if (command.entityId == 1) { // purchase tactical sub
-					TacticalSub newTactical = new TacticalSub(command.target.getX(),
-							command.target.getY());
+					TacticalSub newTactical = new TacticalSub(command.target.getX()-100,
+							command.target.getY()-100);
 					newTactical.setTeam(Team.values()[(int) command.attackTargetId]);
 					tacticals_server_model.put(newTactical.getIdentity(), newTactical);
 				}
