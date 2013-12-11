@@ -6,7 +6,7 @@ Open Issues
 	
 - **[57]** Test play. (Bo)
 - **[58]** Target fire back. (Bo)
-- **[64]** Test/debug Game Over state before showcase.
+- **[64]** Test/debug Game Over state before showcase. (Greg)
 
 ...
 
