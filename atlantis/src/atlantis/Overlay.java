@@ -118,10 +118,10 @@ public class Overlay {
 						.getIdTacticalsMapOnClient().get(selectedUnitID);
 			}
 			if (selectedUnit != null && selectedUnit.visible) {
-				g.drawRect(selectedUnit.getCoarseGrainedMinX(),
-						selectedUnit.getCoarseGrainedMinY(),
-						selectedUnit.getCoarseGrainedWidth(),
-						selectedUnit.getCoarseGrainedHeight());
+					g.drawRect(selectedUnit.getCoarseGrainedMinX(),
+							selectedUnit.getCoarseGrainedMinY(),
+							selectedUnit.getCoarseGrainedWidth(),
+							selectedUnit.getCoarseGrainedHeight());
 			} else { // deselect if invisible
 				selectedUnitID = -1;
 				selectWorkerUnit = selectMotherShipUnit = selectTacticalUnit = false; 
@@ -463,19 +463,17 @@ public class Overlay {
 				if (playingState.team == Team.RED) {
 					g.setColor(Color.red);
 					if (s.getClass() == MotherShip.class) g.setColor(Color.magenta); 
-				}
-				else {
+				} else {
 					g.setColor(Color.blue);
 					if (s.getClass() == MotherShip.class) g.setColor(Color.cyan);
 				}
 				g.drawOval(675 + (s.getX()-PlayingState.viewportOffsetX) * 0.0586f,
 						475 + (s.getY()-PlayingState.viewportOffsetY) * 0.0586f, 1, 1);
-			} else if (s.visibleToOpponent && s.getTeam() != playingState.team) {
+			} else if (s.visible && s.visibleToOpponent && s.getTeam() != playingState.team) {
 				if (playingState.team == Team.RED) {
 					g.setColor(Color.blue);
 					if (s.getClass() == MotherShip.class) g.setColor(Color.cyan);
-				}
-				else {
+				} else {
 					g.setColor(Color.red);
 					if (s.getClass() == MotherShip.class) g.setColor(Color.magenta);
 				}

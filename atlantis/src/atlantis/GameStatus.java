@@ -202,6 +202,14 @@ public class GameStatus {
 					
 					if(soldier.getHealth() <= 0) 
 						remove_soldiers.add(soldier);
+					if (!soldier.visible) {
+						for (TacticalSub tactical : tacticals_server_model.values()) {
+							if (tactical.soldiers.contains(soldier)) {
+								remove_soldiers.add(soldier);
+								break;
+							}
+						}
+					}
 				}
 					
 				for(Soldier remove_soldier : remove_soldiers) 
