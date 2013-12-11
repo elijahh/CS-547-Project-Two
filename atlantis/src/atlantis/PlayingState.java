@@ -84,6 +84,8 @@ public class PlayingState extends BasicGameState{
 			viewportOffsetX = -1248;
 			viewportOffsetY = -1578;
 		}
+		
+		game_over_countdown = 5000;
 	}
 	
 	@Override
@@ -128,6 +130,12 @@ public class PlayingState extends BasicGameState{
 		if(StartMenuState.GAME_TYPE.equals("client"))
 			g.drawString("Client ", 25, 200);
 		
+		if(status.isGameOver())
+			if(status.isRedWinner())
+				g.drawString("RED WINS!!!", 25, 250);
+			else
+				g.drawString("BLUE WINS!!!", 25, 250);
+		
 		g.drawString("Gold: " + (int) gold, 10, 30);
 	}
 	
@@ -150,10 +158,11 @@ public class PlayingState extends BasicGameState{
 		status.update(container, delta);
 		overlay.update(delta);
 		
-		if(status.isGameOver()) {
-			// TODO Shut down server. Display winning side. Wait for a bit.
-			
-			game.enterState(AtlantisGame.MENU);
+		if(status.isGameOver()) {			
+			if(game_over_countdown > 0)
+				game_over_countdown -= delta;
+			else
+				game.enterState(AtlantisGame.GAME_OVER);
 		}
 		
 		// collect battle winnings
