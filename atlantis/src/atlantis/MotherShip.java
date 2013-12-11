@@ -59,7 +59,8 @@ public class MotherShip extends FloatingEntity {
 		health = MAX_HEALTH_VALUE;
 		eyesight = 600;
 		
-		mother_ships.add(this);
+		if(mother_ships.size() < 2)
+			mother_ships.add(this);
 	}
 	
 	/* GAME IS OVER WHEN ONE MOTHER SHIP IS DESTROYED */
@@ -197,7 +198,6 @@ public class MotherShip extends FloatingEntity {
 	public void fire(AtlantisEntity target) {
 		// TODO Auto-generated method stub
 	}
-	
 	
 	private boolean handling_mother_ship_collision = false;
 	private int mother_ship_collision_countdown;

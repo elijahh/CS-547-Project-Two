@@ -52,7 +52,7 @@ public class TacticalSub extends FloatingEntity {
 	private static int ANIMATION_FRAME_WIDTH = 100; /* pixels */
 	private static int ANIMATION_FRAME_HEIGHT = 100; /* pixels */
 	
-	private static List<TacticalSub> tactical_subs = new LinkedList<TacticalSub>();
+	//private static List<TacticalSub> tactical_subs = new LinkedList<TacticalSub>();
 	
 	private static final String HIT_SOUND = "atlantis/resource/hit.wav";
 	
@@ -71,9 +71,8 @@ public class TacticalSub extends FloatingEntity {
 		health = MAX_HEALTH_VALUE;
 		eyesight = 500;
 		
-		tactical_subs.add(this);
+		//tactical_subs.add(this);
 		
-		dijkstra = new DijkstraAlgorithm(dijkstra_with_diagonals);
 	}
 	
 	static private DijkstraAlgorithm dijkstra_with_diagonals;
@@ -349,6 +348,9 @@ public class TacticalSub extends FloatingEntity {
 	}
 	
 	public void update(int delta) {
+		if(null == dijkstra)
+			dijkstra = new DijkstraAlgorithm(dijkstra_with_diagonals);
+
 		super.update(delta);
 		
 		for(FloatingEntity e : this.getPotentialCollisions()) {
@@ -385,7 +387,6 @@ public class TacticalSub extends FloatingEntity {
 			}
 		}
 	}
-
 	
 	ArrayList<Soldier> soldiers = new ArrayList<Soldier>();
 	public void load(Soldier soldier) {

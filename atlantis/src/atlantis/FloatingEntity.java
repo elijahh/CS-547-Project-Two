@@ -13,14 +13,14 @@ import dijkstra.model.Vertex;
 
 abstract class FloatingEntity extends AtlantisEntity {
 
-	private static LinkedList<FloatingEntity> floating_entities = 
-			new LinkedList<FloatingEntity>();
+	// private static LinkedList<FloatingEntity> floating_entities = 
+	// 		new LinkedList<FloatingEntity>();
 	
 	public FloatingEntity(final float x, final float y,
 			Vector movement_direction) {
 		super(x, y, movement_direction);
 		
-		floating_entities.add(this);
+		//floating_entities.add(this);
 	}
 	
 	@Override
