@@ -12,6 +12,8 @@ Open Issues
            Add map and other eye candy to GameOverState. (Greg)
 - **[64]** Create another DijkstraAlgorithm JUnit test using a randomly generated map with many adjacencies not confined
            to a grid in an effort to find a situation where Parallel Dijkstra's will outperform the standard version. (Greg)
+- **[65]** Revisit Dijkstra's algorithm with diagonals (in TacticalSub) to see whether GC overhead can be decreased or
+           heap size just needs to be increased. (Greg)
 ...
  
 
