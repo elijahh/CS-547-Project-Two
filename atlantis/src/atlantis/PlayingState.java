@@ -50,7 +50,6 @@ public class PlayingState extends BasicGameState{
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
 
-		status = new GameStatus(this);
 	}
 	
 	public AtlantisServer getServer() { return GamePrepareState.server; }
@@ -62,7 +61,9 @@ public class PlayingState extends BasicGameState{
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) throws SlickException {
+		status = new GameStatus(this);
 		overlay = new Overlay(this);
+
 		currentFrame = 0;
 		
 		viewportOffsetX = 0;
@@ -161,8 +162,10 @@ public class PlayingState extends BasicGameState{
 		if(status.isGameOver()) {			
 			if(game_over_countdown > 0)
 				game_over_countdown -= delta;
-			else
+			else {
 				game.enterState(AtlantisGame.GAME_OVER);
+				client = null; server = null;
+			}
 		}
 		
 		// collect battle winnings
