@@ -633,7 +633,7 @@ public class Overlay {
 					g.drawString("Purchase Tactical Submarine (2000)", x, y);
 					
 					if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) &&
-							clickTimer <= 0 && playingState.gold >= 2000) {
+							clickTimer <= 0 /*&& playingState.gold >= 2000*/) {
 						playingState.gold -= 2000;
 						clickTimer = 1000;
 						status = playingState.getStatus();
@@ -645,9 +645,11 @@ public class Overlay {
 							}
 						}
 						if (ourShip != null) {
+							float spawnX = ourShip.getX()-PlayingState.viewportOffsetX-40;
+							if (spawnX < 0) spawnX += 80;
 							status.sendCommand(new Command(
 									Command.PURCHASE, playingState.getCurrentFrame(),
-									new Vector(ourShip.getX()-PlayingState.viewportOffsetX,
+									new Vector(spawnX,
 									ourShip.getY()-PlayingState.viewportOffsetY),
 									1, playingState.team.ordinal()));
 						}
