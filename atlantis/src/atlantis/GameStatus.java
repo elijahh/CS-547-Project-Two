@@ -162,8 +162,6 @@ public class GameStatus {
 			}
 
 			/* ---------------------------------------- */
-
-
 			
 			if(0 >= mothership_on_server_1.getHealth()) {
 				game_over = true;
