@@ -117,13 +117,11 @@ public class Overlay {
 				selectedUnit = playingState.getStatus()
 						.getIdTacticalsMapOnClient().get(selectedUnitID);
 			}
-			if (selectedUnit != null) {
-				if (selectedUnit.visible) {
+			if (selectedUnit != null && selectedUnit.visible) {
 					g.drawRect(selectedUnit.getCoarseGrainedMinX(),
 							selectedUnit.getCoarseGrainedMinY(),
 							selectedUnit.getCoarseGrainedWidth(),
 							selectedUnit.getCoarseGrainedHeight());
-				}
 			} else { // deselect if invisible
 				selectedUnitID = -1;
 				selectWorkerUnit = selectMotherShipUnit = selectTacticalUnit = false; 
