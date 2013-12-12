@@ -473,9 +473,6 @@ public class GameStatus {
 				if(soldier != null && (false == is_target_inside_obstacle)) {
 					soldier.setDestination(command.target);
 					soldier.isAttacking = false;
-				} else {
-					System.out.println("Can't move there.");
-					// TODO Notify the user
 				}
 			}
 			synchronized (motherships_server_model) {

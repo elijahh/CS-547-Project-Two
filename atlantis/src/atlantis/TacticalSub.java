@@ -142,7 +142,6 @@ public class TacticalSub extends FloatingEntity {
 			stopMoving();
 			
 			if (tacticalTorpedo == null) {
-				System.out.println("new torpedo");
 				tacticalTorpedo = new TacticalTorpedo(getX(), getY(), theta, team);
 			} else {
 				tacticalTorpedo.setPosition(new Vector(getX(), getY()));
@@ -151,8 +150,6 @@ public class TacticalSub extends FloatingEntity {
 			torpedoTimer = 5000;
 
 			if (target.health <= 0) isAttacking = false;
-			System.out.println("target health: " + target.health);
-			System.out.println("this health: " + health);
 		} else if(target.visibleToOpponent){		
 			setDestination(target.getPosition());
 		}

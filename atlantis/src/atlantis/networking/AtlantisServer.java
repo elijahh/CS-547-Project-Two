@@ -138,7 +138,7 @@ public class AtlantisServer extends Thread{
 		ResultLockStep step = new ResultLockStep(frameNum);
 		
 		SimulationResult result = new SimulationResult();
-		result.type = SimulationResult.GAME_OVER;
+		result.setGameOver(red_wins);
 		step.addResult(result);
 		
 		sendResult(step, frameNum);

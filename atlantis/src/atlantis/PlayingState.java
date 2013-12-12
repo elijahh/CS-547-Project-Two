@@ -87,6 +87,8 @@ public class PlayingState extends BasicGameState{
 		}
 		
 		game_over_countdown = 5000;
+		
+		gold = 0;
 	}
 	
 	@Override
@@ -146,7 +148,7 @@ public class PlayingState extends BasicGameState{
 		// TODO
 	}
 	
-	float gold = 0;
+	float gold;
 
 	int game_over_countdown;
 	

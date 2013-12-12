@@ -491,14 +491,6 @@ public abstract class AtlantisEntity extends Entity implements
 			List<Vertex> path = dijkstra.getPath(this.getCurrentMapNode());
 					
 			// System.out.println(path);
-			
-			// TODO Remove once we're sure that entities aren't wandering into terrain
-			for (int node_id : AtlantisMap.getBlockedNodes())
-				if (node_id == getCurrentMapNode()
-						&& (false == this instanceof FloatingEntity))
-					System.out.println("HUH?!? GROUND ENTITY IN TERRAIN TILE "
-							+ node_id);
-			// End remove - That operation could get pricey!
 						
 			Vector move_direction = this.getNextMovementFromPath(path);
 			

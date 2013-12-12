@@ -271,8 +271,6 @@ public class Soldier extends GroundEntity {
 			torpedoTimer = 2000;	
 
 			if (target.health <= 0) isAttacking = false;
-			System.out.println("target health: " + target.health);
-			System.out.println("this health: " + health);
 		} else if(target.visibleToOpponent){
 			setDestination(target.getPosition());
 		}
