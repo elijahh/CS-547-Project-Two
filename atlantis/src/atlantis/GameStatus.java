@@ -199,16 +199,16 @@ public class GameStatus {
 						remove_soldiers.add(soldier);
 					if (!soldier.visible) {
 						for (TacticalSub tactical : tacticals_server_model.values()) {
-							if (tactical.soldiers.contains(soldier)) {
+							if (tactical.soldiers.contains(soldier) && tactical.getHealth() <= 0) {
 								remove_soldiers.add(soldier);
 								break;
 							}
 						}
 					}
 				}
-					
+
 				for(Soldier remove_soldier : remove_soldiers) 
-					soldiers_server_model.remove(remove_soldier);
+					soldiers_server_model.remove(remove_soldier.getIdentity());
 			}
 	
 			synchronized(tacticals_server_model) {
@@ -226,7 +226,7 @@ public class GameStatus {
 				}
 				
 				for(TacticalSub remove_sub : remove_subs)
-					tacticals_server_model.remove(remove_sub);
+					tacticals_server_model.remove(remove_sub.getIdentity());
 			}
 		
 			server.sendUpdaters(updaters, currentFrame);
