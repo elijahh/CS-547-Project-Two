@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="20" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="Terrain" tilewidth="32" tileheight="32">
+  <image source="densemap-terrain.png" width="128" height="128"/>
+  <terraintypes>
+   <terrain name="blackstuff" tile="0"/>
+   <terrain name="greenstuff" tile="2"/>
+   <terrain name="orangestuff" tile="8"/>
+   <terrain name="pinkstuff" tile="10"/>
+  </terraintypes>
+  <!-- commenting out terrain flags because slick can't parse and doesn't need them
+  <tile id="0" terrain=",,,0"/>
+  <tile id="1" terrain=",,0,"/>
+  <tile id="2" terrain=",,,1"/>
+  <tile id="3" terrain=",,1,"/>
+  <tile id="4" terrain=",0,,"/>
+  <tile id="5" terrain="0,,,"/>
+  <tile id="6" terrain=",1,,"/>
+  <tile id="7" terrain="1,,,"/>
+  <tile id="8" terrain=",,,2"/>
+  <tile id="9" terrain=",,2,"/>
+  <tile id="10" terrain=",,,3"/>
+  <tile id="11" terrain=",,3,"/>
+  <tile id="12" terrain=",2,,"/>
+  <tile id="13" terrain="2,,,"/>
+  <tile id="14" terrain=",3,,"/>
+  <tile id="15" terrain="3,,,"/>
+  -->
+ </tileset>
+ <!-- also seems not to know about imagelayers, but doesn't throw exception -->
+ <imagelayer name="Image Layer 1" width="20" height="20">
+  <image source="densemap-background.png"/>
+ </imagelayer>
+ <layer name="Tile Layer 1" width="20" height="20">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+WUyQrAMAhE031f/v9rO72JVDGKpz6Yg4iJzISUkkMDtUJvgdbK8wZoFHoHdBrv9qDdnUkH9aS2+MZnKBM0k5r7ZpmpJZrFBu2kjmZxQXdg/kXzmO8rQX3RPKb7avlrvkj7WvL/IvomMvD8KRpeb/7GA/fvz6FABgAA
+  </data>
+ </layer>
+</map>

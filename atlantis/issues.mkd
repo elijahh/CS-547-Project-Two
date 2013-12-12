@@ -3,6 +3,119 @@
 
 Open Issues
 -----------
+	
+- **[57]** Test play. (Bo)
+- **[58]** Target fire back. (Bo)
+- **[64]** Test/debug Game Over state before showcase. (Greg)
 
-Resolved Issues
+...
+
+
+Removed As Part of Low Bar Re-evaluation on 12/2
+------------------------------------------------
+- **[28]** Start with a blank screen and start adding workers on each side in empty map areas according 
+           to a random schedule. Remove the temporary code that populated the two workers used in development of
+           [11] - [25].
+- **[31]** Add "base" GroundEntity to each side. Game enters "game over" state when base health on one side 
+		   reaches zero.
+
+
+Resolved Issues 
 ---------------
+- **[1]** Create basic game skeleton. Ongoing until Worker fully functional.
+- **[2]** Create a login screen so player can choose either "create new game" or "join a game" as a game state
+- **[3]** Add jsr166y library, backport of Java 1.7 Concurrency utilities to Java 1.6. 
+- **[4]** Add Parallel Dijkstra work in progress from Greg's Project One. Single thread active.
+- **[6]** Fix StartUpState by separating the gameState branches into BasicGameStates.
+- **[7]** Add overlay with actions for selected unit
+- **[8]** Basic networking with client and server model. Server sends map name to client.
+- **[9]** Format the objects need to be passed between client and server
+- **[10]** Create basic AtlantisEntity and Worker classes. Make one worker appear on screen when
+           client starts.
+- **[11]** Add enough functionality to AtlantisClient to move one character around screen with position
+           updates retrieved from Woker list provided by AtlantisClient. At this point, no network
+           interaction will take place and PlayingState should set movement for client. The object
+           model for the client->server updates is preliminary at this point
+- **[12]** Repeated 11 with AtlantisEntity.Updater serialization/deserialization working. This is important
+           before moving on to work on client/server model.
+- **[13]** Updater deserialization not working on Mac in example in PlayingState. Fix ASAP! 
+- **[14]** Repeat [12] Receiving movement updates from AtlantisServer. AtlantisClient retrieve position updates 
+	       across network connection using serialization protocol to test timing.
+- **[15]** Restore GameStatus object to keep track of lists of units and updates. Move Worker-related
+           code from the bottom of AtlantisClient into the GameStatus object.
+- **[16]** Server->client object(s) will provide movement coordination for the single entity. Status object on
+		   server will maintain state with updates to clients.
+- **[17]** Interface ground unit map to Tiled data. At this point, AtlantisServer should direct
+		   single entity from [11] - [16] to locations picked at random, and entity should move
+		   according to the map.
+- **[18]** Make both player screens reflect server game status. Single entity for issues [11] - [17] 
+		   should appear to move on both screens.
+- **[19]** Add second worker entity which moves randomly. Workers should avoid collision even if they 
+		   are on the same team.
+- **[20]** Add player command interface to control entities. To start, entities should accept mouse 
+		   clicks directing location movement, one worker per player. Dependent on having moveTo()
+		   which will be added in [23].
+- **[21]** Add actual entity art for "worker" class.
+- **[22]** Add visual indicator for Red and Blue teams to entities.
+- **[23]** Set GroundEntity Dijkstra map to grid for now. Add moveTo(Vector position) method
+           to AtlantisEntity to move entity to destination specified by Vector argument. [20] will 
+           depend on having the moveTo().
+- **[24]** Separate entity "model" on server from "view" on client. Mouse interaction with the view should 
+           result in server receiving commands across the network to update the model. Server-side list for
+           active workers should be added at this point.
+- **[26]** Add a GamePrepareState. Server will wait for all clients to join and send map in this state 
+		   and start game at both sides. This might solve the frame desynchronize problem in a better way.
+- **[27]** Fix team movement -- currently only server player controls both teams' workers;
+		   allow each player to control one but not the other.
+- **[29]** Expand "world" beyond 800x600. Viewport should move when user moves mouse to edges of
+           overlay. Consider arrow buttons on each edge of the overlay.
+- **[32]** Translate world coordinates to local coordinates according to viewport offset. 
+- **[33]** Refactor Workers as Soldier units.
+- **[34]** Create first "floating" unit, MotherShip submarine, one per side. Game enters "game over" state when
+           MotherShip health on one side reaches zero.
+- **[35]** "Arm" soldier units with weapons and enable "attack" command. Soldier units may attack each other or
+           the MotherShip submarine. Combat resolution using random numbers.
+- **[36]** Fix map to correctly parse location of terrain obstacles. Ground units should avoid the obstacles.
+- **[37]** Implement "Store" interface, where players use gold to buy new units.
+- **[41]** Create TacticalSub class and associated Torpedo class for the entity's "attack" method.
+- **[44]** Explore truncating the path when attacking to prevent collision with the target.
+- **[46]** Fix torpedo collision detection. Maybe add explosion effect.
+- **[49]** Add visual health indicators	
+- **[50]** Implement purchasing tactical subs and allow soldiers to attack them.
+- **[53]** Add a small map on the empty space in overlay. (Elijah)
+- **[51]** Add ship explosion effect.
+- **[5]**  Make Parallel Dijkstra function for split adjacencies. Investigate possible optimizations.
+- **[61]** When TacticalSub attacks soldier, wait until torpedo animation completes the "kill" before removing the soldier
+           from the game (Greg)
+- **[39]** Add flag to base AtlantisEntity class indicating whether unit is visible. Send to clients as part of
+           Updater serialization. Clients should stop tracking and remove from the active entity list any object
+           with the visible flag set to false. (Elijah)
+- **[60]** Add unit model to left side of overlay and add in-game tutorial. (Elijah)
+- **[59]** When game starts, red team appears on top left corner of the map and blue team appears on bottom right of the map. (Bo)
+- **[54]** Add an "eyesight" property for each entity, if an opponent entity
+		   is out of every eyesight of player's entity, its "visible" flag is turned off.(Bo)
+- **[55]** Add "mount" action for soldier to mount on tactical sub. (Elijah)
+- **[38]** Add health counter to base AtlantisEntity class. Send to clients as part of Updater serialization. Units
+           should be removed from server and clients when health counter goes below zero. Game is over when one of
+           the MotherShip units is destroyed.(Greg)
+- **[40]** Add method to AtlantisMap to identify whether a position vector is inside a terrain
+           "obstacle" tile. (Greg)
+- **[56]** Add "nudge" method for soldiers -- move nudgeNudge() up from TacticalSub. (Greg)
+- **[30]** Modify soldier addition to spawn next to MotherShip while avoiding terrain. Depends on 56 and 40. (Elijah)
+- **[62]** Improve minimap. (Elijah)
+- **[42]** Adjust map rendering offset in such a way that Soldier's "feet" appear near center of tile corresponding to
+           current location. (Greg)
+- **[47]** TacticalSub units should be able to move in 8 directions. (Greg)	  
+- **[63]** Improve transition to GameOverState. Briefly display winning side to both users and shut down server thread.
+           Add map and other eye candy to GameOverState. (Greg)
+- **[64]** Create another DijkstraAlgorithm JUnit test using a randomly generated map with many adjacencies not confined
+           to a grid in an effort to find a situation where Parallel Dijkstra's will outperform the standard version. (Greg)
+
+
+May Need to Revisit
+-------------------
+
+- **[25]** Address collision handling between two Soldiers. Inelegant as currently written.
+- **[43]** FloatingEntity collision handling. 
+- **[65]** Revisit Dijkstra's algorithm with diagonals (in TacticalSub) to see whether GC overhead can be decreased or
+           heap size just needs to be increased. (Greg)
